@@ -1,5 +1,3 @@
-# chihqq.github.io
-chihqq.github.io
-
-
 # 读我
+
+https://hqqich.github.io
