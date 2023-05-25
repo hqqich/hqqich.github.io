@@ -1,5 +1,25 @@
 [book]
-authors = []
+title = "my github page"
+description = "markdown build page."
+authors = ["hqqich, https://hqqich.github.io"]
 language = "en"
 multilingual = false
 src = "src"
+
+[output.html.playpen]
+editable = true
+editor = "ace"
+
+[output.html.fold]
+enable = true
+level = 1
+
+
+[output.html]
+additional-css = ["theme/style1.css"]
+additional-js = ["assets/custom3.js","assets/lang.js"]
+git-repository-url = "https://github.com/sunface/rust-by-practice"
+edit-url-template = "https://github.com/sunface/rust-by-practice/edit/master/zh-CN/{path}"
+
+[rust]
+edition = "2021"

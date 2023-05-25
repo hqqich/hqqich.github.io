@@ -6,5 +6,3 @@
 > 
 > test3
 
-
-![img.png](img.png)
