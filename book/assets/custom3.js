@@ -114,7 +114,8 @@ var initAll = function () {
     var ele = document.createElement("div");
     ele.setAttribute("align","center");
     var count = document.createElement("img")
-    count.setAttribute("src", "https://visitor-badge.glitch.me/badge?page_id=practice/en/" + path);
+    // count.setAttribute("src", "https://visitor-badge.glitch.me/badge?page_id=practice/en/" + path);
+    count.setAttribute("src", "https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg");
     ele.appendChild(count);
     var divider =document.createElement("hr")
 
