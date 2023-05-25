@@ -136,15 +136,15 @@ var initAll = function () {
     script.src = "https://giscus.app/client.js";
     script.async = true;
     script.crossOrigin = "anonymous";
-    script.setAttribute("data-repo", "sunface/rust-by-practice");
-    script.setAttribute("data-repo-id", "MDEwOlJlcG9zaXRvcnkxMjk5OTAzOTY=");
-    script.setAttribute("data-category", "Book Comments");
-    script.setAttribute("data-category-id", "DIC_kwDOB79-_M4COQmx");
-    script.setAttribute("data-mapping", "specific");
+    script.setAttribute("data-repo", "hqqich/hqqich.github.io");
+    script.setAttribute("data-repo-id", "R_kgDOI8Jntg");
+    script.setAttribute("data-category", "Comments");
+    script.setAttribute("data-category-id", "DIC_kwDOI8Jnts4CWuoG");
+    script.setAttribute("data-mapping", "pathname");
     script.setAttribute("data-term", pagePath);
     script.setAttribute("data-reactions-enabled", "1");
     script.setAttribute("data-emit-metadata", "0");
-    script.setAttribute("data-input-position", "top");
+    script.setAttribute("data-input-position", "bottom");
     script.setAttribute("data-theme", theme);
     script.setAttribute("data-lang", lang);
     // 预先加载评论会更好，这样用户读到那边时，评论就加载好了
