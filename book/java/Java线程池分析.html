@@ -1,0 +1,473 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Java线程池分析 - my github page</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="markdown build page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/style1.css">
+
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../study_todo.html"><strong aria-hidden="true">1.</strong> 学习任务</a></li><li class="chapter-item expanded "><a href="../xbell/init.html"><strong aria-hidden="true">2.</strong> xbell</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../xbell/@ControllerAdvice的介绍及三种用法.html"><strong aria-hidden="true">2.1.</strong> @ControllerAdvice的介绍及三种用法</a></li><li class="chapter-item "><a href="../xbell/excel处理.html"><strong aria-hidden="true">2.2.</strong> excel处理</a></li><li class="chapter-item "><a href="../xbell/Guava文件操作.html"><strong aria-hidden="true">2.3.</strong> Guava文件操作</a></li><li class="chapter-item "><a href="../xbell/SpringDataJpa复杂动态查询方式总结.html"><strong aria-hidden="true">2.4.</strong> SpringDataJpa复杂动态查询方式总结</a></li><li class="chapter-item "><a href="../xbell/使用SpringDataJPA进行数据分页与排序.html"><strong aria-hidden="true">2.5.</strong> 使用SpringDataJPA进行数据分页与排序</a></li><li class="chapter-item "><a href="../xbell/参数校验.html"><strong aria-hidden="true">2.6.</strong> 参数校验</a></li><li class="chapter-item "><a href="../xbell/实习记录.html"><strong aria-hidden="true">2.7.</strong> 实习记录</a></li><li class="chapter-item "><a href="../xbell/知识点(java).html"><strong aria-hidden="true">2.8.</strong> 知识点(java)</a></li><li class="chapter-item "><a href="../xbell/知识点(javascript).html"><strong aria-hidden="true">2.9.</strong> 知识点(javascript)</a></li></ol></li><li class="chapter-item expanded "><a href="../golang/init.html"><strong aria-hidden="true">3.</strong> golang知识</a></li><li class="chapter-item expanded "><a href="../java/init.html"><strong aria-hidden="true">4.</strong> java知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/0杂项.html"><strong aria-hidden="true">4.1.</strong> 0杂项</a></li><li class="chapter-item "><a href="../java/@Column注解及属性详解.html"><strong aria-hidden="true">4.2.</strong> @Column注解及属性详解</a></li><li class="chapter-item "><a href="../java/@RequestBody的使用.html"><strong aria-hidden="true">4.3.</strong> @RequestBody的使用</a></li><li class="chapter-item "><a href="../java/Comparable和Comparator的区别.html"><strong aria-hidden="true">4.4.</strong> Comparable和Comparator的区别</a></li><li class="chapter-item "><a href="../java/Druid数据库连接池.html"><strong aria-hidden="true">4.5.</strong> Druid数据库连接池</a></li><li class="chapter-item "><a href="../java/Elasticsearch数据类型及其属性.html"><strong aria-hidden="true">4.6.</strong> Elasticsearch数据类型及其属性</a></li><li class="chapter-item "><a href="../java/GSON.html"><strong aria-hidden="true">4.7.</strong> GSON</a></li><li class="chapter-item "><a href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html"><strong aria-hidden="true">4.8.</strong> IDEA自动部署WEB工程至远程服务器（学习笔记）</a></li><li class="chapter-item "><a href="../java/JSR303.html"><strong aria-hidden="true">4.9.</strong> JSR303</a></li><li class="chapter-item "><a href="../java/JS简单实现多级Select联动菜单效果代码.html"><strong aria-hidden="true">4.10.</strong> JS简单实现多级Select联动菜单效果代码</a></li><li class="chapter-item "><a href="../java/JXl常用解析详解.html"><strong aria-hidden="true">4.11.</strong> JXl常用解析详解</a></li><li class="chapter-item "><a href="../java/Java8获取参数名称时无法获取参数名.html"><strong aria-hidden="true">4.12.</strong> Java8获取参数名称时无法获取参数名</a></li><li class="chapter-item expanded "><a href="../java/Java线程池分析.html" class="active"><strong aria-hidden="true">4.13.</strong> Java线程池分析</a></li><li class="chapter-item "><a href="../java/Lombok的基本使用.html"><strong aria-hidden="true">4.14.</strong> Lombok的基本使用</a></li><li class="chapter-item "><a href="../java/MD5.html"><strong aria-hidden="true">4.15.</strong> MD5</a></li><li class="chapter-item "><a href="../java/index.html"><strong aria-hidden="true">4.16.</strong> README</a></li><li class="chapter-item "><a href="../java/Redis.html"><strong aria-hidden="true">4.17.</strong> Redis</a></li><li class="chapter-item "><a href="../java/Redis的五种数据类型及方法.html"><strong aria-hidden="true">4.18.</strong> Redis的五种数据类型及方法</a></li><li class="chapter-item "><a href="../java/ResponseEntity实现Rest风格的返回值.html"><strong aria-hidden="true">4.19.</strong> ResponseEntity实现Rest风格的返回值</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">my github page</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/hqqich/hqqich.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <!-- Page table of contents -->
+                    <div class="sidetoc"><nav class="pagetoc"></nav></div>
+                    <main>
+                        <h1 id="java线程池分析"><a class="header" href="#java线程池分析">Java线程池分析</a></h1>
+<h2 id="一概述"><a class="header" href="#一概述">一、概述</a></h2>
+<p>在执行一个异步任务或并发任务时，往往是通过直接<code>new Thread()</code>方法来创建新的线程，这样做弊端较多，更好的解决方案是合理地利用线程池，线程池的优势很明显，如下：</p>
+<ol>
+<li>降低系统资源消耗，通过重用已存在的线程，降低线程创建和销毁造成的消耗；</li>
+<li>提高系统响应速度，当有任务到达时，无需等待新线程的创建便能立即执行；</li>
+<li>方便线程并发数的管控，线程若是无限制的创建，不仅会额外消耗大量系统资源，更是占用过多资源而阻塞系统或oom等状况，从而降低系统的稳定性。线程池能有效管控线程，统一分配、调优，提供资源使用率；</li>
+<li>更强大的功能，线程池提供了定时、定期以及可控线程数等功能的线程池，使用方便简单。</li>
+</ol>
+<h2 id="二线程池用法"><a class="header" href="#二线程池用法">二、线程池用法</a></h2>
+<p>Java API针对不同需求，利用<code>Executors</code>类提供了4种不同的线程池：<code>newCachedThreadPool</code>,<code> newFixedThreadPool</code>, <code>newScheduledThreadPool</code>, <code>newSingleThreadExecutor</code>，接下来讲讲线程池的用法。</p>
+<h3 id="21-newcachedthreadpool"><a class="header" href="#21-newcachedthreadpool">2.1 newCachedThreadPool</a></h3>
+<p>创建一个可缓存的无界线程池，该方法无参数。当线程池中的线程空闲时间超过60s则会自动回收该线程，当任务超过线程池的线程数则创建新线程。线程池的大小上限为Integer.MAX_VALUE，可看做是无限大。</p>
+<pre><code>public void cachedThreadPoolDemo(){
+    ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    for (int i = 0; i &lt; 5; i++) {
+        final int index = i;
+
+        cachedThreadPool.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName()+&quot;, index=&quot;+index);
+            }
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>pool-1-thread-1, index=0
+pool-1-thread-1, index=1
+pool-1-thread-1, index=2
+pool-1-thread-1, index=3
+pool-1-thread-1, index=4
+</code></pre>
+<p>从运行结果可以看出，整个过程都在同一个线程<code>pool-1-thread-1</code>中运行，后面线程复用前面的线程。</p>
+<h3 id="22-newfixedthreadpool"><a class="header" href="#22-newfixedthreadpool">2.2 newFixedThreadPool</a></h3>
+<p>创建一个固定大小的线程池，该方法可指定线程池的固定大小，对于超出的线程会在<code>LinkedBlockingQueue</code>队列中等待。</p>
+<pre><code>public void fixedThreadPoolDemo(){
+    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+    for (int i = 0; i &lt; 6; i++) {
+        final int index = i;
+
+        fixedThreadPool.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName()+&quot;, index=&quot;+index);
+            }
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>pool-1-thread-1, index=0
+pool-1-thread-2, index=1
+pool-1-thread-3, index=2
+pool-1-thread-1, index=3
+pool-1-thread-2, index=4
+pool-1-thread-3, index=5
+</code></pre>
+<p>从运行结果可以看出，线程池大小为3，每休眠1s后将任务提交给线程池的各个线程轮番交错地执行。线程池的大小设置，可参数Runtime.getRuntime().availableProcessors()。</p>
+<h3 id="23-newsinglethreadexecutor"><a class="header" href="#23-newsinglethreadexecutor">2.3 newSingleThreadExecutor</a></h3>
+<p>创建一个只有线程的线程池，该方法无参数，所有任务都保存队列LinkedBlockingQueue中，等待唯一的单线程来执行任务，并保证所有任务按照指定顺序(FIFO或优先级)执行。</p>
+<pre><code>public void singleThreadExecutorDemo(){
+    ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+    for (int i = 0; i &lt; 3; i++) {
+        final int index = i;
+
+        singleThreadExecutor.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName()+&quot;, index=&quot;+index);
+            }
+        });
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>pool-1-thread-1, index=0
+pool-1-thread-1, index=1
+pool-1-thread-1, index=2
+</code></pre>
+<p>从运行结果可以看出，所有任务都是在单一线程运行的。</p>
+<h3 id="24-newscheduledthreadpool"><a class="header" href="#24-newscheduledthreadpool">2.4 newScheduledThreadPool</a></h3>
+<p>创建一个可定时执行或周期执行任务的线程池，该方法可指定线程池的核心线程个数。</p>
+<pre><code>public void scheduledThreadPoolDemo(){
+    ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(3);
+    //定时执行一次的任务，延迟1s后执行
+    scheduledThreadPool.schedule(new Runnable() {
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName()+&quot;, delay 1s&quot;);
+        }
+    }, 1, TimeUnit.SECONDS);
+
+    //周期性地执行任务，延迟2s后，每3s一次地周期性执行任务
+    scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
+
+        @Override
+        public void run() {
+            System.out.println(Thread.currentThread().getName()+&quot;, every 3s&quot;);
+        }
+    }, 2, 3, TimeUnit.SECONDS);
+}
+</code></pre>
+<p>运行结果：</p>
+<pre><code>pool-1-thread-1, delay 1s
+pool-1-thread-1, every 3s
+pool-1-thread-2, every 3s
+pool-1-thread-2, every 3s
+...
+</code></pre>
+<ul>
+<li>schedule(Runnable command, long delay, TimeUnit unit)，延迟一定时间后执行Runnable任务；</li>
+<li>schedule(Callable callable, long delay, TimeUnit unit)，延迟一定时间后执行Callable任务；</li>
+<li>scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)，延迟一定时间后，以间隔period时间的频率周期性地执行任务；</li>
+<li>scheduleWithFixedDelay(Runnable command, long initialDelay, long delay,TimeUnit unit)，与scheduleAtFixedRate()方法很类似，但是不同的是scheduleWithFixedDelay()方法的周期时间间隔是以上一个任务执行结束到下一个任务开始执行的间隔，而scheduleAtFixedRate()方法的周期时间间隔是以上一个任务开始执行到下一个任务开始执行的间隔，也就是这一些任务系列的触发时间都是可预知的。</li>
+</ul>
+<p>ScheduledExecutorService功能强大，对于定时执行的任务，建议多采用该方法。</p>
+<h3 id="25-方法对比"><a class="header" href="#25-方法对比">2.5 方法对比</a></h3>
+<p>上述4个方法的参数对比，如下：</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">工厂方法</th><th style="text-align: left">corePoolSize</th><th style="text-align: left">maximumPoolSize</th><th style="text-align: left">keepAliveTime</th><th style="text-align: left">workQueue</th></tr></thead><tbody>
+<tr><td style="text-align: left">newCachedThreadPool</td><td style="text-align: left">0</td><td style="text-align: left">Integer.MAX_VALUE</td><td style="text-align: left">60s</td><td style="text-align: left">SynchronousQueue</td></tr>
+<tr><td style="text-align: left">newFixedThreadPool</td><td style="text-align: left">nThreads</td><td style="text-align: left">nThreads</td><td style="text-align: left">0</td><td style="text-align: left">LinkedBlockingQueue</td></tr>
+<tr><td style="text-align: left">newSingleThreadExecutor</td><td style="text-align: left">1</td><td style="text-align: left">1</td><td style="text-align: left">0</td><td style="text-align: left">LinkedBlockingQueue</td></tr>
+<tr><td style="text-align: left">newScheduledThreadPool</td><td style="text-align: left">corePoolSize</td><td style="text-align: left">Integer.MAX_VALUE</td><td style="text-align: left">0</td><td style="text-align: left">DelayedWorkQueue</td></tr>
+</tbody></table>
+</div>
+<p>其他参数都相同，其中线程工厂的默认类为DefaultThreadFactory，线程饱和的默认策略为ThreadPoolExecutor.AbortPolicy。</p>
+<h2 id="三线程池原理"><a class="header" href="#三线程池原理">三、线程池原理</a></h2>
+<p>Executors类提供4个静态工厂方法：newCachedThreadPool()、newFixedThreadPool(int)、newSingleThreadExecutor和newScheduledThreadPool(int)。这些方法最终都是通过ThreadPoolExecutor类来完成的，这里强烈建议大家直接使用Executors类提供的便捷的工厂方法，能完成绝大多数的用户场景，当需要更细节地调整配置，需要先了解每一项参数的意义。</p>
+<h3 id="31-threadpoolexecutor"><a class="header" href="#31-threadpoolexecutor">3.1 ThreadPoolExecutor</a></h3>
+<pre><code>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue) {
+    this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+         Executors.defaultThreadFactory(), defaultHandler);
+}
+</code></pre>
+<p>创建线程池，在构造一个新的线程池时，必须满足下面的条件：</p>
+<ol>
+<li>corePoolSize（线程池基本大小）必须大于或等于0；</li>
+<li>maximumPoolSize（线程池最大大小）必须大于或等于1；</li>
+<li>maximumPoolSize必须大于或等于corePoolSize；</li>
+<li>keepAliveTime（线程存活保持时间）必须大于或等于0；</li>
+<li>workQueue（任务队列）不能为空；</li>
+<li>threadFactory（线程工厂）不能为空，默认为DefaultThreadFactory类</li>
+<li>handler（线程饱和策略）不能为空，默认策略为ThreadPoolExecutor.AbortPolicy。</li>
+</ol>
+<h3 id="32-参数详解"><a class="header" href="#32-参数详解">3.2 参数详解</a></h3>
+<pre><code>public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+    if (corePoolSize &lt; 0 ||
+        maximumPoolSize &lt;= 0 ||
+        maximumPoolSize &lt; corePoolSize ||
+        keepAliveTime &lt; 0)
+        throw new IllegalArgumentException();
+    if (workQueue == null || threadFactory == null || handler == null)
+        throw new NullPointerException();
+    this.corePoolSize = corePoolSize;
+    this.maximumPoolSize = maximumPoolSize;
+    this.workQueue = workQueue;
+    this.keepAliveTime = unit.toNanos(keepAliveTime);
+    this.threadFactory = threadFactory;
+    this.handler = handler;
+}
+</code></pre>
+<p><strong>参数说明：</strong></p>
+<ol>
+<li>corePoolSize（线程池基本大小）：当向线程池提交一个任务时，若线程池已创建的线程数小于corePoolSize，即便此时存在空闲线程，也会通过创建一个新线程来执行该任务，直到已创建的线程数大于或等于corePoolSize时，才会根据是否存在空闲线程，来决定是否需要创建新的线程。除了利用提交新任务来创建和启动线程（按需构造），也可以通过 prestartCoreThread() 或 prestartAllCoreThreads() 方法来提前启动线程池中的基本线程。</li>
+<li>maximumPoolSize（线程池最大大小）：线程池所允许的最大线程个数。当队列满了，且已创建的线程数小于maximumPoolSize，则线程池会创建新的线程来执行任务。另外，对于无界队列，可忽略该参数。</li>
+<li>keepAliveTime（线程存活保持时间）：默认情况下，当线程池的线程个数多于corePoolSize时，线程的空闲时间超过keepAliveTime则会终止。但只要keepAliveTime大于0，allowCoreThreadTimeOut(boolean) 方法也可将此超时策略应用于核心线程。另外，也可以使用setKeepAliveTime()动态地更改参数。</li>
+<li>unit（存活时间的单位）：时间单位，分为7类，从细到粗顺序：NANOSECONDS（纳秒），MICROSECONDS（微妙），MILLISECONDS（毫秒），SECONDS（秒），MINUTES（分），HOURS（小时），DAYS（天）；</li>
+<li>workQueue（任务队列）：用于传输和保存等待执行任务的阻塞队列。可以使用此队列与线程池进行交互：
+<ul>
+<li>如果运行的线程数少于 corePoolSize，则 Executor 始终首选添加新的线程，而不进行排队。</li>
+<li>如果运行的线程数等于或多于 corePoolSize，则 Executor 始终首选将请求加入队列，而不添加新的线程。</li>
+<li>如果无法将请求加入队列，则创建新的线程，除非创建此线程超出 maximumPoolSize，在这种情况下，任务将被拒绝。</li>
+</ul>
+</li>
+<li>threadFactory（线程工厂）：用于创建新线程。由同一个threadFactory创建的线程，属于同一个ThreadGroup，创建的线程优先级都为Thread.NORM_PRIORITY，以及是非守护进程状态。threadFactory创建的线程也是采用new Thread()方式，threadFactory创建的线程名都具有统一的风格：<code>pool-m-thread-n</code>（m为线程池的编号，n为线程池内的线程编号）;</li>
+<li>handler（线程饱和策略）：当线程池和队列都满了，则表明该线程池已达饱和状态。
+<ul>
+<li>ThreadPoolExecutor.AbortPolicy：处理程序遭到拒绝，则直接抛出运行时异常 RejectedExecutionException。(默认策略)</li>
+<li>ThreadPoolExecutor.CallerRunsPolicy：调用者所在线程来运行该任务，此策略提供简单的反馈控制机制，能够减缓新任务的提交速度。</li>
+<li>ThreadPoolExecutor.DiscardPolicy：无法执行的任务将被删除。</li>
+<li>ThreadPoolExecutor.DiscardOldestPolicy：如果执行程序尚未关闭，则位于工作队列头部的任务将被删除，然后重新尝试执行任务（如果再次失败，则重复此过程）。</li>
+</ul>
+</li>
+</ol>
+<p><strong>排队有三种通用策略：</strong></p>
+<ul>
+<li>直接提交。工作队列的默认选项是 SynchronousQueue，它将任务直接提交给线程而不保持它们。在此，如果不存在可用于立即运行任务的线程，则试图把任务加入队列将失败，因此会构造一个新的线程。此策略可以避免在处理可能具有内部依赖性的请求集时出现锁。直接提交通常要求无界 maximumPoolSizes 以避免拒绝新提交的任务。当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。</li>
+<li>无界队列。使用无界队列（例如，不具有预定义容量的 LinkedBlockingQueue）将导致在所有 corePoolSize 线程都忙时新任务在队列中等待。这样，创建的线程就不会超过 corePoolSize。（因此，maximumPoolSize 的值也就无效了。）当每个任务完全独立于其他任务，即任务执行互不影响时，适合于使用无界队列；例如，在 Web 页服务器中。这种排队可用于处理瞬态突发请求，当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。</li>
+<li>有界队列。当使用有限的 maximumPoolSizes 时，有界队列（如 ArrayBlockingQueue）有助于防止资源耗尽，但是可能较难调整和控制。队列大小和最大池大小可能需要相互折衷：使用大型队列和小型池可以最大限度地降低 CPU 使用率、操作系统资源和上下文切换开销，但是可能导致人工降低吞吐量。如果任务频繁阻塞（例如，如果它们是 I/O 边界），则系统可能为超过您许可的更多线程安排时间。使用小型队列通常要求较大的池大小，CPU 使用率较高，但是可能遇到不可接受的调度开销，这样也会降低吞吐量。</li>
+</ul>
+<h3 id="33-工作队列blockingqueue"><a class="header" href="#33-工作队列blockingqueue">3.3 工作队列BlockingQueue</a></h3>
+<p>BlockingQueue的插入/移除/检查这些方法，对于不能立即满足但可能在将来某一时刻可以满足的操作，共有4种不同的处理方式：第一种是抛出一个异常，第二种是返回一个特殊值（null 或 false，具体取决于操作），第三种是在操作可以成功前，无限期地阻塞当前线程，第四种是在放弃前只在给定的最大时间限制内阻塞。如下表格：</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">操作</th><th style="text-align: left">抛出异常</th><th style="text-align: left">特殊值</th><th style="text-align: left">阻塞</th><th style="text-align: left">超时</th></tr></thead><tbody>
+<tr><td style="text-align: left">插入</td><td style="text-align: left">add(e)</td><td style="text-align: left">offer(e)</td><td style="text-align: left">put(e)</td><td style="text-align: left">offer(e, time, unit)</td></tr>
+<tr><td style="text-align: left">移除</td><td style="text-align: left">remove()</td><td style="text-align: left">poll()</td><td style="text-align: left">take()</td><td style="text-align: left">poll(time, unit)</td></tr>
+<tr><td style="text-align: left">检查</td><td style="text-align: left">element()</td><td style="text-align: left">peek()</td><td style="text-align: left">不可用</td><td style="text-align: left">不可用</td></tr>
+</tbody></table>
+</div>
+<p><strong>实现BlockingQueue接口的常见类如下：</strong></p>
+<ul>
+<li>ArrayBlockingQueue：基于数组的有界阻塞队列。队列按FIFO原则对元素进行排序，队列头部是在队列中存活时间最长的元素，队尾则是存在时间最短的元素。新元素插入到队列的尾部，队列获取操作则是从队列头部开始获得元素。 这是一个典型的“有界缓存区”，固定大小的数组在其中保持生产者插入的元素和使用者提取的元素。一旦创建了这样的缓存区，就不能再增加其容量。试图向已满队列中放入元素会导致操作受阻塞；试图从空队列中提取元素将导致类似阻塞。ArrayBlockingQueue构造方法可通过设置fairness参数来选择是否采用公平策略，公平性通常会降低吞吐量，但也减少了可变性和避免了“不平衡性”，可根据情况来决策。</li>
+<li>LinkedBlockingQueue：基于链表的无界阻塞队列。与ArrayBlockingQueue一样采用FIFO原则对元素进行排序。基于链表的队列吞吐量通常要高于基于数组的队列。</li>
+<li>SynchronousQueue：同步的阻塞队列。其中每个插入操作必须等待另一个线程的对应移除操作，等待过程一直处于阻塞状态，同理，每一个移除操作必须等到另一个线程的对应插入操作。SynchronousQueue没有任何容量。不能在同步队列上进行 peek，因为仅在试图要移除元素时，该元素才存在；除非另一个线程试图移除某个元素，否则也不能（使用任何方法）插入元素；也不能迭代队列，因为其中没有元素可用于迭代。Executors.newCachedThreadPool使用了该队列。</li>
+<li>PriorityBlockingQueue：基于优先级的无界阻塞队列。优先级队列的元素按照其自然顺序进行排序，或者根据构造队列时提供的 Comparator 进行排序，具体取决于所使用的构造方法。优先级队列不允许使用 null 元素。依靠自然顺序的优先级队列还不允许插入不可比较的对象（这样做可能导致 ClassCastException）。虽然此队列逻辑上是无界的，但是资源被耗尽时试图执行 add 操作也将失败（导致 OutOfMemoryError）。</li>
+</ul>
+<h3 id="34-线程池关闭"><a class="header" href="#34-线程池关闭">3.4 线程池关闭</a></h3>
+<p>调用线程池的shutdown()或shutdownNow()方法来关闭线程池</p>
+<ul>
+<li>shutdown原理：将线程池状态设置成SHUTDOWN状态，然后中断所有没有正在执行任务的线程。</li>
+<li>shutdownNow原理：将线程池的状态设置成STOP状态，然后中断所有任务(包括正在执行的)的线程，并返回等待执行任务的列表。</li>
+</ul>
+<p>中断采用interrupt方法，所以无法响应中断的任务可能永远无法终止。但调用上述的两个关闭之一，isShutdown()方法返回值为true，当所有任务都已关闭，表示线程池关闭完成，则isTerminated()方法返回值为true。当需要立刻中断所有的线程，不一定需要执行完任务，可直接调用shutdownNow()方法。</p>
+<h3 id="35-线程池流程"><a class="header" href="#35-线程池流程">3.5 线程池流程</a></h3>
+<p><img src="http://gityuan.com/images/android-process/thread-pool.jpg" alt="thread-pool" /></p>
+<ol>
+<li>判断核心线程池是否已满，即已创建线程数是否小于corePoolSize？没满则创建一个新的工作线程来执行任务。已满则进入下个流程。</li>
+<li>判断工作队列是否已满？没满则将新提交的任务添加在工作队列，等待执行。已满则进入下个流程。</li>
+<li>判断整个线程池是否已满，即已创建线程数是否小于maximumPoolSize？没满则创建一个新的工作线程来执行任务，已满则交给饱和策略来处理这个任务。</li>
+</ol>
+<h2 id="四优化"><a class="header" href="#四优化">四、优化</a></h2>
+<h3 id="41-合理地配置线程池"><a class="header" href="#41-合理地配置线程池">4.1 合理地配置线程池</a></h3>
+<p>需要针对具体情况而具体处理，不同的任务类别应采用不同规模的线程池，任务类别可划分为CPU密集型任务、IO密集型任务和混合型任务。</p>
+<ul>
+<li>对于CPU密集型任务：线程池中线程个数应尽量少，不应大于CPU核心数；</li>
+<li>对于IO密集型任务：由于IO操作速度远低于CPU速度，那么在运行这类任务时，CPU绝大多数时间处于空闲状态，那么线程池可以配置尽量多些的线程，以提高CPU利用率；</li>
+<li>对于混合型任务：可以拆分为CPU密集型任务和IO密集型任务，当这两类任务执行时间相差无几时，通过拆分再执行的吞吐率高于串行执行的吞吐率，但若这两类任务执行时间有数据级的差距，那么没有拆分的意义。</li>
+</ul>
+<h3 id="42-线程池监控"><a class="header" href="#42-线程池监控">4.2 线程池监控</a></h3>
+<p>利用线程池提供的参数进行监控，参数如下：</p>
+<ul>
+<li>taskCount：线程池需要执行的任务数量。</li>
+<li>completedTaskCount：线程池在运行过程中已完成的任务数量，小于或等于taskCount。</li>
+<li>largestPoolSize：线程池曾经创建过的最大线程数量，通过这个数据可以知道线程池是否满过。如等于线程池的最大大小，则表示线程池曾经满了。</li>
+<li>getPoolSize：线程池的线程数量。如果线程池不销毁的话，池里的线程不会自动销毁，所以这个大小只增不减。</li>
+<li>getActiveCount：获取活动的线程数。</li>
+</ul>
+<p>通过扩展线程池进行监控：继承线程池并重写线程池的beforeExecute()，afterExecute()和terminated()方法，可以在任务执行前、后和线程池关闭前自定义行为。如监控任务的平均执行时间，最大执行时间和最小执行时间等。</p>
+
+                        <div id="giscus-container"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../java/Java8获取参数名称时无法获取参数名.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" style="z-index: 9999; position: relative;" href="../java/Lombok的基本使用.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../java/Java8获取参数名称时无法获取参数名.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" style="z-index: 9999; position: relative;" href="../java/Lombok的基本使用.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var pagePath = "java/Java线程池分析.md"
+        </script>
+
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../assets/custom3.js"></script>
+        <script type="text/javascript" src="../assets/lang.js"></script>
+
+
+    </body>
+</html>

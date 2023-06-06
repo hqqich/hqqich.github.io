@@ -1,0 +1,552 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>GSON - my github page</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="markdown build page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/style1.css">
+
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../study_todo.html"><strong aria-hidden="true">1.</strong> 学习任务</a></li><li class="chapter-item expanded "><a href="../xbell/init.html"><strong aria-hidden="true">2.</strong> xbell</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../xbell/@ControllerAdvice的介绍及三种用法.html"><strong aria-hidden="true">2.1.</strong> @ControllerAdvice的介绍及三种用法</a></li><li class="chapter-item "><a href="../xbell/excel处理.html"><strong aria-hidden="true">2.2.</strong> excel处理</a></li><li class="chapter-item "><a href="../xbell/Guava文件操作.html"><strong aria-hidden="true">2.3.</strong> Guava文件操作</a></li><li class="chapter-item "><a href="../xbell/SpringDataJpa复杂动态查询方式总结.html"><strong aria-hidden="true">2.4.</strong> SpringDataJpa复杂动态查询方式总结</a></li><li class="chapter-item "><a href="../xbell/使用SpringDataJPA进行数据分页与排序.html"><strong aria-hidden="true">2.5.</strong> 使用SpringDataJPA进行数据分页与排序</a></li><li class="chapter-item "><a href="../xbell/参数校验.html"><strong aria-hidden="true">2.6.</strong> 参数校验</a></li><li class="chapter-item "><a href="../xbell/实习记录.html"><strong aria-hidden="true">2.7.</strong> 实习记录</a></li><li class="chapter-item "><a href="../xbell/知识点(java).html"><strong aria-hidden="true">2.8.</strong> 知识点(java)</a></li><li class="chapter-item "><a href="../xbell/知识点(javascript).html"><strong aria-hidden="true">2.9.</strong> 知识点(javascript)</a></li></ol></li><li class="chapter-item expanded "><a href="../golang/init.html"><strong aria-hidden="true">3.</strong> golang知识</a></li><li class="chapter-item expanded "><a href="../java/init.html"><strong aria-hidden="true">4.</strong> java知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/0杂项.html"><strong aria-hidden="true">4.1.</strong> 0杂项</a></li><li class="chapter-item "><a href="../java/@Column注解及属性详解.html"><strong aria-hidden="true">4.2.</strong> @Column注解及属性详解</a></li><li class="chapter-item "><a href="../java/@RequestBody的使用.html"><strong aria-hidden="true">4.3.</strong> @RequestBody的使用</a></li><li class="chapter-item "><a href="../java/Comparable和Comparator的区别.html"><strong aria-hidden="true">4.4.</strong> Comparable和Comparator的区别</a></li><li class="chapter-item "><a href="../java/Druid数据库连接池.html"><strong aria-hidden="true">4.5.</strong> Druid数据库连接池</a></li><li class="chapter-item "><a href="../java/Elasticsearch数据类型及其属性.html"><strong aria-hidden="true">4.6.</strong> Elasticsearch数据类型及其属性</a></li><li class="chapter-item expanded "><a href="../java/GSON.html" class="active"><strong aria-hidden="true">4.7.</strong> GSON</a></li><li class="chapter-item "><a href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html"><strong aria-hidden="true">4.8.</strong> IDEA自动部署WEB工程至远程服务器（学习笔记）</a></li><li class="chapter-item "><a href="../java/JSR303.html"><strong aria-hidden="true">4.9.</strong> JSR303</a></li><li class="chapter-item "><a href="../java/JS简单实现多级Select联动菜单效果代码.html"><strong aria-hidden="true">4.10.</strong> JS简单实现多级Select联动菜单效果代码</a></li><li class="chapter-item "><a href="../java/JXl常用解析详解.html"><strong aria-hidden="true">4.11.</strong> JXl常用解析详解</a></li><li class="chapter-item "><a href="../java/Java8获取参数名称时无法获取参数名.html"><strong aria-hidden="true">4.12.</strong> Java8获取参数名称时无法获取参数名</a></li><li class="chapter-item "><a href="../java/Java线程池分析.html"><strong aria-hidden="true">4.13.</strong> Java线程池分析</a></li><li class="chapter-item "><a href="../java/Lombok的基本使用.html"><strong aria-hidden="true">4.14.</strong> Lombok的基本使用</a></li><li class="chapter-item "><a href="../java/MD5.html"><strong aria-hidden="true">4.15.</strong> MD5</a></li><li class="chapter-item "><a href="../java/index.html"><strong aria-hidden="true">4.16.</strong> README</a></li><li class="chapter-item "><a href="../java/Redis.html"><strong aria-hidden="true">4.17.</strong> Redis</a></li><li class="chapter-item "><a href="../java/Redis的五种数据类型及方法.html"><strong aria-hidden="true">4.18.</strong> Redis的五种数据类型及方法</a></li><li class="chapter-item "><a href="../java/ResponseEntity实现Rest风格的返回值.html"><strong aria-hidden="true">4.19.</strong> ResponseEntity实现Rest风格的返回值</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">my github page</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/hqqich/hqqich.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <!-- Page table of contents -->
+                    <div class="sidetoc"><nav class="pagetoc"></nav></div>
+                    <main>
+                        <h1 id="gson"><a class="header" href="#gson">GSON</a></h1>
+<p>GSON弥补了JSON的许多不足的地方，在实际应用中更加适用于Java开发。在这里，我们主要讲解的是利用GSON来操作java对象和json数据之间的相互转换，包括了常见的对象序列化和反序列化的知识。</p>
+<h2 id="一前言"><a class="header" href="#一前言">一、前言</a></h2>
+<p>因为json有2种类型：</p>
+<ul>
+<li>一种是对象，<code>object</code> -&gt; <code>{key:value,key:value,...}</code> 。</li>
+<li>另一种是数组，<code>array</code> -&gt; <code>[value,value,...]</code> 。</li>
+</ul>
+<p>所以针对这两种类型，来展开对json数据的操作。</p>
+<p>GSON在解析json的时候，大体上有2种类型，一种是直接在内存中生成object或array，通过手工指定key来获取值；另一种是借助javabean来进行映射获取值。</p>
+<h2 id="二对-json-数据进行反序列化得到java-对象"><a class="header" href="#二对-json-数据进行反序列化得到java-对象">二、对 <code>json</code> 数据进行反序列化，得到<code>java</code> 对象</a></h2>
+<h3 id="1不借助java-类直接解析json-数据"><a class="header" href="#1不借助java-类直接解析json-数据">1、不借助<code>java</code> 类，直接解析<code>json</code> 数据</a></h3>
+<h4 id="1json-是对象类型"><a class="header" href="#1json-是对象类型">1、<code>json</code> 是对象类型</a></h4>
+<p>当ajax传过来的json数据属于对象时，不论这个对象简单还是复杂，都可以轻松地把它们给解析出来。</p>
+<p>ajax传过来的json数据（是对象形式）：</p>
+<pre><code class="language-javascript">var data_json =  {
+        &quot;sex&quot;: '男',
+        &quot;hobby&quot;:[&quot;baskte&quot;,&quot;tennis&quot;],
+        &quot;introduce&quot;: {
+            &quot;name&quot;:&quot;tom&quot;,
+            &quot;age&quot;:23
+        }
+    };
+
+data: JSON.stringify(data_json),
+</code></pre>
+<p>GSON解析：</p>
+<pre><code class="language-java">BufferedReader reader = request.getReader();
+    // 读取json数据
+    StringBuffer buffer = new StringBuffer();
+    String s;
+    while ((s = reader.readLine()) != null) {
+        buffer.append(s);
+    }
+    String json = buffer.toString();
+    System.out.println(&quot;json:&quot; + json);  
+
+    // json解析器，解析json数据
+    JsonParser parser = new JsonParser();
+    JsonElement element = parser.parse(json);
+    // json属于对象类型时
+    if (element.isJsonObject()) {  
+        JsonObject object = element.getAsJsonObject();  // 转化为对象
+
+        // 1. value为string时，取出string
+        String sex = object.get(&quot;sex&quot;).getAsString();                         System.out.println(&quot;sex:&quot; + sex);
+
+        // 2. value为array时，取出array
+        JsonArray hobbies = object.getAsJsonArray(&quot;hobby&quot;);  // 
+        for (int i = 0; i &lt; hobbies.size(); i++) {
+            String hobby = hobbies.get(i).getAsString();
+            System.out.println(&quot;hobby:&quot; + hobby);
+        }
+
+        // 3. value为object时，取出object
+        JsonObject introduce = object.getAsJsonObject(&quot;introduce&quot;);
+        String name = introduce.get(&quot;name&quot;).getAsString();
+        int age = introduce.get(&quot;age&quot;).getAsInt();
+        System.out.println(&quot;name:&quot; + name+&quot;;age:&quot; + age);
+    }
+</code></pre>
+<p><strong>解读：</strong></p>
+<p>很明显，对于传过来的对象类型的json数据，使用GSON是很方便进行解析的，在得到了json数据对应的<code>JsonObject</code> 对象之后，我们就可以很简单地进行操作了。这种方法是直接获取json中的值，而没有进行java对象的还原（简单情况下，没有必要生成相应的javabean）。</p>
+<h4 id="2json-是数组类型"><a class="header" href="#2json-是数组类型">2、<code>json</code> 是数组类型</a></h4>
+<p>ajax传过来的json数据（是数组形式）：</p>
+<pre><code class="language-javascript">var data_json =  [
+    &quot;cake&quot;,
+    2,
+    {&quot;brother&quot;:&quot;tom&quot;,&quot;sister&quot;:&quot;lucy&quot;},
+    [&quot;red&quot;,&quot;orange&quot;]
+];
+
+data: JSON.stringify(data_json),
+</code></pre>
+<p>GSON解析：</p>
+<pre><code class="language-java">BufferedReader reader = request.getReader();
+    StringBuffer buffer = new StringBuffer();
+    String s;
+    while ((s = reader.readLine()) != null) {
+        buffer.append(s);
+    }
+    String json = buffer.toString();
+    System.out.println(&quot;json:&quot;+json);
+
+    // json解析器，解析json数据
+    JsonParser parser = new JsonParser();
+    JsonElement element = parser.parse(json);
+    // json属于数组类型
+    if (element.isJsonArray()) {  
+        JsonArray array = element.getAsJsonArray();
+
+        // 1. value为string时，取出string
+        String array_1 = array.get(0).getAsString();
+        System.out.println(&quot;array_1:&quot;+array_1);
+
+        // 2. value为int时，取出int
+        int array_2 = array.get(1).getAsInt();
+        System.out.println(&quot;array_2:&quot;+array_2);
+
+        // 3. value为object时，取出object
+        JsonObject array_3 = array.get(2).getAsJsonObject();
+        String brother = array_3.get(&quot;brother&quot;).getAsString();
+        String sister = array_3.get(&quot;sister&quot;).getAsString();
+        System.out.println(&quot;brother:&quot;+brother+&quot;;sister:&quot;+sister);
+
+        // 4. value为array时，取出array
+        JsonArray array_4 = array.get(3).getAsJsonArray();
+        for (int i = 0; i &lt; array_4.size(); i++) {
+        System.out.println(array_4.get(i).getAsString());
+        }
+
+    }
+</code></pre>
+<p><strong>解读：</strong></p>
+<p>当json是数组类型的时候，使用GSON操作和上一小节几乎差不多，只不过是第一步生成的json对象是数组而已。上面2种方式解析json十分简单，在日常使用中足够了。</p>
+<p>但是对于有规律的json数据，比如往往是可以映射成一个javabean对象，那么我们就没有必要一个个手工取值了，我们可以借助javabean配合GSON来更加快速地解析json数据。</p>
+<h3 id="2借助java-类生成对应java-对象来解析数据"><a class="header" href="#2借助java-类生成对应java-对象来解析数据">2、借助<code>java</code> 类，生成对应<code>java</code> 对象来解析数据</a></h3>
+<p>详细的前端<code>json</code> 数据，可以看前面的反例，以下只是使用直接的<code>json</code>数据进行说明。</p>
+<p>生成对于的java对象之后，就可以通过getter方法来获取相应的数据了。</p>
+<p><strong>通用代码：</strong></p>
+<p>在这个方法里，借助json数据来生成java对象的代码都是一致的：</p>
+<pre><code class="language-java">Gson gson = new Gson();
+BeanType bean = gson.fronJson(jsonData, BeanType.class);
+</code></pre>
+<h4 id="1-json-是对象类型"><a class="header" href="#1-json-是对象类型">1. <code>json</code> 是对象类型</a></h4>
+<h5 id="11-基本案列"><a class="header" href="#11-基本案列">1.1 基本案列</a></h5>
+<p><strong><code>json</code> 数据</strong></p>
+<pre><code class="language-javascript">{&quot;name&quot;:&quot;tom&quot;,&quot;salary&quot;:2999}
+</code></pre>
+<p><strong>java类</strong></p>
+<pre><code class="language-java">public class MyEntry {
+    private String name;
+    private int age;
+    public String address;
+    public int salary;
+    // getter、setter、toString
+}
+</code></pre>
+<p><strong><code>java</code> 代码</strong></p>
+<pre><code class="language-java">String json1 = &quot;{\&quot;name\&quot;:\&quot;tom\&quot;,\&quot;salary\&quot;:2999}&quot;;
+Gson gson1 = new Gson();
+MyEntry entry1 = gson1.fromJson(json1, MyEntry.class);
+System.out.println(entry1.toString());  // name:tom,age:0,address:null,salary:2999
+</code></pre>
+<p><strong>解读</strong></p>
+<p>可以看出，对于不完整的<code>json</code> 数据，在我们映射了相应的<code>java</code> 类之后，转化得到的java对象，未赋值的字段都是默认值。这就符合java的规范和常理。</p>
+<h5 id="12-字段名并不一致怎么办"><a class="header" href="#12-字段名并不一致怎么办">1.2 字段名并不一致怎么办？</a></h5>
+<p>如果前端传过来的<code>json</code> 数据的key和我们java类的字段不一致，就需要我们在java类中手工进行指定。</p>
+<p><strong><code>@SerializedName()</code> 注解</strong></p>
+<p>比如对于上面的<code>json</code> 数据，<code>salary</code> 改成<code>money</code> ，我们得到的java对象中，<code>salary</code> 就会变成默认值：0。</p>
+<p>因此，我们要使用注解:</p>
+<pre><code class="language-java">@SerializedName(&quot;money&quot;)
+private String salary;
+
+@SerializedName({&quot;money&quot;, &quot;salary&quot;})  // 可以有多个备选值
+private String salary;
+</code></pre>
+<h5 id="13-如何限定某个字段不参加序列化或反序列化"><a class="header" href="#13-如何限定某个字段不参加序列化或反序列化">1.3 如何限定某个字段不参加序列化或反序列化？</a></h5>
+<p><strong><code>@Expose()注解</code></strong></p>
+<p>如果想要让java类的某些字段不参加序列化或反序列化，可以显示来设置。如：</p>
+<pre><code class="language-java">@Expose(serialize=false,deserialize=false)
+private String name;
+</code></pre>
+<p>上面的<code>name</code> 字段将不参加序列化及反序列化。</p>
+<h5 id="14-复合的对象怎么处理"><a class="header" href="#14-复合的对象怎么处理">1.4 复合的对象怎么处理？</a></h5>
+<p>当<code>json</code> 数据是对象形式时，常见的<code>value</code> 会是一个数组或对象。如：</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;tom&quot;,
+  &quot;age&quot;: 0,
+  &quot;money&quot;: 2999,
+  &quot;hobbies&quot;: [
+    &quot;basket&quot;,
+    &quot;tennis&quot;
+  ],
+  &quot;collections&quot;: {
+    &quot;2&quot;: &quot;paint&quot;,
+    &quot;3&quot;: &quot;mouse&quot;
+  }
+}
+</code></pre>
+<p>举一反三，<code>value</code> 是数组时（hobbies），对应在java类中也是数组；<code>value</code> 是对象时，对应在java类中就是map（k-v对）了。</p>
+<p>因此，我们可以很容易得到对应的java类：</p>
+<pre><code class="language-java">private List&lt;String&gt; hobbies;
+private Map&lt;Integer, String&gt; collections;
+</code></pre>
+<p><strong>解读：</strong> 可知，再复杂的<code>json</code> 数据，我们也可以构造出对应的java类。</p>
+<h4 id="2-json-是数组类型"><a class="header" href="#2-json-是数组类型">2. <code>json</code> 是数组类型</a></h4>
+<h5 id="11-基本案例"><a class="header" href="#11-基本案例">1.1 基本案例：</a></h5>
+<p>json数据</p>
+<pre><code class="language-json">[&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;]
+</code></pre>
+<p>显然，数组在java中对应的也是数组。</p>
+<p>java代码</p>
+<pre><code class="language-java">String json2 = &quot;[\&quot;apple\&quot;, \&quot;pear\&quot;, \&quot;banana\&quot;]&quot;;
+Gson gson2 = new Gson();
+// 传入的java类型是String[].class
+String[] fruits = gson2.fromJson(json2, String[].class);  
+</code></pre>
+<h5 id="12-我想用list-数组"><a class="header" href="#12-我想用list-数组">1.2 我想用<code>List</code> 数组</a></h5>
+<p>对于上面这种简单的数组形式的json数据，我们还可以反序列化为List类型的数组。因为List进行增删改都比较方便。</p>
+<p>这里就要使用泛型了，具体的泛型讲解，会在下面进行说明。</p>
+<pre><code class="language-java">String json2 = &quot;[\&quot;apple\&quot;, \&quot;pear\&quot;, \&quot;banana\&quot;]&quot;;
+Gson gson2 = new Gson();
+List&lt;String&gt; fruitList = gson2.fromJson(json2, new TypeToken&lt;List&lt;String&gt;&gt;(){}.getType());
+</code></pre>
+<h3 id="3使用泛型"><a class="header" href="#3使用泛型">3、使用泛型</a></h3>
+<p>有的时候，传过来的json数据在格式上是很相近的，只不过某个字段的value不固定，如果为此生成多个相似的java类就十分多余了。</p>
+<p>如：前端传过来的json数据主要是2类：</p>
+<pre><code class="language-json">{&quot;code&quot;:&quot;0&quot;,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:{}}
+</code></pre>
+<pre><code class="language-json">{&quot;code&quot;:&quot;0&quot;,&quot;message&quot;:&quot;success&quot;,&quot;data&quot;:[]}
+</code></pre>
+<p>对于字段<code>data</code> ，有时候是对象，有时候是数组。</p>
+<p>这里，我们将使用<code>Result&lt;T&gt;</code> 来映射<code>json</code>数据，使用<code>MyEntry</code> 类来映射<code>json</code> 数据的<code>data</code> 部分。这意味着，对于不同的json数据，我们将不再生成多个java类，而是动态生成所需的java对象。</p>
+<p>result对象</p>
+<pre><code class="language-java">public class Result&lt;T&gt;{
+    public int code;
+    public String message;
+    public T data;
+    // getter、setter
+}
+</code></pre>
+<h5 id="11-data为对象的json1"><a class="header" href="#11-data为对象的json1">1.1 data为对象的json1：</a></h5>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;success&quot;,
+  &quot;data&quot;: [
+    {
+      &quot;name&quot;: &quot;tom&quot;,
+      &quot;age&quot;: 32,
+      &quot;address&quot;: &quot;street one&quot;,
+      &quot;salary&quot;: 4999
+    },
+    {
+      &quot;name&quot;: &quot;tom&quot;,
+      &quot;age&quot;: 32,
+      &quot;address&quot;: &quot;street one&quot;,
+      &quot;salary&quot;: 4999
+    }
+  ]
+}
+</code></pre>
+<p>java代码</p>
+<pre><code class="language-java">String typeJson1 = &quot;{\n&quot; +
+                        &quot;  \&quot;code\&quot;:0,\n&quot; +
+                        &quot;  \&quot;message\&quot;:\&quot;success\&quot;,\n&quot; +
+                        &quot;  \&quot;data\&quot;:{\n&quot; +
+                        &quot;    \&quot;name\&quot;:\&quot;tom\&quot;,\n&quot; +
+                        &quot;    \&quot;age\&quot;:32,\n&quot; +
+                        &quot;    \&quot;address\&quot;:\&quot;street one\&quot;,\n&quot; +
+                        &quot;    \&quot;salary\&quot;:4999\n&quot; +
+                        &quot;  }\n&quot; +
+                        &quot;}&quot;;
+Gson typeGson1 = new Gson();
+// 动态生成所需的java类的类型
+Type type1 = new TypeToken&lt;Result&lt;MyEntry&gt;&gt;(){}.getType();
+// 动态生成java对象
+Result&lt;MyEntry&gt; result1 = typeGson1.fromJson(typeJson1, type1);
+System.out.println(result1);
+</code></pre>
+<h5 id="12-data为数值的json2"><a class="header" href="#12-data为数值的json2">1.2 data为数值的json2：</a></h5>
+<pre><code class="language-json">{
+  &quot;code&quot;: 0,
+  &quot;message&quot;: &quot;success&quot;,
+  &quot;data&quot;: [
+    {
+      &quot;name&quot;: &quot;tom&quot;,
+      &quot;age&quot;: 32,
+      &quot;address&quot;: &quot;street one&quot;,
+      &quot;salary&quot;: 4999
+    },
+    {
+      &quot;name&quot;: &quot;lucy&quot;,
+      &quot;age&quot;: 24,
+      &quot;address&quot;: &quot;street three&quot;,
+      &quot;salary&quot;: 2333
+    }
+  ]
+}
+</code></pre>
+<p>java代码</p>
+<pre><code class="language-java">String typeJson2 = &quot;{\n&quot; +
+                        &quot;  \&quot;code\&quot;: 0,\n&quot; +
+                        &quot;  \&quot;message\&quot;: \&quot;success\&quot;,\n&quot; +
+                        &quot;  \&quot;data\&quot;: [\n&quot; +
+                        &quot;    {\n&quot; +
+                        &quot;      \&quot;name\&quot;: \&quot;tom\&quot;,\n&quot; +
+                        &quot;      \&quot;age\&quot;: 32,\n&quot; +
+                        &quot;      \&quot;address\&quot;: \&quot;street one\&quot;,\n&quot; +
+                        &quot;      \&quot;salary\&quot;: 4999\n&quot; +
+                        &quot;    },\n&quot; +
+                        &quot;    {\n&quot; +
+                        &quot;      \&quot;name\&quot;: \&quot;lucy\&quot;,\n&quot; +
+                        &quot;      \&quot;age\&quot;: 24,\n&quot; +
+                        &quot;      \&quot;address\&quot;: \&quot;street three\&quot;,\n&quot; +
+                        &quot;      \&quot;salary\&quot;: 2333\n&quot; +
+                        &quot;    }\n&quot; +
+                        &quot;  ]\n&quot; +
+                        &quot;}&quot;;
+Gson typeGson2 = new Gson();
+// 再次动态生成java类型
+Type type2 = new TypeToken&lt;Result&lt;List&lt;MyEntry&gt;&gt;&gt;(){}.getType();
+// 再次动态生成java对象
+Result&lt;List&lt;MyEntry&gt;&gt; result2 = typeGson2.fromJson(typeJson2, type2);
+System.out.println(result2);
+</code></pre>
+<h2 id="四java-对象序列化为json-数据"><a class="header" href="#四java-对象序列化为json-数据">四、<code>java</code> 对象序列化为<code>json</code> 数据</a></h2>
+<p>这一部分，主要是讲解如何将一个java对象序列化为json数据，也会涉及到如何组装这个java对象。</p>
+<h3 id="1由具体的java类对象序列化为json-数据"><a class="header" href="#1由具体的java类对象序列化为json-数据">1、由具体的<code>java</code>类对象，序列化为<code>json</code> 数据</a></h3>
+<p>我们可以直接把java对象给序列化为json数据。对于未设置的属性，会采取默认值；但是如果默认是null的话，该属性就不会被序列化。</p>
+<p>java类，我们仍然采用的是<code>MyEntry</code> 类。</p>
+<pre><code class="language-java">MyEntry entry2 = new MyEntry();
+entry2.setName(&quot;tom&quot;);
+entry2.setSalary(2999);
+List&lt;String&gt; hobbies = new ArrayList&lt;&gt;();
+hobbies.add(&quot;basket&quot;);
+hobbies.add(&quot;tennis&quot;);
+entry2.setHobbies(hobbies);
+Map&lt;Integer, String&gt; collections = new HashMap&lt;&gt;();
+collections.put(2, &quot;paint&quot;);
+collections.put(3, &quot;mouse&quot;);
+entry2.setCollections(collections);
+Gson gson2 = new Gson();
+String json2 = gson2.toJson(entry2);
+System.out.println(json2);
+// {&quot;name&quot;:&quot;tom&quot;,&quot;age&quot;:0,&quot;money&quot;:2999,&quot;hobbies&quot;:[&quot;basket&quot;,&quot;tennis&quot;],&quot;collections&quot;:{&quot;2&quot;:&quot;paint&quot;,&quot;3&quot;:&quot;mouse&quot;}}
+</code></pre>
+<p>对于非值属性，即引用属性，如hobbies、collections，如果没有设置值的话，在序列化后的json数据中，是不会出现的。而如果是值属性的话，没有设置值的情况下，在json数据中会是使用java中的默认值。</p>
+<h4 id="11-要生成对象形式的json-数据"><a class="header" href="#11-要生成对象形式的json-数据">1.1 要生成对象形式的<code>json</code> 数据</a></h4>
+<ul>
+<li>第一种方法是上面的，直接使用java类对象</li>
+<li>还可以使用生成map对象，进行序列化</li>
+</ul>
+<h4 id="12-要生成数组形式的json-数据"><a class="header" href="#12-要生成数组形式的json-数据">1.2 要生成数组形式的<code>json</code> 数据</a></h4>
+<ul>
+<li>第一种，使用<code>String[]</code> 字符串数组来生成</li>
+<li>还可以使用List对象来序列化</li>
+<li>还可以使用Set对象来序列化</li>
+</ul>
+<p>对于序列化的要求，更多的情况会使用注解来选择需要/不需要进行序列化的字段。</p>
+
+                        <div id="giscus-container"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../java/Elasticsearch数据类型及其属性.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" style="z-index: 9999; position: relative;" href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../java/Elasticsearch数据类型及其属性.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" style="z-index: 9999; position: relative;" href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var pagePath = "java/GSON.md"
+        </script>
+
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../assets/custom3.js"></script>
+        <script type="text/javascript" src="../assets/lang.js"></script>
+
+
+    </body>
+</html>

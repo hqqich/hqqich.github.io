@@ -1,0 +1,728 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>excel处理 - my github page</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="markdown build page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/style1.css">
+
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../study_todo.html"><strong aria-hidden="true">1.</strong> 学习任务</a></li><li class="chapter-item expanded "><a href="../xbell/init.html"><strong aria-hidden="true">2.</strong> xbell</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../xbell/@ControllerAdvice的介绍及三种用法.html"><strong aria-hidden="true">2.1.</strong> @ControllerAdvice的介绍及三种用法</a></li><li class="chapter-item expanded "><a href="../xbell/excel处理.html" class="active"><strong aria-hidden="true">2.2.</strong> excel处理</a></li><li class="chapter-item "><a href="../xbell/Guava文件操作.html"><strong aria-hidden="true">2.3.</strong> Guava文件操作</a></li><li class="chapter-item "><a href="../xbell/SpringDataJpa复杂动态查询方式总结.html"><strong aria-hidden="true">2.4.</strong> SpringDataJpa复杂动态查询方式总结</a></li><li class="chapter-item "><a href="../xbell/使用SpringDataJPA进行数据分页与排序.html"><strong aria-hidden="true">2.5.</strong> 使用SpringDataJPA进行数据分页与排序</a></li><li class="chapter-item "><a href="../xbell/参数校验.html"><strong aria-hidden="true">2.6.</strong> 参数校验</a></li><li class="chapter-item "><a href="../xbell/实习记录.html"><strong aria-hidden="true">2.7.</strong> 实习记录</a></li><li class="chapter-item "><a href="../xbell/知识点(java).html"><strong aria-hidden="true">2.8.</strong> 知识点(java)</a></li><li class="chapter-item "><a href="../xbell/知识点(javascript).html"><strong aria-hidden="true">2.9.</strong> 知识点(javascript)</a></li></ol></li><li class="chapter-item expanded "><a href="../golang/init.html"><strong aria-hidden="true">3.</strong> golang知识</a></li><li class="chapter-item expanded "><a href="../java/init.html"><strong aria-hidden="true">4.</strong> java知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/0杂项.html"><strong aria-hidden="true">4.1.</strong> 0杂项</a></li><li class="chapter-item "><a href="../java/@Column注解及属性详解.html"><strong aria-hidden="true">4.2.</strong> @Column注解及属性详解</a></li><li class="chapter-item "><a href="../java/@RequestBody的使用.html"><strong aria-hidden="true">4.3.</strong> @RequestBody的使用</a></li><li class="chapter-item "><a href="../java/Comparable和Comparator的区别.html"><strong aria-hidden="true">4.4.</strong> Comparable和Comparator的区别</a></li><li class="chapter-item "><a href="../java/Druid数据库连接池.html"><strong aria-hidden="true">4.5.</strong> Druid数据库连接池</a></li><li class="chapter-item "><a href="../java/Elasticsearch数据类型及其属性.html"><strong aria-hidden="true">4.6.</strong> Elasticsearch数据类型及其属性</a></li><li class="chapter-item "><a href="../java/GSON.html"><strong aria-hidden="true">4.7.</strong> GSON</a></li><li class="chapter-item "><a href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html"><strong aria-hidden="true">4.8.</strong> IDEA自动部署WEB工程至远程服务器（学习笔记）</a></li><li class="chapter-item "><a href="../java/JSR303.html"><strong aria-hidden="true">4.9.</strong> JSR303</a></li><li class="chapter-item "><a href="../java/JS简单实现多级Select联动菜单效果代码.html"><strong aria-hidden="true">4.10.</strong> JS简单实现多级Select联动菜单效果代码</a></li><li class="chapter-item "><a href="../java/JXl常用解析详解.html"><strong aria-hidden="true">4.11.</strong> JXl常用解析详解</a></li><li class="chapter-item "><a href="../java/Java8获取参数名称时无法获取参数名.html"><strong aria-hidden="true">4.12.</strong> Java8获取参数名称时无法获取参数名</a></li><li class="chapter-item "><a href="../java/Java线程池分析.html"><strong aria-hidden="true">4.13.</strong> Java线程池分析</a></li><li class="chapter-item "><a href="../java/Lombok的基本使用.html"><strong aria-hidden="true">4.14.</strong> Lombok的基本使用</a></li><li class="chapter-item "><a href="../java/MD5.html"><strong aria-hidden="true">4.15.</strong> MD5</a></li><li class="chapter-item "><a href="../java/index.html"><strong aria-hidden="true">4.16.</strong> README</a></li><li class="chapter-item "><a href="../java/Redis.html"><strong aria-hidden="true">4.17.</strong> Redis</a></li><li class="chapter-item "><a href="../java/Redis的五种数据类型及方法.html"><strong aria-hidden="true">4.18.</strong> Redis的五种数据类型及方法</a></li><li class="chapter-item "><a href="../java/ResponseEntity实现Rest风格的返回值.html"><strong aria-hidden="true">4.19.</strong> ResponseEntity实现Rest风格的返回值</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">my github page</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/hqqich/hqqich.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <!-- Page table of contents -->
+                    <div class="sidetoc"><nav class="pagetoc"></nav></div>
+                    <main>
+                        <h1 id="java-处理-excel-表格"><a class="header" href="#java-处理-excel-表格">Java 处理 excel 表格</a></h1>
+<h2 id="easyexcel-组件"><a class="header" href="#easyexcel-组件">easyExcel 组件</a></h2>
+<blockquote>
+<p><a href="https://www.yuque.com/easyexcel/doc">官方文档</a></p>
+<p><a href="https://alibaba-easyexcel.github.io/index.html">官方文档</a></p>
+<p><a href="https://github.com/alibaba/easyexcel">源码地址</a></p>
+<p>参考文章：</p>
+<ol>
+<li><a href="https://www.jianshu.com/p/d1d264c817ef">框架篇-easyexcel使用</a></li>
+<li><a href="https://www.jianshu.com/p/d1d264c817ef"></a></li>
+<li><a href="https://blog.csdn.net/jianggujin/article/details/80200400">JAVA使用easyexcel操作Excel</a></li>
+<li><a href="https://blog.csdn.net/xuxiannian/article/details/105029283">EasyExcel 动态表头生成且带合并</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/98042288">easyExcel 使用指南详解</a></li>
+<li><a href="https://www.cnblogs.com/funnylog/p/14248982.html">EasyExcel模板填充踩坑</a></li>
+<li><a href=""></a></li>
+<li><a href=""></a></li>
+<li><a href=""></a></li>
+<li><a href=""></a></li>
+</ol>
+</blockquote>
+<h4 id="1-引入依赖"><a class="header" href="#1-引入依赖">1. 引入依赖</a></h4>
+<pre><code class="language-xml">&lt;!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;easyexcel&lt;/artifactId&gt;
+    &lt;version&gt;3.0.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="2-简单例子实体类方式"><a class="header" href="#2-简单例子实体类方式">2. 简单例子（实体类方式）</a></h4>
+<p>创建一个实体类<code>Student</code>：</p>
+<pre><code class="language-java">import com.alibaba.excel.annotation.ExcelIgnore;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentRowHeight;
+import com.alibaba.excel.annotation.write.style.HeadRowHeight;
+import lombok.Data;
+import java.io.Serializable;
+import java.util.Date;
+
+@Data
+@HeadRowHeight(value = 35) // 表头行高
+@ContentRowHeight(value = 25) // 内容行高
+public class Student implements Serializable {
+
+  @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生信息2&quot;,&quot;学生编号&quot;},order = 10)  //自定义title 和 order位置等级，值越大越靠后
+  @ColumnWidth(20)  //自定义宽度
+  @ExcelIgnore  //创建excel时忽略这个属性
+  private Integer id;
+
+  @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生信息1&quot;,&quot;学生姓名&quot;},order = 2)
+  @ColumnWidth(20)
+  private String name;
+
+  @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生信息1&quot;,&quot;学生薪水&quot;},order = 1)
+  @ColumnWidth(20)
+  private Double salary;
+
+  @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生信息2&quot;,&quot;学生生日&quot;},order = 11)
+  @DateTimeFormat(&quot;yyyy-MM-dd&quot;)  //格式化日期 别导错了，是这个=&gt;com.alibaba.excel.annotation.format.DateTimeFormat;
+  @ColumnWidth(30)
+  private Date birthday;
+}
+</code></pre>
+<p>写一个测试类：</p>
+<pre><code class="language-java">public List&lt;Student&gt; getData() {
+  return new ArrayList&lt;Student&gt;(){{
+    for (int i = 0; i &lt; 10; i++) {
+      add(new Student(i, &quot;name&quot;+i, 1000.00+i, new Date()));
+    }
+  }};
+}
+
+@Test
+void contextLoads() {
+  //第一个参数： 写出表格的文件名; 第二个参数：写到表格数据类型的class对象
+  EasyExcel.write(&quot;学生信息表.xlsx&quot;, Student.class)  //创建一个表格，指定文件名，指定数据类型
+      // .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())  //自适应宽度，但是这个不是特别精确
+      .sheet()  //指定sheet , 可以指定名字，也可以不写，使用默认的
+      .doWrite(getData());  //将数据写入表格中
+}
+</code></pre>
+<p>运行后项目根目录就会出现一个文件</p>
+<p><img src="img/20220118154701.JPG" alt="20220118154701" /></p>
+<p>excel文件里就长这个样子
+<img src="img/20220118190801.JPG" alt="20220118170801" /></p>
+<p>还可以指定写</p>
+<pre><code class="language-java">@HeadRowHeight(value = 35) // 表头行高
+@ContentRowHeight(value = 25) // 内容行高
+@Data
+public class Student implements Serializable {
+
+    @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生编号&quot;},order = 10)
+    private Integer id;
+
+    @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生姓名&quot;},order = 2)
+    private String name;
+
+    @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生薪水&quot;},order = 1)
+    private Double salary;
+
+    @ExcelProperty(value = {&quot;学生信息&quot;,&quot;学生生日&quot;},order = 11)
+    @DateTimeFormat(&quot;yyyy-MM-dd&quot;)
+    private Date birthday;
+}
+
+
+@Test
+void contextLoads() {
+    // 设置 要导出列的属性名
+    // 必须要跟类型的属性名保持一致
+    Set&lt;String&gt; set = new HashSet&lt;&gt;();
+    set.add(&quot;id&quot;);
+    set.add(&quot;name&quot;);
+
+    EasyExcel.write(&quot;学生信息表.xlsx&quot;, Student.class)
+        .includeColumnFiledNames(set)
+        // 自适应宽度，但是这个不是特别精确
+        .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+        .sheet()
+        .doWrite(getData());
+}
+</code></pre>
+<h4 id="3-简单读"><a class="header" href="#3-简单读">3. 简单读</a></h4>
+<p>记住，这里传入的excel 表格式一定和实体类对应，不然会现数据读不全，读错</p>
+<pre><code class="language-java">@Test
+  void test011(){
+    List&lt;Student&gt; list = new ArrayList&lt;&gt;();
+    EasyExcel.read(&quot;学生信息表.xlsx&quot;, Student.class, new AnalysisEventListener&lt;Student&gt;() {
+
+      // 每读取一行就调用该方法
+      @Override
+      public void invoke(Student student, AnalysisContext analysisContext) {
+        list.add(student);
+      }
+
+      // 全部读取完成就调用该方法
+      @Override
+      public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+        System.out.println(&quot;全部读取完成&quot;);
+      }
+    }).sheet().doRead();
+
+    list.forEach(System.out::println);
+    /**
+     * 全部读取完成
+     * Student(id=null, name=李四0, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四1, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四2, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四3, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四4, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四5, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四6, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四7, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四8, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四9, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     * Student(id=null, name=李四10, salary=1500.0, birthday=Tue Jan 18 09:38:35 CST 2022)
+     */
+  }
+</code></pre>
+<h4 id="excel工具类-excelutiljava"><a class="header" href="#excel工具类-excelutiljava">excel工具类 <code>ExcelUtil.java</code></a></h4>
+<pre><code class="language-Java">package com.example.demoeasyexclespringboot.util;
+
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.builder.ExcelWriterBuilder;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.*;
+
+public class ExcelUtil {
+
+  /**
+   * 写出一个 excel 文件到本地
+   * &lt;br /&gt;
+   * 将类型所有加了 @ExcelProperty 注解的属性全部写出
+   *
+   * @param fileName  文件名 不要后缀
+   * @param sheetName sheet名
+   * @param data      写出的数据
+   * @param clazz     要写出数据类的Class类型对象
+   * @param &lt;T&gt;       写出的数据类型
+   */
+  public static &lt;T&gt; void writeExcel(String fileName, String sheetName, List&lt;T&gt; data, Class&lt;T&gt; clazz) {
+    writeExcel(null, fileName, sheetName, data, clazz);
+  }
+
+
+  /**
+   * 按照指定的属性名进行写出 一个 excel
+   *
+   * @param attrName  指定的属性名 必须与数据类型的属性名一致
+   * @param fileName  文件名 不要后缀
+   * @param sheetName sheet名
+   * @param data      要写出的数据
+   * @param clazz     要写出数据类的Class类型对象
+   * @param &lt;T&gt;       要写出的数据类型
+   */
+  public static &lt;T&gt; void writeExcel(Set&lt;String&gt; attrName, String fileName, String sheetName, List&lt;T&gt; data, Class&lt;T&gt; clazz) {
+    fileName = StringUtils.isBlank(fileName) ? &quot;学生管理系统&quot; : fileName;
+    sheetName = StringUtils.isBlank(sheetName) ? &quot;sheet0&quot; : sheetName;
+
+    try(FileOutputStream fos = new FileOutputStream(fileName)) {
+      write(fos,attrName,sheetName,data,clazz);
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
+  }
+
+  /**
+   * 读取 指定格式的 excel文档
+   *
+   * @param fileName 文件名
+   * @param clazz    数据类型的class对象
+   * @param &lt;T&gt;      数据类型
+   * @return
+   */
+  public static &lt;T&gt; List&lt;T&gt; readExcel(String fileName, Class&lt;T&gt; clazz) {
+    return readExcel(fileName, clazz, null);
+  }
+
+  /**
+   * 取 指定格式的 excel文档
+   * 注意一旦传入自定义监听器，则返回的list为空，数据需要在自定义监听器里面获取
+   *
+   * @param fileName     文件名
+   * @param clazz        数据类型的class对象
+   * @param readListener 自定义监听器
+   * @param &lt;T&gt;          数据类型
+   * @return
+   */
+  public static&lt;T&gt; List&lt;T&gt; readExcel(String fileName, Class&lt;T&gt; clazz, ReadListener&lt;T&gt; readListener) {
+    try(FileInputStream fis = new FileInputStream(fileName)) {
+      return read(fis,clazz,readListener);
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
+    return null;
+  }
+
+
+  /**
+   * 导出  一个 excel
+   *         导出excel所有数据
+   * @param response
+   * @param fileName  件名 最好为英文，不要后缀名
+   * @param sheetName sheet名
+   * @param data      要写出的数据
+   * @param clazz     要写出数据类的Class类型对象
+   * @param &lt;T&gt;       要写出的数据类型
+   */
+  public static &lt;T&gt; void export(HttpServletResponse response, String fileName, String sheetName, List&lt;T&gt; data, Class&lt;T&gt; clazz) {
+    export(response, null, fileName, sheetName, data, clazz);
+  }
+
+  /**
+   * 按照指定的属性名进行写出 一个 excel
+   *
+   * @param response
+   * @param attrName  指定的属性名 必须与数据类型的属性名一致
+   * @param fileName  文件名 最好为英文，不要后缀名
+   * @param sheetName sheet名
+   * @param data      要写出的数据
+   * @param clazz     要写出数据类的Class类型对象
+   * @param &lt;T&gt;       要写出的数据类型
+   */
+  public static &lt;T&gt; void export(HttpServletResponse response, Set&lt;String&gt; attrName, String fileName, String sheetName, List&lt;T&gt; data, Class&lt;T&gt; clazz) {
+
+    fileName = StringUtils.isBlank(fileName) ? &quot;student-system-manager&quot; : fileName;
+    sheetName = StringUtils.isBlank(sheetName) ? &quot;sheet0&quot; : sheetName;
+
+    response.setContentType(&quot;application/vnd.ms-excel;charset=utf-8&quot;);
+    response.setCharacterEncoding(&quot;utf-8&quot;);
+    response.addHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName + ExcelTypeEnum.XLSX.getValue());
+
+    try(OutputStream os = response.getOutputStream()) {
+      write(os,attrName,sheetName,data,clazz);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  /**
+   * 接收一个excel文件，并且进行解析
+   *  注意一旦传入自定义监听器，则返回的list为空，数据需要在自定义监听器里面获取
+   * @param multipartFile excel文件
+   * @param clazz 数据类型的class对象
+   * @param readListener 监听器
+   * @param &lt;T&gt;
+   * @return
+   */
+  public static &lt;T&gt; List&lt;T&gt; importExcel(MultipartFile multipartFile,Class&lt;T&gt; clazz,ReadListener&lt;T&gt; readListener) {
+    try(InputStream inputStream = multipartFile.getInputStream()) {
+      return read(inputStream,clazz,readListener);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+
+  private static &lt;T&gt; void write(OutputStream os, Set&lt;String&gt; attrName, String sheetName, List&lt;T&gt; data, Class&lt;T&gt; clazz) {
+    ExcelWriterBuilder write = EasyExcel.write(os, clazz);
+    // 如果没有指定要写出那些属性数据，则写出全部
+    if (!CollectionUtils.isEmpty(attrName)) {
+      write.includeColumnFiledNames(attrName);
+    }
+    write.registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).sheet(sheetName).doWrite(data);
+  }
+
+
+  private static &lt;T&gt; List&lt;T&gt; read(InputStream in,Class&lt;T&gt; clazz, ReadListener&lt;T&gt; readListener) {
+    List&lt;T&gt; list = new ArrayList&lt;&gt;();
+    Optional&lt;ReadListener&gt; optional = Optional.ofNullable(readListener);
+    EasyExcel.read(in, clazz, optional.orElse(new AnalysisEventListener&lt;T&gt;() {
+      @Override
+      public void invoke(T data, AnalysisContext context) {
+        list.add(data);
+      }
+      @Override
+      public void doAfterAllAnalysed(AnalysisContext context) {
+        System.out.println(&quot;解析完成&quot;);
+      }
+    })).sheet().doRead();
+    return list;
+  }
+}
+
+</code></pre>
+<h4 id="使用模板"><a class="header" href="#使用模板">使用模板</a></h4>
+<h5 id="1-map类型传参"><a class="header" href="#1-map类型传参">1. map类型传参</a></h5>
+<h5 id="2实体类型传参"><a class="header" href="#2实体类型传参">2.实体类型传参</a></h5>
+<h5 id="例子1"><a class="header" href="#例子1">例子1</a></h5>
+<p>模板样子</p>
+<p><img src="img/20220119121801.JPG" alt="20220119121801" /></p>
+<blockquote>
+<p>注意，这里需要循环的数据需要用.表示：<code>{.name}</code> 表示是对象中的属性</p>
+</blockquote>
+<pre><code class="language-java">@Test
+void test05(){
+  //准备模板
+  String template = &quot;a.xlsx&quot;;
+  ExcelWriterBuilder builder = EasyExcel.write(&quot;hqqich.xlsx&quot;, Map.class).withTemplate(template);
+
+  //准备map数据
+  Map&lt;String, Object&gt; map=new HashMap&lt;&gt;();
+  map.put(&quot;title&quot;, &quot;标题&quot;);
+  map.put(&quot;name&quot;,&quot;姓名&quot;);
+  map.put(&quot;age&quot;,22);
+
+  //简单写
+  builder.sheet().doFill(map);
+}
+</code></pre>
+<p>写入后样子</p>
+<p><img src="img/20220119122101.JPG" alt="20220119122101" /></p>
+<p>可以看到样式被清楚了，弊端</p>
+<h5 id="例子2"><a class="header" href="#例子2">例子2</a></h5>
+<pre><code class="language-java">//FileData
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FileData {
+
+  private String age;
+
+  private String name;
+
+}
+
+//测试方法
+@Test
+void test06(){
+  ExcelWriterBuilder builder = EasyExcel.write(&quot;hqqich.xlsx&quot;, FileData.class).withTemplate(&quot;a.xlsx&quot;);
+  List&lt;FileData&gt; fileDataList = new ArrayList&lt;FileData&gt;(){{
+    add(new FileData(&quot;100&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;200&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;300&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+  }};
+  builder.sheet().doFill(fileDataList);
+}
+</code></pre>
+<p>写入后的样子</p>
+<p><img src="img/20220119132501.JPG" alt="20220119132501" /></p>
+<p>可以看到，循环的的单元格样式被保留下来了</p>
+<h5 id="例子3"><a class="header" href="#例子3">例子3</a></h5>
+<pre><code class="language-java">@Test
+@SneakyThrows
+void test08(){
+
+  //创建.关联文件
+  ExcelWriter build = EasyExcel.write(&quot;hqqich.xlsx&quot;).withTemplate(&quot;a.xlsx&quot;).build();
+
+  //工作区对象
+  WriteSheet sheet = EasyExcel.writerSheet().build();
+
+  //渲染数据
+  List&lt;FileData&gt; fileDataList = new ArrayList&lt;FileData&gt;(){{
+    add(new FileData(&quot;100&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;200&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;300&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+    add(new FileData(&quot;400&quot;, &quot;hqqich&quot;));
+  }};
+  HashMap&lt;String, Object&gt; hashMap = new HashMap&lt;String, Object&gt;(){{
+    put(&quot;title&quot;, &quot;标题&quot;);
+    put(&quot;name&quot;, &quot;用户姓名&quot;);
+    put(&quot;age&quot;, &quot;用户年龄&quot;);
+  }};
+
+  //添加数据
+  build.fill(fileDataList, sheet);
+  build.fill(hashMap, sheet);
+
+  //保存
+  build.finish();
+}
+</code></pre>
+<p>写入后的样子</p>
+<p><img src="img/1642570457952.png" alt="1642570457952" /></p>
+<p>可以看到（标题栏，循环的数据）中的样式都被保留下来了</p>
+<h5 id="例子3的另一种写法"><a class="header" href="#例子3的另一种写法">例子3的另一种写法</a></h5>
+<pre><code class="language-java">@Test
+@SneakyThrows
+void test09(){
+
+  //创建.关联文件
+  ExcelWriter build = EasyExcel.write(&quot;hqqich.xlsx&quot;).withTemplate(&quot;a.xlsx&quot;).build();
+
+  //工作区对象
+  WriteSheet sheet = EasyExcel.writerSheet().build();
+
+  //渲染数据
+  List&lt;Map&lt;String, Object&gt;&gt; fileDataList = new ArrayList&lt;Map&lt;String, Object&gt;&gt;(){{
+    for (int i = 0; i &lt; 10; i++) {
+      int finalI = i;
+      add(new HashMap&lt;String, Object&gt;() {{
+        put(&quot;name&quot;, &quot;hqqich&quot;+ finalI);
+        put(&quot;age&quot;, 22+ finalI);
+      }});
+    }
+  }};
+  HashMap&lt;String, Object&gt; hashMap = new HashMap&lt;String, Object&gt;(){{
+    put(&quot;title&quot;, &quot;标题&quot;);
+    put(&quot;name&quot;, &quot;用户姓名&quot;);
+    put(&quot;age&quot;, &quot;用户年龄&quot;);
+  }};
+
+  //添加数据
+  build.fill(fileDataList, sheet);
+  build.fill(hashMap, sheet);
+
+  //保存
+  build.finish();
+}
+</code></pre>
+<h5 id="例子4"><a class="header" href="#例子4">例子4</a></h5>
+<pre><code class="language-java">@Test
+void test061(){
+  ExcelWriterBuilder builder = EasyExcel.write(&quot;hqqich.xlsx&quot;, Map.class).withTemplate(&quot;a.xlsx&quot;);
+  List&lt;Map&lt;String, Object&gt;&gt; fileDataList = new ArrayList&lt;Map&lt;String, Object&gt;&gt;(){{
+    for (int i = 0; i &lt; 10; i++) {
+      int finalI = i;
+      add(new HashMap&lt;String, Object&gt;() {{
+        put(&quot;name&quot;, &quot;hqqich&quot;+ finalI);
+        put(&quot;age&quot;, 22+ finalI);
+      }});
+    }
+  }};
+  builder.sheet().doFill(fileDataList);
+}
+</code></pre>
+<p>写入后的样子</p>
+<p><img src="img/1642571146989.png" alt="1642571146989" /></p>
+
+                        <div id="giscus-container"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../xbell/@ControllerAdvice的介绍及三种用法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" style="z-index: 9999; position: relative;" href="../xbell/Guava文件操作.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../xbell/@ControllerAdvice的介绍及三种用法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" style="z-index: 9999; position: relative;" href="../xbell/Guava文件操作.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var pagePath = "xbell/excel处理.md"
+        </script>
+
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../assets/custom3.js"></script>
+        <script type="text/javascript" src="../assets/lang.js"></script>
+
+
+    </body>
+</html>

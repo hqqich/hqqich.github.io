@@ -1,0 +1,887 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>SpringDataJpa复杂动态查询方式总结 - my github page</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="markdown build page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/style1.css">
+
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../study_todo.html"><strong aria-hidden="true">1.</strong> 学习任务</a></li><li class="chapter-item expanded "><a href="../xbell/init.html"><strong aria-hidden="true">2.</strong> xbell</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../xbell/@ControllerAdvice的介绍及三种用法.html"><strong aria-hidden="true">2.1.</strong> @ControllerAdvice的介绍及三种用法</a></li><li class="chapter-item "><a href="../xbell/excel处理.html"><strong aria-hidden="true">2.2.</strong> excel处理</a></li><li class="chapter-item "><a href="../xbell/Guava文件操作.html"><strong aria-hidden="true">2.3.</strong> Guava文件操作</a></li><li class="chapter-item expanded "><a href="../xbell/SpringDataJpa复杂动态查询方式总结.html" class="active"><strong aria-hidden="true">2.4.</strong> SpringDataJpa复杂动态查询方式总结</a></li><li class="chapter-item "><a href="../xbell/使用SpringDataJPA进行数据分页与排序.html"><strong aria-hidden="true">2.5.</strong> 使用SpringDataJPA进行数据分页与排序</a></li><li class="chapter-item "><a href="../xbell/参数校验.html"><strong aria-hidden="true">2.6.</strong> 参数校验</a></li><li class="chapter-item "><a href="../xbell/实习记录.html"><strong aria-hidden="true">2.7.</strong> 实习记录</a></li><li class="chapter-item "><a href="../xbell/知识点(java).html"><strong aria-hidden="true">2.8.</strong> 知识点(java)</a></li><li class="chapter-item "><a href="../xbell/知识点(javascript).html"><strong aria-hidden="true">2.9.</strong> 知识点(javascript)</a></li></ol></li><li class="chapter-item expanded "><a href="../golang/init.html"><strong aria-hidden="true">3.</strong> golang知识</a></li><li class="chapter-item expanded "><a href="../java/init.html"><strong aria-hidden="true">4.</strong> java知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/0杂项.html"><strong aria-hidden="true">4.1.</strong> 0杂项</a></li><li class="chapter-item "><a href="../java/@Column注解及属性详解.html"><strong aria-hidden="true">4.2.</strong> @Column注解及属性详解</a></li><li class="chapter-item "><a href="../java/@RequestBody的使用.html"><strong aria-hidden="true">4.3.</strong> @RequestBody的使用</a></li><li class="chapter-item "><a href="../java/Comparable和Comparator的区别.html"><strong aria-hidden="true">4.4.</strong> Comparable和Comparator的区别</a></li><li class="chapter-item "><a href="../java/Druid数据库连接池.html"><strong aria-hidden="true">4.5.</strong> Druid数据库连接池</a></li><li class="chapter-item "><a href="../java/Elasticsearch数据类型及其属性.html"><strong aria-hidden="true">4.6.</strong> Elasticsearch数据类型及其属性</a></li><li class="chapter-item "><a href="../java/GSON.html"><strong aria-hidden="true">4.7.</strong> GSON</a></li><li class="chapter-item "><a href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html"><strong aria-hidden="true">4.8.</strong> IDEA自动部署WEB工程至远程服务器（学习笔记）</a></li><li class="chapter-item "><a href="../java/JSR303.html"><strong aria-hidden="true">4.9.</strong> JSR303</a></li><li class="chapter-item "><a href="../java/JS简单实现多级Select联动菜单效果代码.html"><strong aria-hidden="true">4.10.</strong> JS简单实现多级Select联动菜单效果代码</a></li><li class="chapter-item "><a href="../java/JXl常用解析详解.html"><strong aria-hidden="true">4.11.</strong> JXl常用解析详解</a></li><li class="chapter-item "><a href="../java/Java8获取参数名称时无法获取参数名.html"><strong aria-hidden="true">4.12.</strong> Java8获取参数名称时无法获取参数名</a></li><li class="chapter-item "><a href="../java/Java线程池分析.html"><strong aria-hidden="true">4.13.</strong> Java线程池分析</a></li><li class="chapter-item "><a href="../java/Lombok的基本使用.html"><strong aria-hidden="true">4.14.</strong> Lombok的基本使用</a></li><li class="chapter-item "><a href="../java/MD5.html"><strong aria-hidden="true">4.15.</strong> MD5</a></li><li class="chapter-item "><a href="../java/index.html"><strong aria-hidden="true">4.16.</strong> README</a></li><li class="chapter-item "><a href="../java/Redis.html"><strong aria-hidden="true">4.17.</strong> Redis</a></li><li class="chapter-item "><a href="../java/Redis的五种数据类型及方法.html"><strong aria-hidden="true">4.18.</strong> Redis的五种数据类型及方法</a></li><li class="chapter-item "><a href="../java/ResponseEntity实现Rest风格的返回值.html"><strong aria-hidden="true">4.19.</strong> ResponseEntity实现Rest风格的返回值</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">my github page</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/hqqich/hqqich.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <!-- Page table of contents -->
+                    <div class="sidetoc"><nav class="pagetoc"></nav></div>
+                    <main>
+                        <p>一.Spring data jpa 简介
+首先我并不推荐使用jpa作为ORM框架,毕竟对于负责查询的时候还是不太灵活,还是建议使用mybatis,自己写sql比较好.但是如果公司用这个就没办法了,可以学习一下,对于简单查询还是非常好用的.</p>
+<pre><code>首先JPA是Java持久层API,由Sun公司开发, 希望整合ORM技术，实现天下归一.  诞生的缘由是为了整合第三方ORM框架，建立一种标准的方式，目前也是在按照这个方向发展，但是还没能完全实现。在ORM框架中，Hibernate是一支很大的部队，使用很广泛，也很方便，能力也很强，同时Hibernate也是和JPA整合的比较良好，我们可以认为JPA是标准，事实上也是，JPA几乎都是接口，实现都是Hibernate在做，宏观上面看，在JPA的统一之下Hibernate很良好的运行。
+
+Spring-data-jpa，Spring与jpa的整合
+
+Spring主要是在做第三方工具的整合 不重新造轮子. 而在与第三方整合这方面，Spring做了持久化这一块的工作，于是就有了Spring-data-**这一系列包。包括，Spring-data-jpa,Spring-data-template,Spring-data-mongodb,Spring-data-redis
+
+Spring-data-jpa，目的少使用sql
+
+我们都知道，在使用持久化工具的时候，一般都有一个对象来操作数据库，在原生的Hibernate中叫做Session，在JPA中叫做EntityManager，在MyBatis中叫做SqlSession，通过这个对象来操作数据库。我们一般按照三层结构来看的话，Service层做业务逻辑处理，Dao层和数据库打交道，在Dao中，就存在着上面的对象。那么ORM框架本身提供的功能有什么呢？答案是基本的CRUD(增删改查)，所有的基础CRUD框架都提供，我们使用起来感觉很方便，很给力，业务逻辑层面的处理ORM是没有提供的，如果使用原生的框架，业务逻辑代码我们一般会自定义，会自己去写SQL语句，然后执行。在这个时候，Spring-data-jpa的威力就体现出来了，ORM提供的能力他都提供，ORM框架没有提供的业务逻辑功能Spring-data-jpa也提供，全方位的解决用户的需求。使用Spring-data-jpa进行开发的过程中，常用的功能，我们几乎不需要写一条sql语句，至少在我看来，企业级应用基本上可以不用写任何一条sql，当然spring-data-jpa也提供自己写sql的方式
+
+ 返回值为对象的意义
+
+是jpa查询表内容返回值基本上都是对象,但是仅仅需要一个字段返回整体对象不是会有很多数据冗余吗,其实大多数情况对一个数据表的查询不可能只有一次或者说这个表不仅仅是这一次会用到,如果我写好一个返回对象的方法,之后都可以直接调用,一般情况下多出一点数据对网络的压力可以忽略不计,而这样对开发效率的提升还是很大的.如果仅仅想得到一部分字段也可以新建一个只有想要字段的Entity.
+</code></pre>
+<p>二.Spring data jpa 基本使用
+对于配置方法和基础的dao层写法等不做介绍,基础篇仅当做一个方法字典.</p>
+<pre><code>1.核心方法
+</code></pre>
+<p>查询所有数据 findAll()
+修改 添加数据  S save(S entity)
+分页查询 Page<S> findAll(Example<S> example, Pageable pageable)
+根据id查询 findOne()
+根据实体类属性查询： findByProperty (type Property); 例如：findByAge(int age)
+删除 void delete(T entity)
+计数 查询 long count() 或者 根据某个属性的值查询总数 countByAge(int age)
+是否存在   boolean existsById(ID primaryKey)</p>
+<pre><code>2.查询关键字
+</code></pre>
+<p>-and</p>
+<p>And 例如：findByUsernameAndPassword(String user, Striang pwd)；</p>
+<p>-or
+Or 例如：findByUsernameOrAddress(String user, String addr)；</p>
+<p>-between
+Between 例如：SalaryBetween(int max, int min)；</p>
+<p>-&quot;&lt;&quot;
+LessThan 例如： findBySalaryLessThan(int max)；</p>
+<p>-&quot;&gt;&quot;
+GreaterThan 例如： findBySalaryGreaterThan(int min)；</p>
+<p>-is null
+IsNull 例如： findByUsernameIsNull()；</p>
+<p>-is not null
+IsNotNull NotNull 与 IsNotNull 等价 例如： findByUsernameIsNotNull()；</p>
+<p>-like
+Like 例如： findByUsernameLike(String user)；</p>
+<p>-not like
+NotLike 例如： findByUsernameNotLike(String user)；</p>
+<p>-order by
+OrderBy 例如： findByUsernameOrderByNameAsc(String user)；直接通过name正序排序</p>
+<p>-&quot;!=&quot;
+Not 例如： findByUsernameNot(String user)；</p>
+<p>-in
+In 例如： findByUsernameIn(Collection<String> userList) ，方法的参数可以是 Collection 类型，也可以是数组或者不定长参数；</p>
+<p>-not in
+NotIn 例如： findByUsernameNotIn(Collection<String> userList) ，方法的参数可以是 Collection 类型，也可以是数组或者不定长参数；</p>
+<p>-Top/Limit
+查询方法结果的数量可以通过关键字来限制，first 或者 top都可以使用。top/first加数字可以指定要返回最大结果的大小 默认为1</p>
+<pre><code> 例如:
+</code></pre>
+<p>User findFirstByOrderByLastnameAsc();
+User findTopByOrderByAgeDesc();
+Page<User> queryFirst10ByLastname(String lastname, Pageable pageable);
+Slice<User> findTop3ByLastname(String lastname, Pageable pageable);
+List<User> findFirst10ByLastname(String lastname, Sort sort);
+List<User> findTop10ByLastname(String lastname, Pageable pageable);
+详细查询语法
+关键词	示例	对应的sql片段
+And</p>
+<p>findByLastnameAndFirstname</p>
+<p>… where x.lastname = ?1 and x.firstname = ?2</p>
+<p>Or</p>
+<p>findByLastnameOrFirstname</p>
+<p>… where x.lastname = ?1 or x.firstname = ?2</p>
+<p>Is,Equals</p>
+<p>findByFirstname,findByFirstnameIs,findByFirstnameEquals</p>
+<p>… where x.firstname = ?1</p>
+<p>Between</p>
+<p>findByStartDateBetween</p>
+<p>… where x.startDate between ?1 and ?2</p>
+<p>LessThan</p>
+<p>findByAgeLessThan</p>
+<p>… where x.age &lt; ?1</p>
+<p>LessThanEqual</p>
+<p>findByAgeLessThanEqual</p>
+<p>… where x.age &lt;= ?1</p>
+<p>GreaterThan</p>
+<p>findByAgeGreaterThan</p>
+<p>… where x.age &gt; ?1</p>
+<p>GreaterThanEqual</p>
+<p>findByAgeGreaterThanEqual</p>
+<p>… where x.age &gt;= ?1</p>
+<p>After</p>
+<p>findByStartDateAfter</p>
+<p>… where x.startDate &gt; ?1</p>
+<p>Before</p>
+<p>findByStartDateBefore</p>
+<p>… where x.startDate &lt; ?1</p>
+<p>IsNull</p>
+<p>findByAgeIsNull</p>
+<p>… where x.age is null</p>
+<p>IsNotNull,NotNull</p>
+<p>findByAge(Is)NotNull</p>
+<p>… where x.age not null</p>
+<p>Like</p>
+<p>findByFirstnameLike</p>
+<p>… where x.firstname like ?1</p>
+<p>NotLike</p>
+<p>findByFirstnameNotLike</p>
+<p>… where x.firstname not like ?1</p>
+<p>StartingWith</p>
+<p>findByFirstnameStartingWith</p>
+<p>… where x.firstname like ?1 (parameter bound with appended %)</p>
+<p>EndingWith</p>
+<p>findByFirstnameEndingWith</p>
+<p>… where x.firstname like ?1 (parameter bound with prepended %)</p>
+<p>Containing</p>
+<p>findByFirstnameContaining</p>
+<p>… where x.firstname like ?1 (parameter bound wrapped in %)</p>
+<p>OrderBy</p>
+<p>findByAgeOrderByLastnameDesc</p>
+<p>… where x.age = ?1 order by x.lastname desc</p>
+<p>Not</p>
+<p>findByLastnameNot</p>
+<p>… where x.lastname &lt;&gt; ?1</p>
+<p>In</p>
+<p>findByAgeIn(Collection<Age> ages)</p>
+<p>… where x.age in ?1</p>
+<p>NotIn</p>
+<p>findByAgeNotIn(Collection<Age> ages)</p>
+<p>… where x.age not in ?1</p>
+<p>True</p>
+<p>findByActiveTrue()</p>
+<p>… where x.active = true</p>
+<p>False</p>
+<p>findByActiveFalse()</p>
+<p>… where x.active = false</p>
+<p>IgnoreCase</p>
+<p>findByFirstnameIgnoreCase</p>
+<p>… where UPPER(x.firstame) = UPPER(?1)</p>
+<pre><code>3.内置方法
+</code></pre>
+<p>Sort_排序
+Sort sort =new Sort(Sort.Direction.ASC,&quot;id&quot;);
+//其中第一个参数表示是降序还是升序（此处表示升序）
+//第二个参数表示你要按你的 entity（记住是entity中声明的变量，不是数据库中表对应的字段）中的那个变量进行排序
+PageRequest_分页
+PageRequest pageRequest = new PageRequest(index, num, sort);
+//index偏移量 num查询数量 sort排序
+分页+排序实现:</p>
+<p>DemoBean demoBean = new DemoBean();
+demoBean.setAppId(appId); //查询条件
+//创建查询参数
+Example<DemoBean> example = Example.of(demoBean);
+//获取排序对象
+Sort sort = new Sort(Sort.Direction.DESC, &quot;id&quot;);
+//创建分页对象
+PageRequest pageRequest = new PageRequest(index, num, sort);
+//分页查询
+return demoRepository.findAll(example, pageRequest).getContent();
+Example_实例查询
+创建一个ExampleMatcher对象，最后再用Example的of方法构造相应的Example对象并传递给相关查询方法。我们看看Spring的例子。</p>
+<p>Person person = new Person();<br />
+person.setFirstname(&quot;Dave&quot;);  //Firstname = 'Dave'</p>
+<p>ExampleMatcher matcher = ExampleMatcher.matching()<br />
+.withMatcher(&quot;name&quot;, GenericPropertyMatchers.startsWith()) //姓名采用“开始匹配”的方式查询
+.withIgnorePaths(&quot;int&quot;);  //忽略属性：是否关注。因为是基本类型，需要忽略掉</p>
+<p>Example<Person> example = Example.of(person, matcher);  //Example根据域对象和配置创建一个新的ExampleMatcher<br />
+ExampleMatcher用于创建一个查询对象，上面的代码就创建了一个查询对象。withIgnorePaths方法用来排除某个属性的查询。withIncludeNullValues方法让空值也参与查询，就是我们设置了对象的姓，而名为空值.</p>
+<p>1、概念定义:</p>
+<pre><code>上面例子中，是这样创建“实例”的：Example&lt;Customer&gt; ex = Example.of(customer, matcher);我们看到，Example对象，由customer和matcher共同创建。
+
+A、实体对象：在持久化框架中与Table对应的域对象，一个对象代表数据库表中的一条记录，如上例中Customer对象。在构建查询条件时，一个实体对象代表的是查询条件中的“数值”部分。如：要查询名字是“Dave”的客户，实体对象只能存储条件值“Dave”。
+
+B、匹配器：ExampleMatcher对象，它是匹配“实体对象”的，表示了如何使用“实体对象”中的“值”进行查询，它代表的是“查询方式”，解释了如何去查的问题。如：要查询FirstName是“Dave”的客户,即名以“Dave&quot;开头的客户，该对象就表示了“以什么开头的”这个查询方式，如上例中:withMatcher(&quot;name&quot;, GenericPropertyMatchers.startsWith())
+
+C、实例：即Example对象，代表的是完整的查询条件。由实体对象（查询条件值）和匹配器（查询方式）共同创建。
+
+再来理解“实例查询”，顾名思义，就是通过一个例子来查询。要查询的是Customer对象，查询条件也是一个Customer对象，通过一个现有的客户对象作为例子，查询和这个例子相匹配的对象。
+</code></pre>
+<p>2、特点及约束（局限性）:</p>
+<pre><code>A、支持动态查询。即支持查询条件个数不固定的情况，如：客户列表中有多个过滤条件，用户使用时在“地址”查询框中输入了值，就需要按地址进行过滤，如果没有输入值，就忽略这个过滤条件。对应的实现是，在构建查询条件Customer对象时，将address属性值置具体的条件值或置为null。
+
+B、不支持过滤条件分组。即不支持过滤条件用 or(或) 来连接，所有的过滤查件，都是简单一层的用 and(并且) 连接。
+
+C、仅支持字符串的开始/包含/结束/正则表达式匹配 和 其他属性类型的精确匹配。查询时，对一个要进行匹配的属性（如：姓名 name），只能传入一个过滤条件值，如以Customer为例，要查询姓“刘”的客户，“刘”这个条件值就存储在表示条件对象的Customer对象的name属性中，针对于“姓名”的过滤也只有这么一个存储过滤值的位置，没办法同时传入两个过滤值。正是由于这个限制，有些查询是没办法支持的，例如要查询某个时间段内添加的客户，对应的属性是 addTime，需要传入“开始时间”和“结束时间”两个条件值，而这种查询方式没有存两个值的位置，所以就没办法完成这样的查询。
+</code></pre>
+<p>3、ExampleMatcher的使用 :</p>
+<p>一些问题:
+（1）Null值的处理。当某个条件值为Null,是应当忽略这个过滤条件呢，还是应当去匹配数据库表中该字段值是Null的记录？
+（2）基本类型的处理。如客户Customer对象中的年龄age是int型的，当页面不传入条件值时，它默认是0，是有值的，那是否参与查询呢？
+（3）忽略某些属性值。一个实体对象，有许多个属性，是否每个属性都参与过滤？是否可以忽略某些属性？
+（4）不同的过滤方式。同样是作为String值，可能“姓名”希望精确匹配，“地址”希望模糊匹配，如何做到？</p>
+<p>（5）大小写匹配。字符串匹配时，有时可能希望忽略大小写，有时则不忽略，如何做到？</p>
+<p>一些方法:
+1、关于基本数据类型。
+实体对象中，避免使用基本数据类型，采用包装器类型。如果已经采用了基本类型，</p>
+<p>而这个属性查询时不需要进行过滤，则把它添加到忽略列表（ignoredPaths）中。</p>
+<p>2、Null值处理方式。</p>
+<p>默认值是 IGNORE（忽略），即当条件值为null时，则忽略此过滤条件，一般业务也是采用这种方式就可满足。当需要查询数据库表中属性为null的记录时，可将值设为INCLUDE，这时，对于不需要参与查询的属性，都必须添加到忽略列表（ignoredPaths）中，否则会出现查不到数据的情况。</p>
+<p>3、默认配置、特殊配置。</p>
+<p>默认创建匹配器时，字符串采用的是精确匹配、不忽略大小写，可以通过操作方法改变这种默认匹配，以满足大多数查询条件的需要，如将“字符串匹配方式”改为CONTAINING（包含，模糊匹配），这是比较常用的情况。对于个别属性需要特定的查询方式，可以通过配置“属性特定查询方式”来满足要求。</p>
+<p>4、非字符串属性</p>
+<p>如约束中所谈，非字符串属性均采用精确匹配，即等于。</p>
+<p>5、忽略大小写的问题。</p>
+<p>忽略大小的生效与否，是依赖于数据库的。例如 MySql 数据库中，默认创建表结构时，字段是已经忽略大小写的，所以这个配置与否，都是忽略的。如果业务需要严格区分大小写，可以改变数据库表结构属性来实现，具体可百度。</p>
+<p>一些例子:
+综合使用:</p>
+<p>//创建查询条件数据对象
+Customer customer = new Customer();
+customer.setName(&quot;zhang&quot;);
+customer.setAddress(&quot;河南省&quot;);
+customer.setRemark(&quot;BB&quot;);</p>
+<pre><code>    //创建匹配器，即如何使用查询条件
+    ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
+            .withStringMatcher(StringMatcher.CONTAINING) //改变默认字符串匹配方式：模糊查询
+            .withIgnoreCase(true) //改变默认大小写忽略方式：忽略大小写
+            .withMatcher(&quot;address&quot;, GenericPropertyMatchers.startsWith()) //地址采用“开始匹配”的方式查询
+            .withIgnorePaths(&quot;focus&quot;);  //忽略属性：是否关注。因为是基本类型，需要忽略掉
+    
+    //创建实例
+    Example&lt;Customer&gt; ex = Example.of(customer, matcher); 
+    
+    //查询
+    List&lt;Customer&gt; ls = dao.findAll(ex);
+</code></pre>
+<p>查询null值:</p>
+<p>　　　　 //创建查询条件数据对象
+Customer customer = new Customer();</p>
+<pre><code>    //创建匹配器，即如何使用查询条件
+    ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
+            .withIncludeNullValues() //改变“Null值处理方式”：包括
+            .withIgnorePaths(&quot;id&quot;,&quot;name&quot;,&quot;sex&quot;,&quot;age&quot;,&quot;focus&quot;,&quot;addTime&quot;,&quot;remark&quot;,&quot;customerType&quot;);  //忽略其他属性
+    
+    //创建实例
+    Example&lt;Customer&gt; ex = Example.of(customer, matcher); 
+    
+    //查询
+    List&lt;Customer&gt; ls = dao.findAll(ex);
+</code></pre>
+<p>三.Spring data jpa 注解
+1.Repository注解</p>
+<p>@Modifying //做update操作时需要添加</p>
+<p>@Query // 自定义Sql</p>
+<p>@Query(value = &quot;SELECT * FROM USERS WHERE X = ?1&quot;, nativeQuery = true)
+User findByEmailAddress(String X);
+@Query(&quot;select u from User u where u.firstname = :firstname&quot;) //不加nativeQuery应使用HQL
+User findByLastnameOrFirstname(@Param(&quot;lastname&quot;) String lastname);
+@Transactional //事务</p>
+<p>@Async //异步操作</p>
+<p>2.Entity注解</p>
+<p>@Entity //不写@Table默认为user
+@Table(name=&quot;t_user&quot;) //自定义表名
+public class user {</p>
+<pre><code>@Id //主键
+@GeneratedValue(strategy = GenerationType.AUTO)//采用数据库自增方式生成主键
+//JPA提供的四种标准用法为TABLE,SEQUENCE,IDENTITY,AUTO.
+//TABLE：使用一个特定的数据库表格来保存主键。
+//SEQUENCE：根据底层数据库的序列来生成主键，条件是数据库支持序列。
+//IDENTITY：主键由数据库自动生成（主要是自动增长型）
+//AUTO：主键由程序控制。
+ 
+@Transient //此字段不与数据库关联
+@Version//此字段加上乐观锁
+//字段为name，不允许为空，用户名唯一
+@Column(name = &quot;name&quot;, unique = true, nullable = false)
+private String name;
+ 
+@Temporal(TemporalType.DATE)//生成yyyy-MM-dd类型的日期
+//出参时间格式化
+@JsonFormat(pattern = &quot;yyyy-MM-dd HH:mm:ss&quot;, timezone = &quot;GMT+8&quot;)
+//入参时，请求报文只需要传入yyyymmddhhmmss字符串进来，则自动转换为Date类型数据
+@DateTimeFormat(pattern = &quot;yyyy-MM-dd HH:mm&quot;)
+private Date createTime;
+ 
+public String getName() {
+    return name;
+}
+public void setName(String name) {
+    this.name = name;
+}
+</code></pre>
+<p>}</p>
+<p>四.继承JpaSpecificationExecutor接口进行复杂查询
+spring data jpa 通过创建方法名来做查询，只能做简单的查询，那如果我们要做复杂一些的查询呢，多条件分页怎么办，这里，spring data jpa为我们提供了JpaSpecificationExecutor接口，只要简单实现toPredicate方法就可以实现复杂的查询</p>
+<p>参考:https://www.cnblogs.com/happyday56/p/4661839.html</p>
+<p>1.首先让我们的接口继承于JpaSpecificationExecutor</p>
+<p>public interface TaskDao extends JpaSpecificationExecutor<Task>{
+}
+2.JpaSpecificationExecutor提供了以下接口</p>
+<p>public interface JpaSpecificationExecutor<T> {</p>
+<pre><code>T findOne(Specification&lt;T&gt; spec);
+ 
+List&lt;T&gt; findAll(Specification&lt;T&gt; spec);
+ 
+Page&lt;T&gt; findAll(Specification&lt;T&gt; spec, Pageable pageable);
+ 
+List&lt;T&gt; findAll(Specification&lt;T&gt; spec, Sort sort);
+ 
+long count(Specification&lt;T&gt; spec);
+</code></pre>
+<p>}</p>
+<p>//其中Specification就是需要我们传入查询方法的参数，它是一个接口</p>
+<p>public interface Specification<T> {</p>
+<pre><code>Predicate toPredicate(Root&lt;T&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder cb);
+</code></pre>
+<p>}
+提供唯一的一个方法toPredicate，我们只要按照JPA 2.0 criteria api写好查询条件就可以了，关于JPA 2.0 criteria api的介绍和使用，欢迎参考 
+http://blog.csdn.net/dracotianlong/article/details/28445725 </p>
+<p>http://developer.51cto.com/art/200911/162722.htm</p>
+<p>3.接下来我们在service bean</p>
+<p>@Service
+public class TaskService {</p>
+<pre><code>@Autowired TaskDao taskDao ;
+
+
+
+
+/**
+ * 复杂查询测试
+ * @param page
+ * @param size
+ * @return
+ */
+public Page&lt;Task&gt; findBySepc(int page, int size){
+ 
+    PageRequest pageReq = this.buildPageRequest(page, size);
+    Page&lt;Task&gt; tasks = this.taskDao.findAll(new MySpec(), pageReq);
+    //传入了new MySpec() 既下面定义的匿名内部类 其中定义了查询条件
+    return tasks;
+ 
+}
+ 
+ /**
+  * 建立分页排序请求 
+  * @param page
+  * @param size
+  * @return
+  */
+ private PageRequest buildPageRequest(int page, int size) {
+       Sort sort = new Sort(Direction.DESC,&quot;createTime&quot;);
+       return new PageRequest(page,size, sort);
+ }
+ 
+/**
+ * 建立查询条件
+ */
+private class MySpec implements Specification&lt;Task&gt;{
+ 
+    @Override
+    public Predicate toPredicate(Root&lt;Task&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder cb) {
+ 
+ //1.混合条件查询
+      Path&lt;String&gt; exp1 = root.get(&quot;taskName&quot;);
+        Path&lt;Date&gt;  exp2 = root.get(&quot;createTime&quot;);
+        Path&lt;String&gt; exp3 = root.get(&quot;taskDetail&quot;);
+        Predicate predicate = cb.and(cb.like(exp1, &quot;%taskName%&quot;),cb.lessThan(exp2, new Date()));
+        return cb.or(predicate,cb.equal(exp3, &quot;kkk&quot;));
+ 
+       /* 类似的sql语句为:
+        Hibernate: 
+            select
+                count(task0_.id) as col_0_0_ 
+            from
+                tb_task task0_ 
+            where
+                (
+                    task0_.task_name like ?
+                ) 
+                and task0_.create_time&lt;? 
+                or task0_.task_detail=?
+        */
+ 
+//2.多表查询
+    Join&lt;Task,Project&gt; join = root.join(&quot;project&quot;, JoinType.INNER);
+        Path&lt;String&gt; exp4 = join.get(&quot;projectName&quot;);
+        return cb.like(exp4, &quot;%projectName%&quot;);
+ 
+       /* Hibernate: 
+        select
+            count(task0_.id) as col_0_0_ 
+        from
+            tb_task task0_ 
+        inner join
+            tb_project project1_ 
+                on task0_.project_id=project1_.id 
+        where
+            project1_.project_name like ?*/ 
+       return null ;  
+    }
+}
+</code></pre>
+<p>}
+4.实体类task代码如下</p>
+<p>@Entity
+@Table(name = &quot;tb_task&quot;)
+public class Task {</p>
+<pre><code>private Long id ;
+private String taskName ;
+private Date createTime ;
+private Project project;
+private String taskDetail ;
+ 
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+public Long getId() {
+    return id;
+}
+public void setId(Long id) {
+    this.id = id;
+}
+ 
+@Column(name = &quot;task_name&quot;)
+public String getTaskName() {
+    return taskName;
+}
+public void setTaskName(String taskName) {
+    this.taskName = taskName;
+}
+ 
+@Column(name = &quot;create_time&quot;)
+@DateTimeFormat(pattern = &quot;yyyy-MM-dd hh:mm:ss&quot;)
+public Date getCreateTime() {
+    return createTime;
+}
+public void setCreateTime(Date createTime) {
+    this.createTime = createTime;
+}
+
+
+
+
+@Column(name = &quot;task_detail&quot;)
+public String getTaskDetail() {
+    return taskDetail;
+}
+public void setTaskDetail(String taskDetail) {
+    this.taskDetail = taskDetail;
+}
+ 
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = &quot;project_id&quot;)
+public Project getProject() {
+    return project;
+}
+public void setProject(Project project) {
+    this.project = project;
+}
+</code></pre>
+<p>}
+通过重写toPredicate方法，返回一个查询 Predicate，spring data jpa会帮我们进行查询。</p>
+<p>也许你觉得，每次都要写一个类来实现Specification很麻烦，那或许你可以这么写</p>
+<p>public class TaskSpec {</p>
+<pre><code>public static Specification&lt;Task&gt; method1(){
+ 
+    return new Specification&lt;Task&gt;(){
+        @Override
+        public Predicate toPredicate(Root&lt;Task&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder cb) {
+            return null;
+        }
+ 
+    };
+}
+ 
+public static Specification&lt;Task&gt; method2(){
+ 
+    return new Specification&lt;Task&gt;(){
+        @Override
+        public Predicate toPredicate(Root&lt;Task&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder cb) {
+            return null;
+        }
+ 
+    };
+}
+</code></pre>
+<p>}
+那么用的时候，我们就这么用</p>
+<p>Page<Task> tasks = this.taskDao.findAll(TaskSpec.method1(), pageReq);</p>
+<p>五.Spring data jpa + QueryDSL 进行复杂查询
+QueryDSL仅仅是一个通用的查询框架，专注于通过Java API构建类型安全的SQL查询。
+Querydsl可以通过一组通用的查询API为用户构建出适合不同类型ORM框架或者是SQL的查询语句，也就是说QueryDSL是基于各种ORM框架以及SQL之上的一个通用的查询框架。
+借助QueryDSL可以在任何支持的ORM框架或者SQL平台上以一种通用的API方式来构建查询。目前QueryDSL支持的平台包括JPA,JDO,SQL,Java Collections,RDF,Lucene,Hibernate Search。
+P.s.配置可以根据官网介绍来配置</p>
+<p>1 实体类</p>
+<p>城市类:</p>
+<p>@Entity
+@Table(name = &quot;t_city&quot;, schema = &quot;test&quot;, catalog = &quot;&quot;)
+public class TCity {
+//省略JPA注解标识
+private int id;
+private String name;
+private String state;
+private String country;
+private String map;
+}</p>
+<p>旅馆类:</p>
+<p>@Entity
+@Table(name = &quot;t_hotel&quot;, schema = &quot;test&quot;, catalog = &quot;&quot;)
+public class THotel {
+//省略JPA注解标识
+private int id;
+private String name;
+private String address;
+private Integer city;//保存着城市的id主键
+}
+2 单表动态分页查询</p>
+<p>Spring Data JPA中提供了QueryDslPredicateExecutor接口,用于支持QueryDSL的查询操作</p>
+<p>public interface tCityRepository extends JpaRepository&lt;TCity, Integer&gt;, QueryDslPredicateExecutor<TCity> {
+}
+这样的话单表动态查询就可以参考如下代码:</p>
+<p>//查找出Id小于3,并且名称带有<code>shanghai</code>的记录.</p>
+<p>//动态条件
+QTCity qtCity = QTCity.tCity; //SDL实体类
+//该Predicate为querydsl下的类,支持嵌套组装复杂查询条件
+Predicate predicate = qtCity.id.longValue().lt(3).and(qtCity.name.like(&quot;shanghai&quot;));
+//分页排序
+Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC,&quot;id&quot;));
+PageRequest pageRequest = new PageRequest(0,10,sort);
+//查找结果
+Page<TCity> tCityPage = tCityRepository.findAll(predicate,pageRequest);
+3 多表动态查询</p>
+<p>QueryDSL对多表查询提供了一个很好地封装,看下面代码:</p>
+<p>/**
+* 关联查询示例,查询出城市和对应的旅店
+* @param predicate 查询条件
+* @return 查询实体
+*/
+@Override
+public List<Tuple> findCityAndHotel(Predicate predicate) {
+JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+JPAQuery<Tuple> jpaQuery = queryFactory.select(QTCity.tCity,QTHotel.tHotel)
+.from(QTCity.tCity)
+.leftJoin(QTHotel.tHotel)
+.on(QTHotel.tHotel.city.longValue().eq(QTCity.tCity.id.longValue()));
+//添加查询条件
+jpaQuery.where(predicate);
+//拿到结果
+return jpaQuery.fetch();
+}
+城市表左连接旅店表,当该旅店属于这个城市时查询出两者的详细字段,存放到一个Tuple的多元组中.相比原生sql,简单清晰了很多.
+那么该怎么调用这个方法呢?</p>
+<p>@Test
+public void findByLeftJoin(){
+QTCity qtCity = QTCity.tCity;
+QTHotel qtHotel = QTHotel.tHotel;
+//查询条件
+Predicate predicate = qtCity.name.like(&quot;shanghai&quot;);
+//调用
+List<Tuple> result = tCityRepository.findCityAndHotel(predicate);
+//对多元组取出数据,这个和select时的数据相匹配
+for (Tuple row : result) {
+System.out.println(&quot;qtCity:&quot;+row.get(qtCity));
+System.out.println(&quot;qtHotel:&quot;+row.get(qtHotel));
+System.out.println(&quot;--------------------&quot;);
+}
+System.out.println(result);
+}</p>
+<p>这样做的话避免了返回Object[]数组,下面是自动生成的sql语句:</p>
+<p>select
+tcity0_.id as id1_0_0_,
+thotel1_.id as id1_1_1_,
+tcity0_.country as country2_0_0_,
+tcity0_.map as map3_0_0_,
+tcity0_.name as name4_0_0_,
+tcity0_.state as state5_0_0_,
+thotel1_.address as address2_1_1_,
+thotel1_.city as city3_1_1_,
+thotel1_.name as name4_1_1_ 
+from
+t_city tcity0_ 
+left outer join
+t_hotel thotel1_ 
+on (
+cast(thotel1_.city as signed)=cast(tcity0_.id as signed)
+) 
+where
+tcity0_.name like ? escape '!'
+4 多表动态分页查询</p>
+<p>分页查询对于queryDSL无论什么样的sql只需要写一遍,会自动转换为相应的count查询,也就避免了文章开始的问题4,下面代码是对上面的查询加上分页功能:</p>
+<p>@Override
+public QueryResults<Tuple> findCityAndHotelPage(Predicate predicate,Pageable pageable) {
+JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+JPAQuery<Tuple> jpaQuery = queryFactory.select(QTCity.tCity.id,QTHotel.tHotel)
+.from(QTCity.tCity)
+.leftJoin(QTHotel.tHotel)
+.on(QTHotel.tHotel.city.longValue().eq(QTCity.tCity.id.longValue()))
+.where(predicate)
+.offset(pageable.getOffset())
+.limit(pageable.getPageSize());
+//拿到分页结果
+return jpaQuery.fetchResults();
+}
+和上面不同之处在于这里使用了offset和limit限制查询结果.并且返回一个QueryResults,该类会自动实现count查询和结果查询,并进行封装.
+调用形式如下:</p>
+<pre><code>@Test
+public void findByLeftJoinPage(){
+    QTCity qtCity = QTCity.tCity;
+    QTHotel qtHotel = QTHotel.tHotel;
+    //条件
+    Predicate predicate = qtCity.name.like(&quot;shanghai&quot;);
+    //分页
+    PageRequest pageRequest = new PageRequest(0,10);
+    //调用查询
+    QueryResults&lt;Tuple&gt; result = tCityRepository.findCityAndHotelPage(predicate,pageRequest);
+    //结果取出
+    for (Tuple row : result.getResults()) {
+        System.out.println(&quot;qtCity:&quot;+row.get(qtCity));
+        System.out.println(&quot;qtHotel:&quot;+row.get(qtHotel));
+        System.out.println(&quot;--------------------&quot;);
+    }
+    //取出count查询总数
+    System.out.println(result.getTotal());
+}
+</code></pre>
+<p>生成的原生count查询sql,当该count查询结果为0的话,则直接返回,并不会再进行具体数据查询:</p>
+<p>select
+count(tcity0_.id) as col_0_0_ 
+from
+t_city tcity0_ 
+left outer join
+t_hotel thotel1_ 
+on (
+cast(thotel1_.city as signed)=cast(tcity0_.id as signed)
+) 
+where
+tcity0_.name like ? escape '!'
+生成的原生查询sql:</p>
+<p>select
+tcity0_.id as id1_0_0_,
+thotel1_.id as id1_1_1_,
+tcity0_.country as country2_0_0_,
+tcity0_.map as map3_0_0_,
+tcity0_.name as name4_0_0_,
+tcity0_.state as state5_0_0_,
+thotel1_.address as address2_1_1_,
+thotel1_.city as city3_1_1_,
+thotel1_.name as name4_1_1_ 
+from
+t_city tcity0_ 
+left outer join
+t_hotel thotel1_ 
+on (
+cast(thotel1_.city as signed)=cast(tcity0_.id as signed)
+) 
+where
+tcity0_.name like ? escape '!' limit ?
+查看打印,可以发现对应的city也都是同一个对象,hotel是不同的对象.</p>
+<p>5 改造
+有了上面的经验,改造就变得相当容易了.
+首先前面的一堆sql可以写成如下形式,无非是多了一些select和left join</p>
+<p>JPAQueryFactory factory = new JPAQueryFactory(entityManager);
+factory.select($.pcardCardOrder)
+.select($.pcardVcardMake.vcardMakeDes)
+.select($.pcardVtype.cardnumRuleId,$.pcardVtype.vtypeNm)
+.select($.pcardCardbin)
+.leftJoin($.pcardVcardMake).on($.pcardCardOrder.makeId.eq($.pcardVcardMake.vcardMakeId))
+//......省略
+查询条件使用Predicate代替,放在service拼接,或者写一个生产条件的工厂都可以.</p>
+<p>jpaQuery.where(predicate);
+最后的分页处理就和之前的一样了</p>
+<pre><code>    jpaQuery.offset(pageable.getOffset())
+            .limit(pageable.getPageSize());
+    return jpaQuery.fetchResults();
+</code></pre>
+<p>写在最后:</p>
+<pre><code>个人认为jpa的意义就在于少用原生sql 为了方便开发 封装已经是在所难免了. 推荐多使用简单查询,需要使用动态查询的时候推荐使用JpaSpecificationExecutor个人认为比较好用.
+
+虽然我还是喜欢原生的写法...
+</code></pre>
+<p>另外很多时候简单的条件可以在server层进行判断调用不同的Dao层方法就可以。</p>
+<p>P.s.参考资料 </p>
+<p>使用QueryDSL
+Spring Data JPA 实例查询
+Spring Data JPA - Reference Documentation
+Querydsl Reference Guide</p>
+
+                        <div id="giscus-container"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../xbell/Guava文件操作.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" style="z-index: 9999; position: relative;" href="../xbell/使用SpringDataJPA进行数据分页与排序.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../xbell/Guava文件操作.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" style="z-index: 9999; position: relative;" href="../xbell/使用SpringDataJPA进行数据分页与排序.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var pagePath = "xbell/SpringDataJpa复杂动态查询方式总结.md"
+        </script>
+
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../assets/custom3.js"></script>
+        <script type="text/javascript" src="../assets/lang.js"></script>
+
+
+    </body>
+</html>
