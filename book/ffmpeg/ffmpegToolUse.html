@@ -1,0 +1,442 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ffmpeg工具使用 - my github page</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="markdown build page.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/style1.css">
+
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../study_todo.html"><strong aria-hidden="true">1.</strong> 学习任务</a></li><li class="chapter-item expanded "><a href="../xbell/init.html"><strong aria-hidden="true">2.</strong> xbell</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../xbell/@ControllerAdvice的介绍及三种用法.html"><strong aria-hidden="true">2.1.</strong> @ControllerAdvice的介绍及三种用法</a></li><li class="chapter-item "><a href="../xbell/excel处理.html"><strong aria-hidden="true">2.2.</strong> excel处理</a></li><li class="chapter-item "><a href="../xbell/Guava文件操作.html"><strong aria-hidden="true">2.3.</strong> Guava文件操作</a></li><li class="chapter-item "><a href="../xbell/SpringDataJpa复杂动态查询方式总结.html"><strong aria-hidden="true">2.4.</strong> SpringDataJpa复杂动态查询方式总结</a></li><li class="chapter-item "><a href="../xbell/使用SpringDataJPA进行数据分页与排序.html"><strong aria-hidden="true">2.5.</strong> 使用SpringDataJPA进行数据分页与排序</a></li><li class="chapter-item "><a href="../xbell/参数校验.html"><strong aria-hidden="true">2.6.</strong> 参数校验</a></li><li class="chapter-item "><a href="../xbell/实习记录.html"><strong aria-hidden="true">2.7.</strong> 实习记录</a></li><li class="chapter-item "><a href="../xbell/知识点(java).html"><strong aria-hidden="true">2.8.</strong> 知识点(java)</a></li><li class="chapter-item "><a href="../xbell/知识点(javascript).html"><strong aria-hidden="true">2.9.</strong> 知识点(javascript)</a></li></ol></li><li class="chapter-item expanded "><a href="../golang/init.html"><strong aria-hidden="true">3.</strong> golang知识</a></li><li class="chapter-item expanded "><a href="../java/init.html"><strong aria-hidden="true">4.</strong> java知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/spring/init.html"><strong aria-hidden="true">4.1.</strong> spring</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../java/spring/@postMapping使用.html"><strong aria-hidden="true">4.1.1.</strong> @postMapping使用</a></li></ol></li><li class="chapter-item "><a href="../java/0杂项.html"><strong aria-hidden="true">4.2.</strong> 0杂项</a></li><li class="chapter-item "><a href="../java/@Column注解及属性详解.html"><strong aria-hidden="true">4.3.</strong> @Column注解及属性详解</a></li><li class="chapter-item "><a href="../java/@RequestBody的使用.html"><strong aria-hidden="true">4.4.</strong> @RequestBody的使用</a></li><li class="chapter-item "><a href="../java/Comparable和Comparator的区别.html"><strong aria-hidden="true">4.5.</strong> Comparable和Comparator的区别</a></li><li class="chapter-item "><a href="../java/Druid数据库连接池.html"><strong aria-hidden="true">4.6.</strong> Druid数据库连接池</a></li><li class="chapter-item "><a href="../java/Elasticsearch数据类型及其属性.html"><strong aria-hidden="true">4.7.</strong> Elasticsearch数据类型及其属性</a></li><li class="chapter-item "><a href="../java/GSON.html"><strong aria-hidden="true">4.8.</strong> GSON</a></li><li class="chapter-item "><a href="../java/IDEA自动部署WEB工程至远程服务器（学习笔记）.html"><strong aria-hidden="true">4.9.</strong> IDEA自动部署WEB工程至远程服务器（学习笔记）</a></li><li class="chapter-item "><a href="../java/JSR303.html"><strong aria-hidden="true">4.10.</strong> JSR303</a></li><li class="chapter-item "><a href="../java/JS简单实现多级Select联动菜单效果代码.html"><strong aria-hidden="true">4.11.</strong> JS简单实现多级Select联动菜单效果代码</a></li><li class="chapter-item "><a href="../java/JXl常用解析详解.html"><strong aria-hidden="true">4.12.</strong> JXl常用解析详解</a></li><li class="chapter-item "><a href="../java/Java8获取参数名称时无法获取参数名.html"><strong aria-hidden="true">4.13.</strong> Java8获取参数名称时无法获取参数名</a></li><li class="chapter-item "><a href="../java/Java线程池分析.html"><strong aria-hidden="true">4.14.</strong> Java线程池分析</a></li><li class="chapter-item "><a href="../java/Lombok的基本使用.html"><strong aria-hidden="true">4.15.</strong> Lombok的基本使用</a></li><li class="chapter-item "><a href="../java/MD5.html"><strong aria-hidden="true">4.16.</strong> MD5</a></li><li class="chapter-item "><a href="../java/index.html"><strong aria-hidden="true">4.17.</strong> README</a></li><li class="chapter-item "><a href="../java/Redis.html"><strong aria-hidden="true">4.18.</strong> Redis</a></li><li class="chapter-item "><a href="../java/Redis的五种数据类型及方法.html"><strong aria-hidden="true">4.19.</strong> Redis的五种数据类型及方法</a></li><li class="chapter-item "><a href="../java/ResponseEntity实现Rest风格的返回值.html"><strong aria-hidden="true">4.20.</strong> ResponseEntity实现Rest风格的返回值</a></li><li class="chapter-item "><a href="../java/时间戳和LocalDateTime和Date互转和格式化.html"><strong aria-hidden="true">4.21.</strong> 时间戳和LocalDateTime和Date互转和格式化</a></li></ol></li><li class="chapter-item expanded "><a href="../ffmpeg/init.html"><strong aria-hidden="true">5.</strong> ffmpeg知识</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../ffmpeg/ffmpegToolUse.html" class="active"><strong aria-hidden="true">5.1.</strong> ffmpeg工具使用</a></li><li class="chapter-item "><a href="../ffmpeg/ffmpegample.html"><strong aria-hidden="true">5.2.</strong> ffmpeg示例</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">my github page</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/hqqich/hqqich.github.io" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <!-- Page table of contents -->
+                    <div class="sidetoc"><nav class="pagetoc"></nav></div>
+                    <main>
+                        <h1 id="ffmpeg工具使用"><a class="header" href="#ffmpeg工具使用">ffmpeg工具使用</a></h1>
+<h2 id="ffmpeg指令"><a class="header" href="#ffmpeg指令">ffmpeg指令</a></h2>
+<h4 id="ffmpeg--formats"><a class="header" href="#ffmpeg--formats">ffmpeg -formats</a></h4>
+<p>查看支持的视频文件格式</p>
+<h4 id="ffmpeg--help"><a class="header" href="#ffmpeg--help">ffmpeg -help</a></h4>
+<p>查看帮助信息</p>
+<h4 id="ffmpeg--codecs"><a class="header" href="#ffmpeg--codecs">ffmpeg -codecs</a></h4>
+<p>查看支持的所有编解码器</p>
+<h4 id="ffmpeg--encoders"><a class="header" href="#ffmpeg--encoders">ffmpeg -encoders</a></h4>
+<p>查看支持的编码器</p>
+<h4 id="ffmpeg--decoders"><a class="header" href="#ffmpeg--decoders">ffmpeg -decoders</a></h4>
+<p>查看支持的解码器</p>
+<h4 id="ffmpeg--h-muxerflv"><a class="header" href="#ffmpeg--h-muxerflv">ffmpeg -h muxer=flv</a></h4>
+<p>查看 flv 格式封装器的参数支持</p>
+<h4 id="ffmpeg--h-demuxerflv"><a class="header" href="#ffmpeg--h-demuxerflv">ffmpeg -h demuxer=flv</a></h4>
+<p>查看 flv 格式解封装器的参数支持</p>
+<h4 id="ffmpeg--h-encoderh264"><a class="header" href="#ffmpeg--h-encoderh264">ffmpeg -h encoder=h264</a></h4>
+<p>查看H.264(AVC)编码参数支持</p>
+<h4 id="ffmpeg--h-decoderh264"><a class="header" href="#ffmpeg--h-decoderh264">ffmpeg -h decoder=h264</a></h4>
+<p>查看H.264(AVC)解码参数支持</p>
+<h4 id="ffmpeg--h-filtercolorkey"><a class="header" href="#ffmpeg--h-filtercolorkey">ffmpeg -h filter=colorkey</a></h4>
+<p>查看colorkey滤镜的参数支持</p>
+<h2 id="封装编码"><a class="header" href="#封装编码">封装，编码</a></h2>
+<ul>
+<li>通过 libavformat 库进行封装和解封装</li>
+<li>通过 libavcodec 库进行编码和解码</li>
+</ul>
+<h2 id="例子"><a class="header" href="#例子">例子</a></h2>
+<h3 id="ffmpeg--i-inputrmvb--vcodec-mpeg4--bv-200k--r-15--an-outputmp4"><a class="header" href="#ffmpeg--i-inputrmvb--vcodec-mpeg4--bv-200k--r-15--an-outputmp4"><code>ffmpeg -i input.rmvb -vcodec mpeg4 -b:v 200k -r 15 -an output.mp4</code></a></h3>
+<ul>
+<li>转封装格式从RMVB格式转换为MP4格式</li>
+<li>视频编码从RV40转换为MPEG4格式</li>
+<li>视频码率从原来的 377kbit/s转换为200kbit/s</li>
+<li>视频帧率从原来的 23.98fps转换为15fps</li>
+<li>转码后的文件中不包括音频(-an参数）</li>
+</ul>
+<h2 id="ffprobe-使用"><a class="header" href="#ffprobe-使用">ffprobe 使用</a></h2>
+<h3 id="ffprobe--show_packets-1gmp4"><a class="header" href="#ffprobe--show_packets-1gmp4"><code>ffprobe -show_packets 1G.mp4</code></a></h3>
+<p>查看多媒体数据包信息</p>
+<h3 id="ffprobe--show_data--show_packets-1gmp4"><a class="header" href="#ffprobe--show_data--show_packets-1gmp4"><code>ffprobe -show_data -show_packets 1G.mp4</code></a></h3>
+<p>组合参数查看包具体数据</p>
+<h3 id="ffprobe--show_format-1gmp4"><a class="header" href="#ffprobe--show_format-1gmp4"><code>ffprobe -show_format 1G.mp4</code></a></h3>
+<p>显示视频封装格式</p>
+<h3 id="ffprobe--show_frames-1gmp4"><a class="header" href="#ffprobe--show_frames-1gmp4"><code>ffprobe -show_frames 1G.mp4</code></a></h3>
+<p>显示视频封装的帧信息</p>
+<h3 id="ffprobe--show_streams-1gmp4"><a class="header" href="#ffprobe--show_streams-1gmp4"><code>ffprobe -show_streams 1G.mp4</code></a></h3>
+<p>查看多媒体文件中的流信息</p>
+<ul>
+<li>
+<p><code>ffprobe -of xml -show_streams 1G.mp4 &gt; a.xml</code>  将格式的xml数据覆盖到a.xml中</p>
+</li>
+<li>
+<p><code>ffprobe -of xml -show_streams 1G.mp4 &gt;&gt; b.xml</code> 将格式的xml数据追加到b.xml中</p>
+</li>
+<li>
+<p><code>ffprobe -of ini -show_streams 1G.mp4 &gt; c.ini</code>  将格式的ini数据覆盖到c.ini中</p>
+</li>
+<li>
+<p><code>ffprobe -of flat -show_streams 1G.mp4 &gt; d.flat</code> 将格式的flat数据覆盖到d.flat中</p>
+</li>
+<li>
+<p><code>ffprobe -of json -show_streams 1G.mp4 &gt; e.json</code> 将格式的json数据覆盖到e.json中</p>
+</li>
+<li>
+<p><code>ffprobe -of csv -show_streams 1G.mp4 &gt; f.csv</code> 将格式的csv数据覆盖到f.csv中</p>
+</li>
+</ul>
+<h3 id="ffprobe--show_frames--select_streams-v--of-xml-1gmp4"><a class="header" href="#ffprobe--show_frames--select_streams-v--of-xml-1gmp4"><code>ffprobe -show_frames -select_streams v -of xml 1G.mp4</code></a></h3>
+<p>使用select_streams可以只查看音频(a)、视频 (v)、 字幕（ s）的信息， 例如配合show_ frames查看视频的frames信息</p>
+<ul>
+<li><code>ffprobe -show_frames -select_streams v -of xml 1G.mp4 &gt; a.xml</code>  将格式的xml数据覆盖到a.xml中</li>
+</ul>
+<h2 id="ffplay-命令"><a class="header" href="#ffplay-命令">ffplay 命令</a></h2>
+<blockquote>
+<p>fplay不仅仅是播放器，同时也是测试ffmpeg的codec引擎、format引擎，以及filter引擎的工具， 并且还可以进行可视化的媒体参数分析， 其可以通过ffplay --help进行查看：</p>
+</blockquote>
+<p>常用参数：</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">选项</th><th>说明</th><th>原文</th></tr></thead><tbody>
+<tr><td style="text-align: left">-x width</td><td>强制显示宽度</td><td>.D....... Initial x coordinate. (from 0 to INT_MAX) (default 0)</td></tr>
+<tr><td style="text-align: left">-y height</td><td>强制显示高度</td><td>.D....... Initial y coordinate. (from 0 to INT_MAX) (default 0)</td></tr>
+<tr><td style="text-align: left">-video_size size</td><td>帧尺寸 设置显示帧存储(WxH格式)，仅适用于类似原始YUV等没有包含帧大小(WxH)的视频</td><td>.D....... A string describing frame size, such as 640x480 or hd720. (default &quot;vga&quot;)</td></tr>
+<tr><td style="text-align: left">-pixel_format format</td><td>设置像素格式</td><td>.D....... set video pixel format</td></tr>
+<tr><td style="text-align: left">-fs</td><td>以全屏模式启动</td><td>force full screen</td></tr>
+<tr><td style="text-align: left">-an</td><td>禁用音频</td><td>disable audio</td></tr>
+<tr><td style="text-align: left">-vn</td><td>禁用视频</td><td>disable video</td></tr>
+<tr><td style="text-align: left">-sn</td><td>禁用字幕</td><td>diable subtitling</td></tr>
+<tr><td style="text-align: left">-ss pos</td><td>根据设置的位置进行定位播放</td><td>seek to a given position in seconds</td></tr>
+<tr><td style="text-align: left">-t duration</td><td>设置播放视频/音频时长</td><td>play &quot;duration&quot; seconds of audio/video</td></tr>
+<tr><td style="text-align: left">-bytes val</td><td>以字节为单位进行定位播放</td><td>seek by bytes 0=off 1=on -1=auto</td></tr>
+<tr><td style="text-align: left">-seek_interval interval</td><td>自定义左/右键定位拖动间隔</td><td>set seek interval for left/right keys, in seconds</td></tr>
+<tr><td style="text-align: left">-nodisp</td><td>关闭图形显示，不显示视频。。。</td><td>disable graphical display</td></tr>
+<tr><td style="text-align: left">-volume volume</td><td>设置起始音量</td><td>set startup volume 0=min 100=max</td></tr>
+<tr><td style="text-align: left">-f fmt</td><td>强制使用指定格式解码</td><td>force format</td></tr>
+<tr><td style="text-align: left">-window_title title</td><td>设置窗口标题（默认为文件名）</td><td>set window title</td></tr>
+<tr><td style="text-align: left">-loop number</td><td>设置播放循环次数</td><td>set number of times the playback shall be looped</td></tr>
+<tr><td style="text-align: left">-showmode mode</td><td>设置显示模式,可用的模式值: 0 显示视频,1 显示音频波形,2 显示音频频谱。缺省为0,如果视频不存在则自动选择2</td><td>select show mode (0 = video, 1 = waves, 2 = RDFT)</td></tr>
+<tr><td style="text-align: left">-vf filter_graph</td><td>设置视频滤镜</td><td>set video filters</td></tr>
+<tr><td style="text-align: left">-af filter_graph</td><td>设置音频滤镜</td><td>set audio filters</td></tr>
+</tbody></table>
+</div>
+<p>高级选项 Advanced Options：</p>
+<div class="table-wrapper"><table><thead><tr><th>参数</th><th>说明</th><th>原文</th></tr></thead><tbody>
+<tr><td>-stats</td><td>打印回放统计信息</td><td>show status</td></tr>
+<tr><td>-fast</td><td>非标准规范的多媒体兼容优化</td><td>non spec compliant optimizations</td></tr>
+<tr><td>-genpts</td><td>生成pts</td><td>generate pts</td></tr>
+<tr><td><strong>-sync type</strong></td><td>同步类型，默认audio为主时钟</td><td>set audio-video sync. type (type=audio/video/ext)</td></tr>
+<tr><td>-ast audio_stream_specifier</td><td>指定音频流索引</td><td>select desired audio stream</td></tr>
+<tr><td>-vst video_stream_specifier</td><td>指定视频流索引</td><td>select desired video stream</td></tr>
+<tr><td>-sst substitle_stream_specifier</td><td>指定字幕流索引</td><td>select desired substitle stream</td></tr>
+<tr><td>-autoexit</td><td>视频播放完成后自动退出</td><td>exit at the end</td></tr>
+<tr><td>-exitonkeydown</td><td>键盘按下任何键退出播放</td><td>exit on key down</td></tr>
+<tr><td>-exitonmousedown</td><td>鼠标按下任何键退出播放</td><td>exit on mouse down</td></tr>
+<tr><td><strong>-codec:media_specifier codec_name</strong></td><td>强制使用设置的多媒体解码器, media_specifier可选值为a(audio), v(video), s(substitle)，如codec:v h264 , <em>同名</em>表示：-vcodec h264 == -c:v h264 == -codec:v h264</td><td></td></tr>
+<tr><td>-acodec codec_name</td><td>强制使用设置的音频解码器进行音频解码</td><td>force audio decoder</td></tr>
+<tr><td>-vcodec codec_name</td><td>强制使用设置的视频解码器进行视频解码</td><td>force video decoder</td></tr>
+<tr><td>-scodec codec_name</td><td>强制使用设置的字幕解码器进行字幕解码</td><td>force subtitle decoder</td></tr>
+<tr><td>-autorotate</td><td>根据文件元数据进行自动旋转</td><td>automatically rotate video</td></tr>
+<tr><td>-framedrop</td><td>如果视频不同步则丢弃视频帧。当主时钟非视频时钟时默认开启。若需禁用则使用 -noframedrop</td><td>drop frames when cpu is too slow</td></tr>
+<tr><td>-infbuf</td><td>不限制输入缓冲区大小。此选项将不限制缓冲区的大小。若需禁用则使用-noinfbuf</td><td>don't limit the input buffer size (useful with realtime streams)</td></tr>
+</tbody></table>
+</div>
+<p>播放控制：</p>
+<div class="table-wrapper"><table><thead><tr><th>快捷键</th><th>作用</th><th>原文</th></tr></thead><tbody>
+<tr><td>q, ESC</td><td>退出</td><td>Quit.</td></tr>
+<tr><td>f</td><td>全屏切换</td><td>Toggle full screen.</td></tr>
+<tr><td>p, space</td><td>暂停/播放切换</td><td>Pause.</td></tr>
+<tr><td>m(mute)</td><td>静音切换</td><td>Toggle mute.</td></tr>
+<tr><td>9, 0</td><td>9减小音量，0增大音量</td><td>Decrease and increase volume respectively.</td></tr>
+<tr><td>/, *</td><td>/减小音量，*增大音量</td><td>Decrease and increase volume respectively.</td></tr>
+<tr><td>a</td><td>循环切换音频流</td><td>Cycle audio channel in the current program.</td></tr>
+<tr><td>v</td><td>循环切换视频流</td><td>Cycle video channel.</td></tr>
+<tr><td><em>t</em></td><td>循环切换字幕流</td><td>Cycle subtitle channel in the current program.</td></tr>
+<tr><td>s</td><td>逐帧播放</td><td>Step to the next frame. Pause if the stream is not already paused, step to the next video frame, and pause.Cycle program.</td></tr>
+<tr><td>c</td><td>循环切换节目</td><td>Cycle program.</td></tr>
+<tr><td>w</td><td>循环切换过滤器或显示模式</td><td>Cycle video filters or show modes.</td></tr>
+<tr><td>left/right</td><td>向后/向前拖动10s</td><td>Seek backward/forward 10 seconds.</td></tr>
+<tr><td>down/up</td><td>向后/向前拖动1min</td><td>Seek backward/forward 1 minute.</td></tr>
+<tr><td>鼠标右键单击</td><td>拖动与显示宽度对应百分比的文件进行播放</td><td>Seek to percentage in file corresponding to fraction of width.</td></tr>
+<tr><td>鼠标左键双击</td><td>全屏切换</td><td>Toggle full screen.</td></tr>
+<tr><td>page down/up</td><td>查找前一章/下一章。或者如果没有章节，请向后/向前寻求 10 分钟。</td><td>Seek to the previous/next chapter. or if there are no chapters Seek backward/forward 10 minutes.</td></tr>
+</tbody></table>
+</div>
+<h3 id="ffplay---help"><a class="header" href="#ffplay---help"><code>ffplay --help</code></a></h3>
+<p>获取帮助文档</p>
+<h3 id="ffplay--ss-30--t-10-1gmp4"><a class="header" href="#ffplay--ss-30--t-10-1gmp4"><code>ffplay -ss 30 -t 10 1G.mp4</code></a></h3>
+<p>视频的第30 秒开始播放， 播放10 秒钟的文件</p>
+<h3 id="ffplayexe--window_title-8ktest--x-500--y-500--vcodec-hevc--an--vn-8kmkv"><a class="header" href="#ffplayexe--window_title-8ktest--x-500--y-500--vcodec-hevc--an--vn-8kmkv"><code>ffplay.exe -window_title &quot;8KTest&quot; -x 500 -y 500 -vcodec hevc -an -vn 8K.mkv</code></a></h3>
+<p>指定宽度高度，指定编码格式，指定不播放音频不播放视频</p>
+<ol>
+<li>播放本地文件</li>
+</ol>
+<ul>
+<li><code>ffplay test.flv</code></li>
+<li><code>ffpaly -window_title &quot;test window&quot; test.flv</code> # 指定播放窗口名称</li>
+</ul>
+<ol start="2">
+<li>播放网络流</li>
+</ol>
+<ul>
+<li><code>ffplay rtmp://58.200.131.2:1935/livetv/cctv6</code></li>
+</ul>
+<ol start="3">
+<li>禁用音频或者视频</li>
+</ol>
+<ul>
+<li><code>ffplay -an test.flv</code> # 禁用音频</li>
+<li><code>ffplay -vn test.flv</code> # 禁用视频</li>
+</ul>
+<ol start="4">
+<li>指定解码器</li>
+</ol>
+<ul>
+<li><code>ffplay -vcodec h264 test.flv</code> # 指定h264解码器</li>
+</ul>
+<ol start="5">
+<li>播放YUV数据</li>
+</ol>
+<ul>
+<li><code>ffplay -pixel_format yuv420p -video_size 1280x720 -framerate 5 1280x720_yuv420p.yuv</code></li>
+</ul>
+<ol start="6">
+<li>播放RGB数据</li>
+</ol>
+<ul>
+<li><code>ffplay -pixel_format rgb24 -video_size 1280x720 -framerate 5 1280x720_rgb24.rgb</code></li>
+</ul>
+<ol start="7">
+<li>播放pcm数据</li>
+</ol>
+<ul>
+<li><code>ffplay -ar 44100 -ac 2 -f s16le 44100_2_s16le.pcm</code></li>
+</ul>
+<h4 id="简单过滤器"><a class="header" href="#简单过滤器">简单过滤器</a></h4>
+<ol>
+<li>视频旋转</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -vf transpose =1</code> # 顺时针旋转90度</li>
+</ul>
+<ol start="2">
+<li>视频反转</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -vf hflip # 以垂直中线互换左右</code></li>
+<li><code>ffplay -i test.flv -vf vflip # 以水平中线互换上下</code></li>
+</ul>
+<ol start="3">
+<li>视频旋转同时反转</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -vf hflip，transpose=2</code> # 多个滤镜，相同参数，逗号间隔</li>
+</ul>
+<ol start="4">
+<li>音频倍数播放</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -af atempo=3</code></li>
+</ul>
+<ol start="5">
+<li>视频倍数播放</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -vf setpts=PTS/3</code></li>
+</ul>
+<ol start="6">
+<li>音频与视频同时倍数</li>
+</ol>
+<ul>
+<li><code>ffplay -i test.flv -vf setpts=PTS/3 -af atempo=3</code> # 多个滤镜，不同种类参数，空格追加</li>
+</ul>
+
+                        <div id="giscus-container"></div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../ffmpeg/init.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" style="z-index: 9999; position: relative;" href="../ffmpeg/ffmpegample.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../ffmpeg/init.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" style="z-index: 9999; position: relative;" href="../ffmpeg/ffmpegample.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+        var pagePath = "ffmpeg/ffmpegToolUse.md"
+        </script>
+
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../assets/custom3.js"></script>
+        <script type="text/javascript" src="../assets/lang.js"></script>
+
+
+    </body>
+</html>
