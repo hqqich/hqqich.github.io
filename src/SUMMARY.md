@@ -13,6 +13,7 @@
   - [知识点(javascript)](xbell/知识点(javascript).md)
 - [golang知识](golang/init.md)
 - [java知识](java/init.md)
+  - [命名规范](java/命名规范.md)
   - [spring](java/spring/init.md)
     - [@postMapping使用](java/spring/@postMapping使用.md)
   - [0杂项](java/0杂项.md)
