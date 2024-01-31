@@ -4,7 +4,7 @@ import theme from "./theme.js";
 export default defineUserConfig({
   // dest: "./dev-ops/nginx/html"
   dest: "./dist",
-  base: "/",
+  base: "/blog/dist/",
 
   lang: "zh-CN",
   title: "我的简历",
