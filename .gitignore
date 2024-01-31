@@ -3,3 +3,6 @@
 /mdbook.exe
 /files/
 node_modules/
+package-lock.json
+.cache/
+.temp/
