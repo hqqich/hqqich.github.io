@@ -1,7 +1,7 @@
 {
   "name": "resume-blog",
   "version": "2.0.0",
-  "description": "简历博客",
+  "description": "博客",
   "license": "MIT",
   "type": "module",
   "scripts": {
