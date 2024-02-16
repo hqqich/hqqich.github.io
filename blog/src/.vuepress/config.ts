@@ -8,6 +8,6 @@ export default defineUserConfig({
   base: "/blog/dist/",  // 主路由，因为这里放在github.io上，所以用这个前缀
   lang: "zh-CN",
   title: "blog",
-  description: "关于我自己的学习成长经历",
+  description: "学习成长经历",
   theme,
 });
