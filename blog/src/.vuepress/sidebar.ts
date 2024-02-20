@@ -16,6 +16,7 @@ export default sidebar({
                 "JVM（Java虚拟机） 整理（一）.md",
                 "【SpringBoot】38 个常用注解.md",
                 "HTML中的常用的特殊字符以及所有特殊字符.md",
+                "java中C3P0、Druid、HikariCP 、DBCP连接池的jar包下载与IDEA配置.md",
             ],
         },
 
