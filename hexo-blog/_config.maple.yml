@@ -8,18 +8,22 @@ nav:
 favicon: /favicon.ico
 
 # logo
-logo: /images/logo.svg
+#logo: /images/logo.svg
+logo: https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34
 
 # links
 links:
-  Github: https://github.com/xbmlz
+  Github: https://github.com/hqqich
   # ZhiHu:
   # Twitter:
   # Weibo:
 
+## analytics
+#google_analytics:
+#baidu_analytics:
 # analytics
-google_analytics:
-baidu_analytics:
+google_analytics: G-EHXM4GYP5W
+baidu_analytics: 0a6515fb9c839d6a56d4cfd8b7d243d4
 
 # mathjax
 fancybox: true
@@ -34,13 +38,37 @@ mermaid:
   theme: default
 
 # giscus
+# <script src="https://giscus.app/client.js"
+#        data-repo="hqqich/giscus"
+#        data-repo-id="R_kgDOOCZUBA"
+#        data-category="General"
+#        data-category-id="DIC_kwDOOCZUBM4Cng1l"
+#        data-mapping="pathname"
+#        data-strict="0"
+#        data-reactions-enabled="1"
+#        data-emit-metadata="0"
+#        data-input-position="bottom"
+#        data-theme="preferred_color_scheme"
+#        data-lang="zh-CN"
+#        crossorigin="anonymous"
+#        async>
+#</script>
 giscus:
   enable: true
-  repo:
-  repo_id:
-  category:
-  category_id:
-  mapping:
+  repo: hqqich/giscus
+  repo_id: R_kgDOOCZUBA
+  category: General
+  category_id: DIC_kwDOOCZUBM4Cng1l
+  mapping: pathname
+
+
+# maple
+maple:
+  enable: true
+  # fall leaf count
+  count: 10
+  # 0-1
+  speed: 0.5
 
 ## Header
 #nav:

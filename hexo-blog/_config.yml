@@ -3,17 +3,18 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
+title: Hexo-blog
+subtitle: '忙碌把时光缩短, 苦难把岁月拉长'
 description: ''
 keywords:
-author: John Doe
-language: en
+author: hqqich
+language: zh
 timezone: ''
+
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://hqqich.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -40,7 +41,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -57,6 +58,7 @@ prismjs:
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
+root: /hexo-blog/public/
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
@@ -105,3 +107,16 @@ theme: maple
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+
+# feed
+feed:
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss2.xml
+  limit: 20
+  order_by: -date
+  autodiscovery: true
