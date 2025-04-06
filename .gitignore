@@ -8,3 +8,5 @@ package-lock.json
 .temp/
 /file/
 /blog/dev-ops/
+/log/
+/test.zip
