@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>探究 Kotlin 的隐藏性能开销与避坑指南 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        探究 Kotlin 的隐藏性能开销与避坑指南
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        探究 Kotlin 的隐藏性能开销与避坑指南
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>27 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>6.8k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<p>在 2019 年 Google I&#x2F;O 大会上，Google 宣布了今后 Android 开发将优先使用 Kotlin ，即 Kotlin-first，随之在 Android 开发界兴起了一阵全民学习 Kotlin 的热潮。之后 Google 也推出了一系列用 Kotlin 实现的 ktx 扩展库，例如 <code>activity-ktx</code>、<code>fragment-ktx</code>、<code>core-ktx</code>等，提供了各种方便的扩展方法用于简化开发者的工作，Kotlin 协程目前也是官方在 Android 上进行异步编程的推荐解决方案</p>
+<p>Google 推荐优先使用 Kotlin，也宣称不会放弃 Java，但目前各种 ktx 扩展库还是需要由 Kotlin 代码进行使用才能最大化地享受到其便利性，Java 代码来调用显得有点不伦不类。作为 Jetpack 主要组件之一的 Paging 3.x 版本目前也已经完全用 Kotlin 实现，为 Kotlin 协程提供了一流的支持。刚出正式版本不久的 Jetpack Compose 也只支持 Kotlin，Java 无缘声明式 UI</p>
+<p>开发者可以感受到 Kotlin 在 Android 开发中的重要性在不断提高，虽然 Google 说不会放弃 Java，但以后的事谁说得准呢？开发者还是需要尽早迁移到 Kotlin，这也是必不可挡的技术趋势</p>
+<p>Kotlin 在设计理念上有很多和 Java 不同的地方，开发者能够直观感受到的是语法层面上的差异性，背后也包含有<strong>一系列隐藏的性能开销以及一些隐藏得很深的“坑”</strong>，本篇文章就来介绍在使用 Kotlin 过程中存在的隐藏性能开销，帮助读者避坑，希望对你有所帮助 🤣🤣</p>
+<h1 id="慎用-JvmOverloads"><a href="#慎用-JvmOverloads" class="headerlink" title="慎用 @JvmOverloads"></a>慎用 @JvmOverloads</h1><p><code>@JvmOverloads</code> 注解大家应该不陌生，其作用在具有默认参数的方法上，用于向 Java 代码生成多个重载方法</p>
+<p>例如，以下的 <code>println</code> 方法对于 Java 代码来说就相当于两个重载方法，默认使用空字符串作为入参参数</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Kotlin</span></span><br><span class="line"><span class="meta">@JvmOverloads</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">println</span><span class="params">(log: <span class="type">String</span> = <span class="string">&quot;&quot;</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">println</span><span class="params">(String log)</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">println</span><span class="params">()</span> &#123;</span><br><span class="line">	println(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@JvmOverloads</code> 很方便，减少了 Java 代码调用 Kotlin 代码时的调用成本，使得 Java 代码也可以享受到默认参数的便利，但在某些特殊场景下也会引发一个隐藏得很深的 bug</p>
+<p>举个例子</p>
+<p>我们知道 Android 系统的 View 类包含有多个构造函数，我们在实现自定义 View 时至少就要声明一个<strong>包含有两个参数的构造函数</strong>，参数类型必须依次是 Context 和 AttributeSet，这样该自定义 View 才能在布局文件中使用。而 View 类的构造函数最多包含有四个入参参数，最少只有一个，为了省事，我们在用 Kotlin 代码实现自定义 View 时，就可以用 <code>@JvmOverloads</code> 来很方便地继承 View 类，就像以下代码</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="keyword">class</span> <span class="title class_">BaseView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span>, defStyleRes: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : View(context, attrs, defStyleAttr, defStyleRes)</span><br></pre></td></tr></table></figure>
+
+<p>如果我们是像 BaseView 一样直接继承于 View 的话，此时使用<code>@JvmOverloads</code>就不会产生任何问题，可如果我们继承的是 TextView 的话，那么问题就来了</p>
+<p>直接继承于 TextView 不做任何修改，在布局文件中分别使用 MyTextView 和 TextView，给它们完全一样的参数，看看运行效果</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> <span class="keyword">class</span> <span class="title class_">MyTextView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>,</span><br><span class="line">    defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span>, defStyleRes: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : TextView(context, attrs, defStyleAttr, defStyleRes)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">github.leavesc.demo.MyTextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">&quot;center&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">&quot;业志陈&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:textSize</span>=<span class="string">&quot;42sp&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">&quot;center&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:text</span>=<span class="string">&quot;业志陈&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:textSize</span>=<span class="string">&quot;42sp&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>此时两个 TextView 就会呈现出不一样的文本颜色了，十分神奇</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8db31ff83054797a9a0048919df668a~tplv-k3u1fbpfcp-watermark.image"></p>
+<p>这就是 <code>@JvmOverloads</code> 带来的一个隐藏问题。因为 TextView 的 <code>defStyleAttr</code> 实际上是有一个默认值的，即 <code>R.attr.textViewStyle</code>，当中就包含了 TextView 的默认文本颜色，而由于 MyTextView 为 <code>defStyleAttr</code> 指定了一个默认值 0，这就导致 MyTextView 丢失了一些默认风格属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">TextView</span><span class="params">(Context context, <span class="meta">@Nullable</span> AttributeSet attrs)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>(context, attrs, com.android.internal.R.attr.textViewStyle);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，如果我们要直接继承的是 View 类的话可以直接使用<code>@JvmOverloads</code>，此时不会有任何问题，而如果我们要继承的是现有控件的话，就需要考虑应该如何设置默认值了</p>
+<h1 id="慎用-解构声明"><a href="#慎用-解构声明" class="headerlink" title="慎用 解构声明"></a>慎用 解构声明</h1><p>有时我们会有把一个对象拆解成多个变量的需求，Kotlin 也提供了这类语法糖支持，称为解构声明</p>
+<p>例如，以下代码就将 People 变量解构为了两个变量：name 和 nickname，变量名可以随意取，每个变量就按顺序对应着 People 中的字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">data <span class="keyword">class</span> <span class="title class_">People</span>(val name: String, val nickname: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> fun <span class="title function_">printInfo</span><span class="params">(people: People)</span> &#123;</span><br><span class="line">    val (name, nickname) = people</span><br><span class="line">    <span class="title function_">println</span><span class="params">(name)</span></span><br><span class="line">    println(nickname)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每个解构声明其实都会被编译成以下代码，解构操作其实就是在按照顺序获取特定方法的返回值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> people.component1();</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">nickname</span> <span class="operator">=</span> people.component2();</span><br></pre></td></tr></table></figure>
+
+<p><code>component1()</code> 和 <code>component2()</code> 函数是 Kotlin 为数据类自动生成的方法，People 反编译为 Java 代码后就可以看到，每个方法返回的其实都是成员变量，方法名包含的数字对应的就是成员变量在数据类中的声明顺序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">People</span> &#123;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> String nickname;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String <span class="title function_">component1</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.name;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String <span class="title function_">component2</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.nickname;</span><br><span class="line">   &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解构声明和数据类配套使用时就有一个隐藏的知识点，看以下例子</p>
+<p>假设后续我们为 People 添加了一个新字段 city，此时 <code>printInfo</code> 方法一样可以正常调用，但 nickname 指向的其实就变成了 people 变量内的 city 字段了，含义悄悄发生了变化，此时就会导致逻辑错误了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">People</span>(<span class="keyword">val</span> name: String, <span class="keyword">val</span> city: String, <span class="keyword">val</span> nickname: String)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">printInfo</span><span class="params">(people: <span class="type">People</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> (name, nickname) = people</span><br><span class="line">    println(name)</span><br><span class="line">    println(nickname)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据类中的字段是可以随时增减或者变换位置的，从而使得解构结果和我们一开始预想的不一致，因此我觉得解构声明和数据类不太适合放在一起使用</p>
+<h1 id="慎用-toLowerCase-和-toUpperCase"><a href="#慎用-toLowerCase-和-toUpperCase" class="headerlink" title="慎用 toLowerCase 和 toUpperCase"></a>慎用 toLowerCase 和 toUpperCase</h1><p>当我们要以忽略大小写的方式比较两个字符串是否相等时，通常想到的是通过 <code>toUpperCase</code> 或 <code>toLowerCase</code> 方法将两个字符串转换为全大写或者全小写，然后再进行比较，这种方式完全可以满足需求，但当中也包含着一个隐藏开销</p>
+<p>例如，以下的 Kotlin 代码反编译为 Java 代码后，可以看到每次调用<code>toUpperCase</code>方法都会创建一个新的临时变量，然后再去调用临时变量的 <code>equals</code> 方法进行比较</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> name = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line">    <span class="keyword">val</span> nickname = <span class="string">&quot;leavesc&quot;</span></span><br><span class="line">    println(name.toUpperCase() == nickname.toUpperCase())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> static <span class="keyword">final</span> void main() &#123;</span><br><span class="line">    String name = <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line">    String nickname = <span class="string">&quot;leavesc&quot;</span>;</span><br><span class="line">    String var10000 = name.toUpperCase();</span><br><span class="line">    String var10001 = nickname.toUpperCase();</span><br><span class="line">    boolean var2 = Intrinsics.areEqual(var10000, var10001);</span><br><span class="line">    System.<span class="keyword">out</span>.println(var2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码就多创建了两个临时变量，这样的代码无疑会比较低效</p>
+<p>有一个更好的解决方案，就是通过 Kotlin 提供的支持忽略大小写的 <code>equals</code> 扩展方法来进行比较，此方法内部会调用 String 类原生的 <code>equalsIgnoreCase</code>来进行比较，从而避免了创建临时变量，相对来说会比较高效一些</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> name = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line">    <span class="keyword">val</span> nickname = <span class="string">&quot;leavesc&quot;</span></span><br><span class="line">    println(name.equals(other = nickname, ignoreCase = <span class="literal">true</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> static <span class="keyword">final</span> void main() &#123;</span><br><span class="line">    String name = <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line">    String nickname = <span class="string">&quot;leavesc&quot;</span>;</span><br><span class="line">    boolean var2 = StringsKt.equals(name, nickname, <span class="literal">true</span>);</span><br><span class="line">    boolean var3 = <span class="literal">false</span>;</span><br><span class="line">    System.<span class="keyword">out</span>.println(var2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="慎用-arrayOf"><a href="#慎用-arrayOf" class="headerlink" title="慎用 arrayOf"></a>慎用 arrayOf</h1><p>Kotlin 中的数组类型可以分为两类：</p>
+<ul>
+<li><code>IntArray、LongArray、FloatArray</code> 形式的<strong>基本数据类型数组</strong>，通过 <code>intArrayOf、longArrayOf、floatArrayOf</code> 等方法来声明</li>
+<li><code>Array&lt;T&gt;</code> 形式的<strong>对象类型数组</strong>，通过 <code>arrayOf、arrayOfNulls</code> 等方法来声明</li>
+</ul>
+<p>例如，以下的 Kotlin 代码都是用于声明整数数组，但实际上存储的数据类型并不一样</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> intArray: IntArray = intArrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> integerArray: Array&lt;<span class="built_in">Int</span>&gt; = arrayOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>将以上代码反编译为 Java 代码后，就可以明确地看出一种是基本数据类型 int，一种是包装类型 Integer，<code>arrayOf</code> 方法会自动对入参值进行<strong>装箱</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span>[] intArray = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Integer[] integerArray = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>为了表示基本数据类型的数组，Kotlin 为每一种基本数据类型都提供了若干相应的类并做了特殊的优化。例如，<code>IntArray、ByteArray、BooleanArray</code> 等类型都会被编译成普通的 Java 基本数据类型数组：<code>int[]、byte[]、boolean[]</code>，这些数组中的值在存储时不会进行装箱操作，而是使用了可能的最高效的方式</p>
+<p>因此，如果没有必要的话，我们在开发中要慎用 <code>arrayOf</code> 方法，避免不必要的装箱消耗</p>
+<h1 id="慎用-vararg"><a href="#慎用-vararg" class="headerlink" title="慎用 vararg"></a>慎用 vararg</h1><p>和 Java 一样，Kotlin 也支持可变参数，允许将任意多个参数打包到一个数组中再一并传给函数，Kotlin 通过使用 varage 关键字来声明可变参数</p>
+<p>我们可以向 <code>printValue</code> 方法传递任意数量的入参参数，也可以直接传入一个数组对象，但 Kotlin 要求显式地解包数组，以便每个数组元素在函数中能够作为单独的参数来调用，这个功能被称为展开运算符，使用方式就是在数组前加一个 *</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printValue</span><span class="params">(<span class="keyword">vararg</span> values: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">    values.forEach &#123;</span><br><span class="line">        println(it)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    printValue()</span><br><span class="line">    printValue(<span class="number">1</span>)</span><br><span class="line">    printValue(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">val</span> values = intArrayOf(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>)</span><br><span class="line">    printValue(*values)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们是以直接传递若干个入参参数的形式来调用 <code>printValue</code> 方法的话，Kotlin 会自动将这些参数打包为一个数组进行传递，这里面就包含着创建数组的开销，这方面和 Java 保持一致。 如果我们传入的参数就已经是数组的话，Kotlin 相比 Java 就存在着一个隐藏开销，Kotlin 会复制现有数组作为参数拿来使用，相当于多分配了额外的数组空间，这可以从反编译后的 Java 代码看出来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">printValue</span><span class="params">(<span class="meta">@NotNull</span> <span class="type">int</span>... values)</span> &#123;</span><br><span class="line">  	Intrinsics.checkNotNullParameter(values, <span class="string">&quot;values&quot;</span>);</span><br><span class="line">  	<span class="type">int</span> <span class="variable">$i$f$forEach</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">  	<span class="type">int</span>[] var3 = values;</span><br><span class="line">  	<span class="type">int</span> <span class="variable">var4</span> <span class="operator">=</span> values.length;</span><br><span class="line"></span><br><span class="line">  	<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">var5</span> <span class="operator">=</span> <span class="number">0</span>; var5 &lt; var4; ++var5) &#123;</span><br><span class="line">     	<span class="type">int</span> <span class="variable">element$iv</span> <span class="operator">=</span> var3[var5];</span><br><span class="line">     	<span class="type">int</span> <span class="variable">var8</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">     	<span class="type">boolean</span> <span class="variable">var9</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">     	System.out.println(element$iv);</span><br><span class="line">  	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">  	printValue();</span><br><span class="line">  	printValue(<span class="number">1</span>);</span><br><span class="line">  	printValue(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">  	<span class="type">int</span>[] values = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;;</span><br><span class="line">  	<span class="comment">//复制后再进行调用</span></span><br><span class="line">  	printValue(Arrays.copyOf(values, values.length));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// $FF: synthetic method</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] var0)</span> &#123;</span><br><span class="line">  	main();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Kotlin 会通过 <code>Arrays.copyOf</code> 复制现有数组，将复制后的数组作为参数进行调用，这样做的好处就是可以避免 <code>printValue</code> 方法影响到原有数组，坏处就是会额外消耗多一份的内存空间</p>
+<h1 id="慎用-lazy"><a href="#慎用-lazy" class="headerlink" title="慎用 lazy"></a>慎用 lazy</h1><p>我们经常会使用<code>lazy()</code>函数来惰性加载只读属性，将加载操作延迟到需要使用的时候，适用于某些不适合立刻加载或者加载成本较高的情况</p>
+<p>例如，以下的 <code>lazyValue</code> 只会等到我们调用到的时候才会被赋值</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> lazyValue <span class="keyword">by</span> lazy &#123;</span><br><span class="line">    <span class="string">&quot;it is lazy value&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而在使用<code>lazy()</code>函数时很容易被忽略的地方就是其包含有一个可选的 model 参数：</p>
+<ul>
+<li>LazyThreadSafetyMode.SYNCHRONIZED。只允许由单个线程来完成初始化，且初始化操作包含有双重锁检查，从而使得所有线程都得到相同的值</li>
+<li>LazyThreadSafetyMode.PUBLICATION。允许多个线程同时执行初始化操作，但只有第一个初始化成功的值会被当做最终值，最终所有线程也都会得到相同的值</li>
+<li>LazyThreadSafetyMode.NONE。允许多个线程同时执行初始化操作，不进行任何线程同步，导致不同线程可能会得到不同的初始化值，因此不应该用于多线程环境</li>
+</ul>
+<p><code>lazy()</code>函数默认情况下使用的就是<code>LazyThreadSafetyMode.SYNCHRONIZED</code>，从 SynchronizedLazyImpl 可以看到，其内部就使用到了<code>synchronized</code>来实现多线程同步，以此避免多线程竞争</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">actual</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">lazy</span><span class="params">(initializer: () -&gt; <span class="type">T</span>)</span></span>: Lazy&lt;T&gt; = SynchronizedLazyImpl(initializer)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">SynchronizedLazyImpl</span>&lt;<span class="type">out T</span>&gt;(initializer: () -&gt; T, lock: Any? = <span class="literal">null</span>) : Lazy&lt;T&gt;, Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> initializer: (() -&gt; T)? = initializer</span><br><span class="line">    <span class="meta">@Volatile</span> <span class="keyword">private</span> <span class="keyword">var</span> _value: Any? = UNINITIALIZED_VALUE</span><br><span class="line">    <span class="comment">// final field is required to enable safe publication of constructed instance</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> lock = lock ?: <span class="keyword">this</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="keyword">val</span> value: T</span><br><span class="line">        <span class="keyword">get</span>() &#123;</span><br><span class="line">            <span class="keyword">val</span> _v1 = _value</span><br><span class="line">            <span class="keyword">if</span> (_v1 !== UNINITIALIZED_VALUE) &#123;</span><br><span class="line">                <span class="meta">@Suppress(<span class="string">&quot;UNCHECKED_CAST&quot;</span>)</span></span><br><span class="line">                <span class="keyword">return</span> _v1 <span class="keyword">as</span> T</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> synchronized(lock) &#123;</span><br><span class="line">                <span class="keyword">val</span> _v2 = _value</span><br><span class="line">                <span class="keyword">if</span> (_v2 !== UNINITIALIZED_VALUE) &#123;</span><br><span class="line">                    <span class="meta">@Suppress(<span class="string">&quot;UNCHECKED_CAST&quot;</span>)</span> (_v2 <span class="keyword">as</span> T)</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">val</span> typedValue = initializer!!()</span><br><span class="line">                    _value = typedValue</span><br><span class="line">                    initializer = <span class="literal">null</span></span><br><span class="line">                    typedValue</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">isInitialized</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> = _value !== UNINITIALIZED_VALUE</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">toString</span><span class="params">()</span></span>: String = <span class="keyword">if</span> (isInitialized()) value.toString() <span class="keyword">else</span> <span class="string">&quot;Lazy value not initialized yet.&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">writeReplace</span><span class="params">()</span></span>: Any = InitializedLazyImpl(value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 Android 开发者来说，大多数情况下我们都是在主线程中调用 <code>lazy()</code> 函数，此时使用 <code>LazyThreadSafetyMode.SYNCHRONIZED</code> 就会带来不必要的线程同步开销，因此可以根据实际情况考虑替换为<code>LazyThreadSafetyMode.NONE</code></p>
+<h1 id="慎用-lateinit-var"><a href="#慎用-lateinit-var" class="headerlink" title="慎用 lateinit var"></a>慎用 lateinit var</h1><p>lateinit var 适用于某些不方便马上就初始化变量的场景，用于将初始化操作延后，同时也存在一些使用上的限制：如果在未初始化的情况下就使用该变量的话会导致 NPE</p>
+<p>例如，如果在 name 变量还未初始化时就调用了 <code>print</code> 方法的话，此时就会导致 NPE。且由于 lateinit var 变量不允许为 null，因此此时我们也无法通过判空来得知 name 是否已经被初始化了，而且判空操作本身也相当于在调用 name 变量，在未初始化的时候一样会导致 NPE</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">lateinit</span> <span class="keyword">var</span> name: String</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    println(name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以通过另一种方式来判断 lateinit 变量是否已初始化</p>
+<p>lateinit 实际上是通过代理机制来实现的，关联的是 KProperty0 接口，KProperty0 就提供了一个扩展属性用于判断其代理的值是否已经初始化了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SinceKotlin(<span class="string">&quot;1.2&quot;</span>)</span></span><br><span class="line"><span class="meta">@InlineOnly</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">val</span> <span class="meta">@receiver:AccessibleLateinitPropertyLiteral</span> KProperty0&lt;*&gt;.isInitialized: <span class="built_in">Boolean</span></span><br><span class="line">    <span class="keyword">get</span>() = <span class="keyword">throw</span> NotImplementedError(<span class="string">&quot;Implementation is intrinsic&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>因此我们可以通过以下方式来进行判断，从而避免不安全的访问操作</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">lateinit</span> <span class="keyword">var</span> name: String</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>::name.isInitialized) &#123;</span><br><span class="line">        println(<span class="string">&quot;isInitialized true&quot;</span>)</span><br><span class="line">        println(name)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        println(<span class="string">&quot;isInitialized false&quot;</span>)</span><br><span class="line">        println(name) <span class="comment">//会导致 NPE</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="lambda-表达式"><a href="#lambda-表达式" class="headerlink" title="lambda 表达式"></a>lambda 表达式</h1><p>lambda 表达式在语义上很简洁，既避免了冗长的函数声明，也解决了以前需要强类型声明函数类型的情况</p>
+<p>例如，以下代码就通过 lambda 表达式声明了一个回调函数 callback，我们无需创建一个具体的函数类型，而只需声明需要的<strong>入参参数、入参类型、函数返回值</strong>就可以</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">requestHttp</span><span class="params">(callback: (<span class="type">code</span>: <span class="type">Int</span>, <span class="type">data</span>: <span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    callback(<span class="number">200</span>, <span class="string">&quot;success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    requestHttp &#123; code, <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">&quot;code: <span class="variable">$code</span>&quot;</span>)</span><br><span class="line">        println(<span class="string">&quot;data: <span class="variable">$data</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>lambda 表达式语法虽然方便，但也隐藏着两个性能问题：</p>
+<ul>
+<li>每次调用 lambda 表达式都相当于在创建一个对象</li>
+<li>lambda 表达式内部隐藏了自动装箱和自动拆箱的操作</li>
+</ul>
+<p>将以上代码反编译为 Java 代码后，可以看到 callback 最终的实际类型就是 Function2，每次调用<code>requestHttp</code> 方法就相当于是在创建一个 Function2 变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">requestHttp</span><span class="params">(<span class="meta">@NotNull</span> Function2 callback)</span> &#123;</span><br><span class="line">	Intrinsics.checkNotNullParameter(callback, <span class="string">&quot;callback&quot;</span>);</span><br><span class="line">	callback.invoke(<span class="number">200</span>, <span class="string">&quot;success&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Function2 是 Kotlin 提供的一个的泛型接口，数字 2 即代表其包含两个入参值</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Function2</span>&lt;<span class="type">in P1, in P2, out R</span>&gt; : <span class="type">Function</span>&lt;<span class="type">R</span>&gt; &#123;</span><br><span class="line">    <span class="comment">/** Invokes the function with the specified arguments. */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">invoke</span><span class="params">(p1: <span class="type">P1</span>, p2: <span class="type">P2</span>)</span></span>: R</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Kotlin 会在编译阶段将开发者声明的 lambda 表达式转换为相应的 FunctionX 对象，调用 lambda 表达式就相当于在调用其 <code>invoke</code> 方法，以此为低版本 JVM 平台（例如 Java 6 &#x2F; 7）也能提供 lambda 表达式功能。此外，我们也知道泛型类型不可能是基本数据类型，因此我们在 Kotlin 中声明的 Int 最终会被自动装箱为 Integer，lambda 表达式内部自动完成了装箱和拆箱的操作</p>
+<p>所以说，简洁的 lambda 表达式背后就隐藏了<strong>自动创建 Function 对象进行中转调用，自动装箱和自动拆箱的过程，且最终创建的方法总数要多于表面上看到的</strong></p>
+<p>如果想要避免 lambda 表达式的以上开销，可以通过使用 inline 内联函数来实现</p>
+<p>在使用 inline 关键字修饰 <code>requestHttp</code> 方法后，可以看到此时 <code>requestHttp</code> 的逻辑就相当于被直接复制到了 <code>main</code> 方法内部，不会创建任何多余的对象，且此时使用的也是 int 而非 Integer</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="title">requestHttp</span><span class="params">(callback: (<span class="type">code</span>: <span class="type">Int</span>, <span class="type">data</span>: <span class="type">String</span>) -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">    callback(<span class="number">200</span>, <span class="string">&quot;success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    requestHttp &#123; code, <span class="keyword">data</span> -&gt;</span><br><span class="line">        println(<span class="string">&quot;code: <span class="variable">$code</span>&quot;</span>)</span><br><span class="line">        println(<span class="string">&quot;data: <span class="variable">$data</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">String</span> <span class="variable">data</span> <span class="operator">=</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">	<span class="type">int</span> <span class="variable">code</span> <span class="operator">=</span> <span class="number">200</span>;</span><br><span class="line">	<span class="type">String</span> <span class="variable">var4</span> <span class="operator">=</span> <span class="string">&quot;code: &quot;</span> + code;</span><br><span class="line">	System.out.println(var4);</span><br><span class="line">	var4 = <span class="string">&quot;data: &quot;</span> + data;</span><br><span class="line">	System.out.println(var4);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过内联函数，可以使得编译器直接在调用方中使用内联函数体中的代码，相当于直接把内联函数中的逻辑复制到了调用方中，完全避免了调用带来的开销。对于高阶函数，作为参数传递的 lambda 表达式的主体也将被内联，这使得：</p>
+<ul>
+<li>声明和调用 lambda 表达式时，不会实例化 Function 对象</li>
+<li>没有自动装箱和拆箱的操作</li>
+<li>不会导致方法数增多，但如果内联函数方法体较大且被多处调用的话，可能导致最终代码量显著增加</li>
+</ul>
+<h1 id="init-的声明顺序很重要"><a href="#init-的声明顺序很重要" class="headerlink" title="init 的声明顺序很重要"></a>init 的声明顺序很重要</h1><p>看以下代码，我们可以在 init 块中调用 parameter1，却无法调用 parameter2，从 IDE 的提示信息 <code> Variable &#39;parameter2&#39; must be initialized</code>也可以看出来，对于 init 块来说 parameter2 此时还未赋值，自然就无法使用了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> parameter1 = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        println(parameter1)</span><br><span class="line">        <span class="comment">//error: Variable &#x27;parameter2&#x27; must be initialized</span></span><br><span class="line">        <span class="comment">//println(parameter2)</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> parameter2 = <span class="string">&quot;业志陈&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从反编译出的 Java 代码也可以看出来，由于 parameter2 是声明在 init 块之后，所以 parameter2 的赋值操作其实是放在构造函数中的最后面，因此 IDE 的语法检查器就会阻止我们在 init 块中来调用 parameter2 了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">parameter1</span> <span class="operator">=</span> <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> String parameter2;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">KotlinMode</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="built_in">this</span>.parameter1;</span><br><span class="line">      System.out.println(var1);</span><br><span class="line">      <span class="built_in">this</span>.parameter2 = <span class="string">&quot;业志陈&quot;</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>IDE 会阻止开发者去调用还未初始化的变量，防止我们写出不安全的代码，我们也可以用以下方式来绕过语法检查，但同时也写出了不安全的代码</p>
+<p>我们可以通过在 init 块中调用 <code>print()</code> 方法的方式来间接访问 parameter2，此时代码是可以正常编译的，但此时 parameter2 也只会为 null</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> parameter1 = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        println(parameter1)</span><br><span class="line">        print()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">print</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(parameter2)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> parameter2 = <span class="string">&quot;业志陈&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从反编译出的 Java 代码可以看出来，<code>print()</code>方法依旧是会在 parameter2 初始化之前被调用，此时<code>print()</code>方法访问到的 parameter2 也只会为 null，从而引发意料之外的 NPE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">parameter1</span> <span class="operator">=</span> <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> String parameter2;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="built_in">this</span>.parameter2;</span><br><span class="line">      System.out.println(var1);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">KotlinMode</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="type">String</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="built_in">this</span>.parameter1;</span><br><span class="line">      System.out.println(var1);</span><br><span class="line">      <span class="built_in">this</span>.print();</span><br><span class="line">      <span class="built_in">this</span>.parameter2 = <span class="string">&quot;业志陈&quot;</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以说，init 块和成员变量之间的声明顺序决定了在构造函数中的初始化顺序，我们应该先声明成员变量再声明 init 块，否则就有可能导致 NPE</p>
+<h1 id="Gson-data-class"><a href="#Gson-data-class" class="headerlink" title="Gson &amp; data class"></a>Gson &amp; data class</h1><p>来看个小例子，猜猜其运行结果会是怎样的</p>
+<p>UserBean 是一个 dataClass，其 userName 字段被声明为非 null 类型，而 json 字符串中 userName 对应的值明确就是 null，那用 Gson 到底能不能反序列化成功呢？程序能不能成功运行完以下三个步骤？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">UserBean</span>(<span class="keyword">val</span> userName: String, <span class="keyword">val</span> userAge: <span class="built_in">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> json = <span class="string">&quot;&quot;&quot;&#123;&quot;userName&quot;:null,&quot;userAge&quot;:26&#125;&quot;&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">val</span> userBean = Gson().fromJson(json, UserBean::<span class="keyword">class</span>.java) <span class="comment">//第一步</span></span><br><span class="line">    println(userBean) <span class="comment">//第二步</span></span><br><span class="line">    printMsg(userBean.userName) <span class="comment">//第三步</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">printMsg</span><span class="params">(msg: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上程序能够正常运行到第二步，但在执行第三步的时候反而直接报 NPE 异常了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">UserBean(userName=<span class="literal">null</span>, userAge=<span class="number">26</span>)</span><br><span class="line">Exception <span class="keyword">in</span> thread <span class="string">&quot;main&quot;</span> java.lang.NullPointerException: Parameter specified <span class="keyword">as</span> non-<span class="literal">null</span> <span class="keyword">is</span> <span class="literal">null</span>: method temp.TestKt.printMsg, parameter msg</span><br><span class="line">	at temp.TestKt.printMsg(Test.kt)</span><br><span class="line">	at temp.TestKt.main(Test.kt:<span class="number">16</span>)</span><br><span class="line">	at temp.TestKt.main(Test.kt)</span><br></pre></td></tr></table></figure>
+
+<p><code>printMsg</code> 方法接收了参数后实际上什么也没做，为啥会抛出 NPE ？</p>
+<p>将<code>printMsg</code>反编译为 Java 方法，可以发现方法内部会对入参进行空校验，当发现为 null 时就会直接抛出 NPE。这个比较好理解，毕竟 Kotlin 的类型系统会严格区分 <strong>可 null</strong> 和 <strong>不可为 null</strong> 两种类型，其区分手段之一就是会自动在我们的代码里插入一些类型校验逻辑，即自动加上了非空断言，当发现不可为 null 的参数传入了 null 的话就会马上抛出 NPE，即使我们并没有使用到该参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">printMsg</span><span class="params">(<span class="meta">@NotNull</span> String msg)</span> &#123;</span><br><span class="line">	Intrinsics.checkNotNullParameter(msg, <span class="string">&quot;msg&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那既然 UserBean 中的 userName 字段已经被声明为非 null 类型了，那么为什么还可以反序列化成功呢？按照我自己的第一直觉，应该在进行反序列的时候就直接抛出异常才对</p>
+<p>将 UserBean 反编译为 Java 代码后，也可以看到其构造函数中是有对 userName 进行 null 检查的，当发现为 null 的话会直接抛出 NPE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">UserBean</span> &#123;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> String userName;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> userAge;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String <span class="title function_">getUserName</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.userName;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">int</span> <span class="title function_">getUserAge</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.userAge;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">UserBean</span><span class="params">(<span class="meta">@NotNull</span> String userName, <span class="type">int</span> userAge)</span> &#123;</span><br><span class="line">      <span class="comment">//进行 null 检查</span></span><br><span class="line">      Intrinsics.checkNotNullParameter(userName, <span class="string">&quot;userName&quot;</span>);</span><br><span class="line">      <span class="built_in">super</span>();</span><br><span class="line">      <span class="built_in">this</span>.userName = userName;</span><br><span class="line">      <span class="built_in">this</span>.userAge = userAge;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   ···</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那 Gson 是怎么绕过 Kotlin 的 null 检查的呢？</p>
+<p>其实，通过查看 Gson 内部源码，可以知道 Gson 是通过 Unsafe 包来实例化 UserBean 对象的，Unsafe 提供了一个非常规实例化对象的方法：<code>allocateInstance</code>，该方法提供了通过 Class 对象就可以创建出相应实例的功能，而且不需要调用其构造函数、初始化代码、JVM 安全检查等，即使构造函数是 private 的也能通过此方法进行实例化。因此 Gson 实际上并不会调用到 UserBean 的构造函数，相当于绕过了 Kotlin 的 null 检查，所以即使 userName 值为 null 最终也能够反序列化成功</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/af135d36b80341e68befd0c0bbe091ce~tplv-k3u1fbpfcp-watermark.image"></p>
+<p>此问题的出现场景大多是在移动端解析服务端传来的数据的时候，移动端将数据声明为非空类型，但服务端给过来的数据却为 null 值，此时用户看到的可能就是应用崩溃了……</p>
+<p>一方面，我觉得移动端应该对服务端传来的数据保持不信任的态度，不能觉得对方传来的数据就一定是符合约定的，为了保证安全需要将数据均声明为可空类型。另一方面，这也无疑导致移动端需要加上很多多余的判空操作，简直有点无解 &#x3D;_&#x3D;</p>
+<h1 id="ARouter-JvmField"><a href="#ARouter-JvmField" class="headerlink" title="ARouter &amp; JvmField"></a>ARouter &amp; JvmField</h1><p>在 Java 中，字段和其访问器的组合被称作属性。在 Kotlin 中，属性是头等的语言特性，完全替代了字段和访问器方法。在类中声明一个属性和声明一个变量一样是使用 val 和 var 关键字，两者在使用上的差异就在于赋值后是否还允许修改，在字节码上的差异性之一就在于是否会自动生成相应的 <code>setValue</code> 方法</p>
+<p>例如，以下的 Kotlin 代码在反编译为 Java 代码后，可以看到两个属性的可见性都变为了 private， name 变量会同时包含有<code>getValue</code>和<code>setValue</code> 方法，而 nickname 变量只有 <code>getValue</code> 方法，这也是我们在 Java 代码中只能以 <code>kotlinMode.getName()</code> 的方式来访问 name 变量的原因</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&quot;业志陈&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> nickname = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">&quot;业志陈&quot;</span>;</span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">nickname</span> <span class="operator">=</span> <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.name;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(<span class="meta">@NotNull</span> String var1)</span> &#123;</span><br><span class="line">      Intrinsics.checkNotNullParameter(var1, <span class="string">&quot;&lt;set-?&gt;&quot;</span>);</span><br><span class="line">      <span class="built_in">this</span>.name = var1;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String <span class="title function_">getNickname</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">this</span>.nickname;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了不让 Kotlin 的 var &#x2F; val 变量自动生成 <code>getValue</code> 或 <code>setValue</code> 方法，达到和在 Java 代码中声明公开变量一样的效果，此时就需要为属性添加 <code>@JvmField</code> 注解了，添加后就会变为 public 类型的成员变量，且不包含任何 <code>getValue</code> 和 <code>setValue</code> 方法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@JvmField</span></span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&quot;业志陈&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@JvmField</span></span><br><span class="line">    <span class="keyword">val</span> nickname = <span class="string">&quot;leavesC&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">KotlinMode</span> &#123;</span><br><span class="line">   <span class="meta">@JvmField</span></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> String name = <span class="string">&quot;业志陈&quot;</span>;</span><br><span class="line">   <span class="meta">@JvmField</span></span><br><span class="line">   <span class="meta">@NotNull</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">final</span> String nickname = <span class="string">&quot;leavesC&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><code>@JvmField</code> 的一个使用场景就是在配套使用 ARouter 的时候。我们在使用 ARouter 进行参数自动注入时，就需要为待注入的参数添加 <code>@JvmField</code>注解，就像以下代码一样，不添加的话就会导致编译失败</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Route(path = RoutePath.USER_HOME)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserHomeActivity</span> : <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired(name = RoutePath.USER_HOME_PARAMETER_ID)</span></span><br><span class="line">    <span class="meta">@JvmField</span></span><br><span class="line">    <span class="keyword">var</span> userId: <span class="built_in">Long</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_user_home)</span><br><span class="line">        ARouter.getInstance().inject(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那为什么不添加该注解就会导致编译失败呢？</p>
+<p>其实，ARouter 实现参数自动注入是需要依靠注解处理器生成的辅助文件来实现的，即会生成以下的辅助代码，当中会以 <code>substitute.userId</code> 、<code>substitute.userName</code>的形式来调用 Activity 中的两个参数值，如果不添加 <code>@JvmField</code>注解，辅助文件就没法以直接调用变量名的方式来完成注入，自然就会导致编译失败了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserHomeActivity</span>$$<span class="title">ARouter</span>$$<span class="title">Autowired</span> <span class="title">implements</span> <span class="title">ISyringe</span> &#123;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">private</span> SerializationService serializationService;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> void inject(Object target) &#123;</span><br><span class="line">    serializationService = ARouter.getInstance().navigation(SerializationService.<span class="keyword">class</span>);</span><br><span class="line">    UserHomeActivity substitute = (UserHomeActivity)target;</span><br><span class="line">    substitute.userId = substitute.getIntent().getLongExtra(<span class="string">&quot;userHomeId&quot;</span>, substitute.userId);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Kotlin 这套为属性自动生成 <code>getValue</code>和<code>setValue</code> 方法的机制有一个缺点，就是可能会导致方法数极速膨胀，使得 Android App 的 dex 文件很快就达到最大方法数限制，不得不进行分包处理</p>
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6908391430977224718">Gson 和 Kotlin data class 的避坑指南</a></p>
+<p>更加详细地介绍了 Gson 和 Kotlin data class 在配套使用时可能出现的坑，值得一看 ！！！</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6880602489297895438">两万六千字带你 Kotlin 入门</a></p>
+<p>读者是否还未开始学习 Kotlin 呢？或者是对 Kotlin 还了解得不够清楚呢？如果是的话，推荐阅读我的一篇 Kotlin 入门教程，全文两万六千多字，手把手教你学会 Kotlin ！！！</p>
+</li>
+</ul>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%8812%EF%BC%89OkHttp%20&%20Retrofit%20%E5%BC%80%E5%8F%91%E8%B0%83%E8%AF%95%E5%88%A9%E5%99%A8/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          主流开源库源码分析（12）OkHttp & Retrofit 开发调试利器
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E4%B8%80%E6%96%87%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20Gson/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          一文快速入门 Gson
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

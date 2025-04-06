@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>Kotlin 协程官方文档（3）组合挂起函数 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        Kotlin 协程官方文档（3）组合挂起函数
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        Kotlin 协程官方文档（3）组合挂起函数
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>9 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.2k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md">coroutines-guide</a></p>
+</blockquote>
+<p>本节来介绍构成挂起函数的各种方法</p>
+<h1 id="一、默认顺序"><a href="#一、默认顺序" class="headerlink" title="一、默认顺序"></a>一、默认顺序</h1><p>假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数</p>
+<p>我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlin.system.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> time = measureTimeMillis &#123;</span><br><span class="line">        <span class="keyword">val</span> one = doSomethingUsefulOne()</span><br><span class="line">        <span class="keyword">val</span> two = doSomethingUsefulTwo()</span><br><span class="line">        println(<span class="string">&quot;The answer is <span class="subst">$&#123;one + two&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Completed in <span class="variable">$time</span> ms&quot;</span>)</span><br><span class="line">    <span class="comment">//sampleEnd    </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The answer <span class="keyword">is</span> <span class="number">42</span></span><br><span class="line">Completed <span class="keyword">in</span> <span class="number">2007</span> ms</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、使用-async-并发"><a href="#二、使用-async-并发" class="headerlink" title="二、使用 async 并发"></a>二、使用 async 并发</h1><p>如果 doSomethingUsefulOne() 和 doSomethingUsefulTwo() 这两个函数之间没有依赖关系，并且我们希望通过同时执行这两个操作（并发）以便更快地得到答案，此时就需要用到 <code>async</code> 了</p>
+<p>从概念上讲，async 就类似于 launch。async 启动一个单独的协程，这是一个与所有其它协程同时工作的轻量级协程。不同之处在于，launch 返回 Job 对象并且不携带任何运行结果值。而 async 返回一个轻量级非阻塞的 <code>Deferred</code> 对象，可用于在之后取出返回值，可以通过调用 Deferred 的 <code>await()</code> 方法来获取最终结果。此外，Deferred 也实现了 Job 接口，所以也可以根据需要来取消它</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlin.system.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> time = measureTimeMillis &#123;</span><br><span class="line">        <span class="keyword">val</span> one = async &#123; doSomethingUsefulOne() &#125;</span><br><span class="line">        <span class="keyword">val</span> two = async &#123; doSomethingUsefulTwo() &#125;</span><br><span class="line">        println(<span class="string">&quot;The answer is <span class="subst">$&#123;one.await() + two.await()&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Completed in <span class="variable">$time</span> ms&quot;</span>)</span><br><span class="line">    <span class="comment">//sampleEnd    </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果类似于以下所示</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The answer <span class="keyword">is</span> <span class="number">42</span></span><br><span class="line">Completed <span class="keyword">in</span> <span class="number">1014</span> ms</span><br></pre></td></tr></table></figure>
+
+<p>可以看到运行耗时几乎是减半了，因为这两个协程是同时运行，总的耗时时间可以说是取决于耗时最长的任务。需要注意，协程的并发总是显式的</p>
+<h1 id="三、惰性启动-async"><a href="#三、惰性启动-async" class="headerlink" title="三、惰性启动 async"></a>三、惰性启动 async</h1><p>可选的，可以将 async 的 <code>start</code> 参数设置为 <code>CoroutineStart.lazy</code> 使其变为懒加载模式。在这种模式下，只有在主动调用 Deferred 的 <code>await()</code> 或者 <code>start()</code> 方法时才会启动协程。运行以下示例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlin.system.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> time = measureTimeMillis &#123;</span><br><span class="line">        <span class="keyword">val</span> one = async(start = CoroutineStart.LAZY) &#123; doSomethingUsefulOne() &#125;</span><br><span class="line">        <span class="keyword">val</span> two = async(start = CoroutineStart.LAZY) &#123; doSomethingUsefulTwo() &#125;</span><br><span class="line">        <span class="comment">// some computation</span></span><br><span class="line">        one.start() <span class="comment">// start the first one</span></span><br><span class="line">        two.start() <span class="comment">// start the second one</span></span><br><span class="line">        println(<span class="string">&quot;The answer is <span class="subst">$&#123;one.await() + two.await()&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Completed in <span class="variable">$time</span> ms&quot;</span>)</span><br><span class="line">    <span class="comment">//sampleEnd    </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将得到以下类似输出：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The answer <span class="keyword">is</span> <span class="number">42</span></span><br><span class="line">Completed <span class="keyword">in</span> <span class="number">1016</span> ms</span><br></pre></td></tr></table></figure>
+
+<p>以上定义了两个协程，但没有像前面的例子那样直接执行，而是将控制权交给了开发者，由开发者通过调用 <code>start()</code> 函数来确切地开始执行。首先启动了协程 one，然后启动了协程 two，然后再等待协程运行结束</p>
+<p>注意，如果只是在 <code>println</code> 中调用了 <code>await()</code> 而不首先调用 <code>start()</code> ,这将形成顺序行为，因为 <code>await()</code> 会启动协程并等待其完成，这不是 lazy 模式的预期结果。<code>async(start=CoroutineStart.LAZY)</code> 的用例是标准标准库中的 lazy 函数的替代品，用于在值的计算涉及挂起函数的情况下</p>
+<h1 id="四、异步风格的函数"><a href="#四、异步风格的函数" class="headerlink" title="四、异步风格的函数"></a>四、异步风格的函数</h1><p>我们可以定义异步风格的函数，使用带有显式 GlobalScope 引用的异步协程生成器来调用 <code>doSomethingUsefulOne</code> 和 <code>doSomethingUsefulTwo</code> 函数。用 “…Async” 后缀来命名这些函数，以此来强调它们用来启动异步计算，并且需要通过其返回的延迟值来获取结果</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The result type of somethingUsefulOneAsync is Deferred&lt;Int&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">somethingUsefulOneAsync</span><span class="params">()</span></span> = GlobalScope.async &#123;</span><br><span class="line">    doSomethingUsefulOne()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// The result type of somethingUsefulTwoAsync is Deferred&lt;Int&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">somethingUsefulTwoAsync</span><span class="params">()</span></span> = GlobalScope.async &#123;</span><br><span class="line">    doSomethingUsefulTwo()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，这些 <code>xxxAsync</code> 函数不是挂起函数，它们可以从任何地方调用。但是，调用这些函数意味着是要用异步形式来执行操作</p>
+<p>以下示例展示了它们在协程之外的使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlin.system.*</span><br><span class="line"></span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line"><span class="comment">// note that we don&#x27;t have `runBlocking` to the right of `main` in this example</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> time = measureTimeMillis &#123;</span><br><span class="line">        <span class="comment">// we can initiate async actions outside of a coroutine</span></span><br><span class="line">        <span class="keyword">val</span> one = somethingUsefulOneAsync()</span><br><span class="line">        <span class="keyword">val</span> two = somethingUsefulTwoAsync()</span><br><span class="line">        <span class="comment">// but waiting for a result must involve either suspending or blocking.</span></span><br><span class="line">        <span class="comment">// here we use `runBlocking &#123; ... &#125;` to block the main thread while waiting for the result</span></span><br><span class="line">        runBlocking &#123;</span><br><span class="line">            println(<span class="string">&quot;The answer is <span class="subst">$&#123;one.await() + two.await()&#125;</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Completed in <span class="variable">$time</span> ms&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//sampleEnd</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">somethingUsefulOneAsync</span><span class="params">()</span></span> = GlobalScope.async &#123;</span><br><span class="line">    doSomethingUsefulOne()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">somethingUsefulTwoAsync</span><span class="params">()</span></span> = GlobalScope.async &#123;</span><br><span class="line">    doSomethingUsefulTwo()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里展示的带有异步函数的编程样式仅供说明，因为它是其它编程语言中的流行样式。强烈建议不要将此样式与 kotlin 协程一起使用，因为如下所述</p>
+</blockquote>
+<p>想象一下，如果在 <code>val one = somethingUsefulOneAsync()</code> 和 <code>one.await()</code> 这两行代码之间存在逻辑错误，导致程序抛出异常，正在执行的操作也被中止，此时会发生什么情况？通常，全局的错误处理者可以捕获此异常，为开发人员记录并报告错误，但是程序可以继续执行其它操作。但是这里 <code>somethingUsefulOneAsync()</code> 函数仍然还在后台运行（因为其协程作用域是 GlobalScope），即使其启动者已经被中止了。这个问题不会在结构化并发中出现，如下一节所示</p>
+<h1 id="五、使用-async-的结构化并发"><a href="#五、使用-async-的结构化并发" class="headerlink" title="五、使用 async 的结构化并发"></a>五、使用 async 的结构化并发</h1><p>让我们以 <code>Concurrent using async</code> 章节为例，提取一个同时执行 <code>doSomethingUsefulOne()</code> 和 <code>doSomethingUsefulTwo()</code> 并返回其结果之和的函数。因为 async 函数被定义为 CoroutineScope 上的一个扩展函数，所以我们需要将它放在 CoroutineScope 中，这就是  coroutineScope 函数提供的功能：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">concurrentSum</span><span class="params">()</span></span>: <span class="built_in">Int</span> = coroutineScope &#123;</span><br><span class="line">    <span class="keyword">val</span> one = async &#123; doSomethingUsefulOne() &#125;</span><br><span class="line">    <span class="keyword">val</span> two = async &#123; doSomethingUsefulTwo() &#125;</span><br><span class="line">    one.await() + two.await()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，如果 <code>concurrentSum()</code> 函数发生错误并引发异常，则在其作用域中启动的所有协程都将被取消</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlin.system.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> time = measureTimeMillis &#123;</span><br><span class="line">        println(<span class="string">&quot;The answer is <span class="subst">$&#123;concurrentSum()&#125;</span>&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Completed in <span class="variable">$time</span> ms&quot;</span>)</span><br><span class="line">    <span class="comment">//sampleEnd    </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">concurrentSum</span><span class="params">()</span></span>: <span class="built_in">Int</span> = coroutineScope &#123;</span><br><span class="line">    <span class="keyword">val</span> one = async &#123; doSomethingUsefulOne() &#125;</span><br><span class="line">    <span class="keyword">val</span> two = async &#123; doSomethingUsefulTwo() &#125;</span><br><span class="line">    one.await() + two.await()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulOne</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">doSomethingUsefulTwo</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    delay(<span class="number">1000L</span>) <span class="comment">// pretend we are doing something useful here, too</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">29</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从 main 函数的输出结果来看，两个操作仍然是同时执行的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The answer <span class="keyword">is</span> <span class="number">42</span></span><br><span class="line">Completed <span class="keyword">in</span> <span class="number">1017</span> ms</span><br></pre></td></tr></table></figure>
+
+<p>取消操作始终通过协程的层次结构来进行传播</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        failedConcurrentSum()</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e: ArithmeticException) &#123;</span><br><span class="line">        println(<span class="string">&quot;Computation failed with ArithmeticException&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">failedConcurrentSum</span><span class="params">()</span></span>: <span class="built_in">Int</span> = coroutineScope &#123;</span><br><span class="line">    <span class="keyword">val</span> one = async&lt;<span class="built_in">Int</span>&gt; &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            delay(<span class="built_in">Long</span>.MAX_VALUE) <span class="comment">// Emulates very long computation</span></span><br><span class="line">            <span class="number">42</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            println(<span class="string">&quot;First child was cancelled&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">val</span> two = async&lt;<span class="built_in">Int</span>&gt; &#123;</span><br><span class="line">        println(<span class="string">&quot;Second child throws an exception&quot;</span>)</span><br><span class="line">        <span class="keyword">throw</span> ArithmeticException()</span><br><span class="line">    &#125;</span><br><span class="line">    one.await() + two.await()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意协程 one 和正在等待的父级是如何在协程 two 失败时取消的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Second child throws an exception</span><br><span class="line">First child was cancelled</span><br><span class="line">Computation failed with ArithmeticException</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Kotlin%20%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%889%EF%BC%89%E9%80%89%E6%8B%A9%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Kotlin 协程官方文档（9）选择表达式
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Java%20&%20Android%20%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E9%A1%BB%E7%9F%A5%E9%A1%BB%E4%BC%9A%EF%BC%881%EF%BC%89/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          Java & Android 集合框架须知须会（1）
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

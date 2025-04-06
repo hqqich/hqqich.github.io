@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>一文快速入门 Gson | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        一文快速入门 Gson
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        一文快速入门 Gson
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>23 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>4.8k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<p>Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库有 Gson 和 FastJson 两种，这里要介绍的是 Gson</p>
+<p>Gson 的 GitHub 主页点击这里：<a target="_blank" rel="noopener" href="https://github.com/google/gson">Gson</a></p>
+<h1 id="一、基本用法"><a href="#一、基本用法" class="headerlink" title="一、基本用法"></a>一、基本用法</h1><h2 id="1、Gson-对象"><a href="#1、Gson-对象" class="headerlink" title="1、Gson 对象"></a>1、Gson 对象</h2><p>在进行序列化与反序列操作前，需要先实例化一个 <code>com .google.gson.Gson</code> 对象，获取 Gson 对象的方法有两种</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过构造函数来获取</span></span><br><span class="line"><span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line"><span class="comment">//通过 GsonBuilder 来获取，可以进行多项特殊配置</span></span><br><span class="line"><span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().create();</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、生成-Json"><a href="#2、生成-Json" class="headerlink" title="2、生成  Json"></a>2、生成  Json</h2><p>利用 Gson 可以很方便地生成 Json 字符串，通过使用 <code>addProperty</code> 的四个重载方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JsonObject</span>();</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;String&quot;</span>, <span class="string">&quot;leavesC&quot;</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Number_Integer&quot;</span>, <span class="number">23</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Number_Double&quot;</span>, <span class="number">22.9</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Boolean&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Char&quot;</span>, <span class="string">&#x27;c&#x27;</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(jsonObject);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86dce58efe1b406db415b9ed6cbbe40b~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><code>addProperty</code> 方法底层调用的是 <code>add(String property, JsonElement value)</code> 方法，即将基本数据类型转化为了 <strong>JsonElement</strong> 对象，JsonElement 是一个抽象类，而 <strong>JsonObject</strong> 继承了 JsonElement ，因此我们可以通过 JsonObject 自己来构建一个 JsonElement </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JsonObject</span>();</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;String&quot;</span>, <span class="string">&quot;leavesC&quot;</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Number&quot;</span>, <span class="number">23</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Number&quot;</span>, <span class="number">22.9</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Boolean&quot;</span>, <span class="literal">true</span>);</span><br><span class="line">    jsonObject.addProperty(<span class="string">&quot;Char&quot;</span>, <span class="string">&#x27;c&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">JsonObject</span> <span class="variable">jsonElement</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JsonObject</span>();</span><br><span class="line">    jsonElement.addProperty(<span class="string">&quot;Boolean&quot;</span>, <span class="literal">false</span>);</span><br><span class="line">    jsonElement.addProperty(<span class="string">&quot;Double&quot;</span>, <span class="number">25.9</span>);</span><br><span class="line">    jsonElement.addProperty(<span class="string">&quot;Char&quot;</span>, <span class="string">&#x27;c&#x27;</span>);</span><br><span class="line">    jsonObject.add(<span class="string">&quot;JsonElement&quot;</span>, jsonElement);</span><br><span class="line"></span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(jsonObject);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/41f93e3921b8496eaaf6860573be42c8~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="3、Json-与-Array、List-的转化"><a href="#3、Json-与-Array、List-的转化" class="headerlink" title="3、Json 与 Array、List 的转化"></a>3、Json 与 Array、List 的转化</h2><p>Json 数组与字符串数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//Json数组 转为 字符串数组</span></span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonArray</span> <span class="operator">=</span> <span class="string">&quot;[\&quot;https://github.com/leavesCZY\&quot;,\&quot;https://www.jianshu.com/u/9df45b87cfdf\&quot;,\&quot;Java\&quot;,\&quot;Kotlin\&quot;,\&quot;Git\&quot;,\&quot;GitHub\&quot;]&quot;</span>;</span><br><span class="line">    String[] strings = gson.fromJson(jsonArray, String[].class);</span><br><span class="line">    System.out.println(<span class="string">&quot;Json数组 转为 字符串数组: &quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (String string : strings) &#123;</span><br><span class="line">        System.out.println(string);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//字符串数组 转为 Json数组</span></span><br><span class="line">    jsonArray = gson.toJson(jsonArray, <span class="keyword">new</span> <span class="title class_">TypeToken</span>&lt;String&gt;() &#123;</span><br><span class="line">    &#125;.getType());</span><br><span class="line">    System.out.println(<span class="string">&quot;\n字符串数组 转为 Json数组: &quot;</span>);</span><br><span class="line">    System.out.println(jsonArray);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eff362e498f84aa09b3e61eaa77a11a6~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>Json 数组 与 List</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//Json数组 转为 List</span></span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonArray</span> <span class="operator">=</span> <span class="string">&quot;[\&quot;https://github.com/leavesCZY\&quot;,\&quot;https://www.jianshu.com/u/9df45b87cfdf\&quot;,\&quot;Java\&quot;,\&quot;Kotlin\&quot;,\&quot;Git\&quot;,\&quot;GitHub\&quot;]&quot;</span>;</span><br><span class="line">    List&lt;String&gt; stringList = gson.fromJson(jsonArray, <span class="keyword">new</span> <span class="title class_">TypeToken</span>&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">    &#125;.getType());</span><br><span class="line">    System.out.println(<span class="string">&quot;\nJson数组 转为 List: &quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (String string : stringList) &#123;</span><br><span class="line">        System.out.println(string);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//List 转为 Json数组</span></span><br><span class="line">    jsonArray = gson.toJson(stringList, <span class="keyword">new</span> <span class="title class_">TypeToken</span>&lt;List&lt;String&gt;&gt;() &#123;</span><br><span class="line">    &#125;.getType());</span><br><span class="line">    System.out.println(<span class="string">&quot;\nList 转为 Json数组: &quot;</span>);</span><br><span class="line">    System.out.println(jsonArray);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ad6694864e94a739be74332b979523e~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="4、序列化与反序列化"><a href="#4、序列化与反序列化" class="headerlink" title="4、序列化与反序列化"></a>4、序列化与反序列化</h2><p>Gson 也提供了 <code>toJson()</code> 和 <code>fromJson()</code> 两个方法用于转化 Model 与 Json，前者实现了序列化，后者实现了反序列化</p>
+<p>首先，声明一个 User 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> sex;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String name, <span class="type">int</span> age, <span class="type">boolean</span> sex)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">        <span class="built_in">this</span>.sex = sex;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&quot;, sex=&quot;</span> + sex +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>序列化的方法很简单，调用 gson 对象的 toJson 方法，传入要序列化的对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//序列化</span></span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;leavesC&quot;</span>, <span class="number">24</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e192083ec56b4b38ba7634f4bb9e9ac5~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>反序化的方式也类似</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//反序列化</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">userJson</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、属性重命名"><a href="#二、属性重命名" class="headerlink" title="二、属性重命名"></a>二、属性重命名</h1><p>继续使用上一节声明的 User 类，根据 User 类声明的各个属性名，移动端的开发者希望接口返回的数据格式即是如下这样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;leavesC&quot;</span>,<span class="string">&quot;age&quot;</span>:<span class="number">24</span>,<span class="string">&quot;sex&quot;</span>:<span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>如果没有和服务器端沟通好或者是 API 改版了，接口返回的数据格式可能是这样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;Name&quot;</span>:<span class="string">&quot;leavesC&quot;</span>,<span class="string">&quot;age&quot;</span>:<span class="number">24</span>,<span class="string">&quot;sex&quot;</span>:<span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;userName&quot;</span>:<span class="string">&quot;leavesC&quot;</span>,<span class="string">&quot;age&quot;</span>:<span class="number">24</span>,<span class="string">&quot;sex&quot;</span>:<span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果继续使用上一节介绍的方法，那无疑会解析出错</p>
+<p>例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//反序列化</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">userJson</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>name 属性值解析不到，所以为 null</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71d1516941744b9d82932b1cb681aa2a~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>此时为了兼顾多种格式的数据，就需要使用 <strong>SerializedName</strong> 注解</p>
+<p>根据 SerializedName 的声明来看，SerializedName 包含两个属性值，一个是字符串，一个是字符串数组，而字符串数组含有默认值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SerializedName &#123;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    String[] alternate() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SerializedName 的作用是为了在序列化或反序列化时，指导 Gson 如果将原有的属性名和其它特殊情况下的属性名联系起来</p>
+<p>例如，修改 User 类，为 name 声明 SerializedName 注解，注解值为 userName</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SerializedName(&quot;userName&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> sex;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在序列时，Json 格式就会相应改变</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//序列化</span></span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;leavesC&quot;</span>, <span class="number">24</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cdb00c69827421a845406668a66d9c6~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>在反序列化时也一样，能够解析到正确的属性值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//反序列化</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">userJson</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a22237127f4d424485f7dc05d1fc6b63~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>还有个问题没解决，为了应对多种属性名不一致的情况，难道我们要声明多个 User 类吗？这显然是不现实的，所以还需要为 User 类设置多个备选属性名，这就需要用到 SerializedName 注解的另一个属性值 <strong>alternate</strong> 了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SerializedName(value = &quot;userName&quot;, alternate = &#123;&quot;user_name&quot;, &quot;Name&quot;&#125;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> sex;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>以下几种情况都能够被正确的反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="comment">//反序列化</span></span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="type">String</span> <span class="variable">userJson</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line"></span><br><span class="line">    userJson = <span class="string">&quot;&#123;\&quot;user_name\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    user = gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line"></span><br><span class="line">    userJson = <span class="string">&quot;&#123;\&quot;Name\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    user = gson.fromJson(userJson, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a265bd984754066abad2a908280fa5b~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h1 id="三、字段过滤"><a href="#三、字段过滤" class="headerlink" title="三、字段过滤"></a>三、字段过滤</h1><p>有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求。</p>
+<h2 id="1、基于-Expose注解"><a href="#1、基于-Expose注解" class="headerlink" title="1、基于@Expose注解"></a>1、基于@Expose注解</h2><p>Expose 注解包含两个属性值，且均声明了默认值。Expose 的含义即为“暴露”，即用于对外暴露字段，serialize 用于指定是否进行序列化，deserialize 用于指定是否进行反序列化。如果字段不声明 Expose 注解，则意味着不进行序列化和反序列化操作，相当于两个属性值均为 false 。此外，Expose 注解需要和 GsonBuilder 构建的 Gson 对象一起使用才能生效</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Expose &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">serialize</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">deserialize</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Expose 注解的注解值声明情况有四种</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Expose(serialize = true, deserialize = true)</span>   <span class="comment">//序列化和反序列化都生效</span></span><br><span class="line"><span class="meta">@Expose(serialize = false, deserialize = true)</span>  <span class="comment">//序列化时不生效，反序列化时生效</span></span><br><span class="line"><span class="meta">@Expose(serialize = true, deserialize = false)</span>  <span class="comment">//序列化时生效，反序列化时不生效</span></span><br><span class="line"><span class="meta">@Expose(serialize = false, deserialize = false)</span> <span class="comment">//序列化和反序列化都不生效，和不写注解一样</span></span><br></pre></td></tr></table></figure>
+
+<p>现在来看个例子，修改 User 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Expose(serialize = true, deserialize = true)</span>   <span class="comment">//序列化和反序列化都生效</span></span><br><span class="line">    <span class="keyword">private</span> String a;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Expose(serialize = false, deserialize = true)</span>  <span class="comment">//序列化时不生效，反序列化时生效</span></span><br><span class="line">    <span class="keyword">private</span> String b;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Expose(serialize = true, deserialize = false)</span>  <span class="comment">//序列化时生效，反序列化时不生效</span></span><br><span class="line">    <span class="keyword">private</span> String c;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Expose(serialize = false, deserialize = false)</span> <span class="comment">//序列化和反序列化都不生效，和不写注解一样</span></span><br><span class="line">    <span class="keyword">private</span> String d;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String e;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String a, String b, String c, String d, String e)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.a = a;</span><br><span class="line">        <span class="built_in">this</span>.b = b;</span><br><span class="line">        <span class="built_in">this</span>.c = c;</span><br><span class="line">        <span class="built_in">this</span>.d = d;</span><br><span class="line">        <span class="built_in">this</span>.e = e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;a=&#x27;&quot;</span> + a + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, b=&#x27;&quot;</span> + b + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, c=&#x27;&quot;</span> + c + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, d=&#x27;&quot;</span> + d + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, e=&#x27;&quot;</span> + e + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按照如上的注解值，只有声明了 Expose 注解且 serialize 值为 true 的字段才能被序列化，只有声明了 Expose 注解且 deserialize 值为 true 的字段才能被反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().excludeFieldsWithoutExposeAnnotation().create();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;a\&quot;:\&quot;A\&quot;,\&quot;b\&quot;:\&quot;B\&quot;,\&quot;c\&quot;:\&quot;C\&quot;,\&quot;d\&quot;:\&quot;D\&quot;,\&quot;e\&quot;:\&quot;E\&quot;&#125;&quot;</span>;</span><br><span class="line">    user = gson.fromJson(json, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1db89d97907f42be91eab1637c1bcb22~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="2、基于版本"><a href="#2、基于版本" class="headerlink" title="2、基于版本"></a>2、基于版本</h2><p>Gson 提供了 @Since 和 @Until 两个注解基于版本对字段进行过滤，@Since 和 @Until 都包含一个 Double 属性值，用于设置版本号。Since 的意思是“自……开始”，Until 的意思是“到……为止”，一样要和 GsonBuilder 配合使用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Since &#123;</span><br><span class="line">    <span class="type">double</span> <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Until &#123;</span><br><span class="line">    <span class="type">double</span> <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当版本( GsonBuilder 设置的版本) 大于或等于 Since 属性值或小于 Until 属性值时字段会进行序列化和反序列化操作，而没有声明注解的字段都会加入序列化和反序列操作</p>
+<p>现在来看个例子，修改 User 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Since(1.4)</span></span><br><span class="line">    <span class="keyword">private</span> String a;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Since(1.6)</span></span><br><span class="line">    <span class="keyword">private</span> String b;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Since(1.8)</span></span><br><span class="line">    <span class="keyword">private</span> String c;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Until(1.6)</span></span><br><span class="line">    <span class="keyword">private</span> String d;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Until(2.0)</span></span><br><span class="line">    <span class="keyword">private</span> String e;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String a, String b, String c, String d, String e)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.a = a;</span><br><span class="line">        <span class="built_in">this</span>.b = b;</span><br><span class="line">        <span class="built_in">this</span>.c = c;</span><br><span class="line">        <span class="built_in">this</span>.d = d;</span><br><span class="line">        <span class="built_in">this</span>.e = e;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;a=&#x27;&quot;</span> + a + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, b=&#x27;&quot;</span> + b + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, c=&#x27;&quot;</span> + c + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, d=&#x27;&quot;</span> + d + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, e=&#x27;&quot;</span> + e + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().setVersion(<span class="number">1.6</span>).create();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;E&quot;</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;a\&quot;:\&quot;A\&quot;,\&quot;b\&quot;:\&quot;B\&quot;,\&quot;c\&quot;:\&quot;C\&quot;,\&quot;d\&quot;:\&quot;D\&quot;,\&quot;e\&quot;:\&quot;E\&quot;&#125;&quot;</span>;</span><br><span class="line">    user = gson.fromJson(json, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/750f3b022d2d46889bbdeba6be5fcb3d~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="3、基于访问修饰符"><a href="#3、基于访问修饰符" class="headerlink" title="3、基于访问修饰符"></a>3、基于访问修饰符</h2><p>访问修饰符由 <strong>java.lang.reflect.Modifier</strong> 提供 int 类型的定义，而 GsonBuilder 对象的 <code>excludeFieldsWithModifiers</code>方法接收一个 int 类型可变参数，指定不进行序列化和反序列化操作的访问修饰符字段</p>
+<p>看个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ModifierSample</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">String</span> <span class="variable">publicField</span> <span class="operator">=</span> <span class="string">&quot;public&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">String</span> <span class="variable">protectedField</span> <span class="operator">=</span> <span class="string">&quot;protected&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">privateField</span> <span class="operator">=</span> <span class="string">&quot;private&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">defaultField</span> <span class="operator">=</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">finalField</span> <span class="operator">=</span> <span class="string">&quot;final&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="type">String</span> <span class="variable">staticField</span> <span class="operator">=</span> <span class="string">&quot;static&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().excludeFieldsWithModifiers(Modifier.PRIVATE, Modifier.STATIC).create();</span><br><span class="line">    <span class="type">ModifierSample</span> <span class="variable">modifierSample</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModifierSample</span>();</span><br><span class="line">    System.out.println(gson.toJson(modifierSample));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba1e07967c374dda91f1e10691fb6ac3~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="4、基于策略"><a href="#4、基于策略" class="headerlink" title="4、基于策略"></a>4、基于策略</h2><p>GsonBuilder 类包含 <code>setExclusionStrategies(ExclusionStrategy... strategies)</code>方法用于传入不定长参数的策略方法，用于直接排除指定字段名或者指定字段类型</p>
+<p>看个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategies</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String stringField;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> intField;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> doubleField;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Strategies</span><span class="params">(String stringField, <span class="type">int</span> intField, <span class="type">double</span> doubleField)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.stringField = stringField;</span><br><span class="line">        <span class="built_in">this</span>.intField = intField;</span><br><span class="line">        <span class="built_in">this</span>.doubleField = doubleField;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Strategies&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;stringField=&#x27;&quot;</span> + stringField + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, intField=&quot;</span> + intField +</span><br><span class="line">                <span class="string">&quot;, doubleField=&quot;</span> + doubleField +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().setExclusionStrategies(<span class="keyword">new</span> <span class="title class_">ExclusionStrategy</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldSkipField</span><span class="params">(FieldAttributes fieldAttributes)</span> &#123;</span><br><span class="line">                <span class="comment">//排除指定字段名</span></span><br><span class="line">                <span class="keyword">return</span> fieldAttributes.getName().equals(<span class="string">&quot;intField&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">shouldSkipClass</span><span class="params">(Class&lt;?&gt; aClass)</span> &#123;</span><br><span class="line">                <span class="comment">//排除指定字段类型</span></span><br><span class="line">                <span class="keyword">return</span> aClass.getName().equals(<span class="type">double</span>.class.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).create();</span><br><span class="line"></span><br><span class="line">        <span class="type">Strategies</span> <span class="variable">strategies</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Strategies</span>(<span class="string">&quot;stringField&quot;</span>, <span class="number">111</span>, <span class="number">11.22</span>);</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(gson.toJson(strategies));</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;stringField\&quot;:\&quot;stringField\&quot;,\&quot;intField\&quot;:111,\&quot;doubleField\&quot;:11.22&#125;&quot;</span>;</span><br><span class="line">        strategies = gson.fromJson(json, Strategies.class);</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(strategies);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>字段名为 “intField” 和字段类型为 double 的字段都会被排除掉</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5ede196fb3b49dc89d689b63856d043~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><code>setExclusionStrategies</code> 方法在序列化和反序列化时都会生效，如果只是想指定其中一种情况下的排除策略或分别指定排除策略，可以改为使用以下两个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">addSerializationExclusionStrategy(ExclusionStrategy strategy);</span><br><span class="line"></span><br><span class="line">addDeserializationExclusionStrategy(ExclusionStrategy strategy);</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、个性化配置"><a href="#四、个性化配置" class="headerlink" title="四、个性化配置"></a>四、个性化配置</h1><h2 id="1、输出-null"><a href="#1、输出-null" class="headerlink" title="1、输出 null"></a>1、输出 null</h2><p>对于 Gson 而言，在序列化时如果某个属性值为 null 的话，那么在序列化时该字段不会参与进来，如果想要显示输出该字段的话，可以通过 GsonBuilder 进行配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategies</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String stringField;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> intField;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">double</span> doubleField;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">       <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>()</span><br><span class="line">               .serializeNulls() <span class="comment">//输出null</span></span><br><span class="line">               .create();</span><br><span class="line">       <span class="type">Strategies</span> <span class="variable">strategies</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Strategies</span>(<span class="literal">null</span>, <span class="number">24</span>, <span class="number">22.333</span>);</span><br><span class="line">       System.out.println();</span><br><span class="line">       System.out.println(gson.toJson(strategies));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0c33efba86344c6974cacebcee3470f~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="2、格式化输出Json"><a href="#2、格式化输出Json" class="headerlink" title="2、格式化输出Json"></a>2、格式化输出Json</h2><p>默认的序列化后的 Josn 字符串并不太直观，可以选择格式化输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>()</span><br><span class="line">            .serializeNulls() <span class="comment">//输出null</span></span><br><span class="line">            .setPrettyPrinting()<span class="comment">//格式化输出</span></span><br><span class="line">            .create();</span><br><span class="line">    <span class="type">Strategies</span> <span class="variable">strategies</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Strategies</span>(<span class="literal">null</span>, <span class="number">24</span>, <span class="number">22.333</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(strategies));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c28fa45112934426a4b7eb1ecf16e70c~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h2 id="3、格式化时间"><a href="#3、格式化时间" class="headerlink" title="3、格式化时间"></a>3、格式化时间</h2><p>Gson 也可以对时间值进行格式化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Strategies</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Date date;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Date date2;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Strategies</span><span class="params">(Date date, Date date2)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.date = date;</span><br><span class="line">        <span class="built_in">this</span>.date2 = date2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">SimpleDateFormat</span> <span class="variable">simpleDateFormat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss:SSS&quot;</span>, Locale.CHINA);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Strategies&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;date=&quot;</span> + simpleDateFormat.format(date) +</span><br><span class="line">                <span class="string">&quot;, date2=&quot;</span> + simpleDateFormat.format(date2) +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>()</span><br><span class="line">                .setPrettyPrinting()<span class="comment">//格式化输出</span></span><br><span class="line">                .setDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss:SSS&quot;</span>)<span class="comment">//格式化时间</span></span><br><span class="line">                .create();</span><br><span class="line">        <span class="type">Date</span> <span class="variable">date</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        <span class="type">Strategies</span> <span class="variable">strategies</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Strategies</span>(date, <span class="keyword">new</span> <span class="title class_">Date</span>(date.getTime() + <span class="number">1000000</span>));</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(gson.toJson(strategies));</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;  \&quot;date\&quot;: \&quot;2018-03-17 19:38:50:033\&quot;,\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;  \&quot;date2\&quot;: \&quot;2018-03-17 19:55:30:033\&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;&#125;&quot;</span>;</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(gson.fromJson(json, Strategies.class));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/367f08a42e6244d3b539d8cfd8db7ecc~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h1 id="五、TypeAdapter"><a href="#五、TypeAdapter" class="headerlink" title="五、TypeAdapter"></a>五、TypeAdapter</h1><p>TypeAdapter 是一个泛型抽象类，用于接管某种类型的序列化和反序列化过程，包含两个抽象方法，分别用于自定义序列化和反序列化过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">write</span><span class="params">(JsonWriter var1, T var2)</span> <span class="keyword">throws</span> IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> T <span class="title function_">read</span><span class="params">(JsonReader var1)</span> <span class="keyword">throws</span> IOException;</span><br></pre></td></tr></table></figure>
+
+<p>下面看个简单的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2018/3/17 18:32</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> sex;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String name, <span class="type">int</span> age, <span class="type">boolean</span> sex)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">        <span class="built_in">this</span>.sex = sex;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line">                <span class="string">&quot;, sex=&quot;</span> + sex +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义 TypeAdapter 的子类 UserTypeAdapter 来接管 User 类的序列化和反序列化过程</p>
+<p>这里设定当 User 类序列化时 Json 中的Key值都是大写字母开头，反序列化时支持“name”和“Name”两种不同的 Json 风格</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserTypeAdapter</span> <span class="keyword">extends</span> <span class="title class_">TypeAdapter</span>&lt;User&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">write</span><span class="params">(JsonWriter jsonWriter, User user)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">//流式序列化成对象开始</span></span><br><span class="line">        jsonWriter.beginObject();</span><br><span class="line">        <span class="comment">//将Json的Key值都指定为大写字母开头</span></span><br><span class="line">        jsonWriter.name(<span class="string">&quot;Name&quot;</span>).value(user.getName());</span><br><span class="line">        jsonWriter.name(<span class="string">&quot;Age&quot;</span>).value(user.getAge());</span><br><span class="line">        jsonWriter.name(<span class="string">&quot;Sex&quot;</span>).value(user.isSex());</span><br><span class="line">        <span class="comment">//流式序列化结束</span></span><br><span class="line">        jsonWriter.endObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">read</span><span class="params">(JsonReader jsonReader)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        <span class="comment">//流式反序列化开始</span></span><br><span class="line">        jsonReader.beginObject();</span><br><span class="line">        <span class="keyword">while</span> (jsonReader.hasNext()) &#123;</span><br><span class="line">            <span class="keyword">switch</span> (jsonReader.nextName()) &#123;</span><br><span class="line">                <span class="comment">//首字母大小写均合法</span></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;name&quot;</span>:</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;Name&quot;</span>:</span><br><span class="line">                    user.setName(jsonReader.nextString());</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;age&quot;</span>:</span><br><span class="line">                    user.setAge(jsonReader.nextInt());</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;sex&quot;</span>:</span><br><span class="line">                    user.setSex(jsonReader.nextBoolean());</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//流式反序列化结束</span></span><br><span class="line">        jsonReader.endObject();</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().registerTypeAdapter(User.class, <span class="keyword">new</span> <span class="title class_">UserTypeAdapter</span>()).create();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;leavesC&quot;</span>, <span class="number">24</span>, <span class="literal">true</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line"></span><br><span class="line">    <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;Name\&quot;:\&quot;leavesC\&quot;,\&quot;age\&quot;:24,\&quot;sex\&quot;:true&#125;&quot;</span>;</span><br><span class="line">    user = gson.fromJson(json, User.class);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 User 类按照预定义的策略来完成序列化和反序列化了</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/317d550269a64d46b747d68c64203f26~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<h1 id="六、JsonSerializer-和-JsonDeserializer"><a href="#六、JsonSerializer-和-JsonDeserializer" class="headerlink" title="六、JsonSerializer 和 JsonDeserializer"></a>六、JsonSerializer 和 JsonDeserializer</h1><p>TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还提供了只接管序列化过程的接口，即 JsonSerializer</p>
+<p>看个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().registerTypeAdapter(User.class, <span class="keyword">new</span> <span class="title class_">JsonSerializer</span>&lt;User&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> JsonElement <span class="title function_">serialize</span><span class="params">(User user, Type type, JsonSerializationContext jsonSerializationContext)</span> &#123;</span><br><span class="line">            <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JsonObject</span>();</span><br><span class="line">            jsonObject.addProperty(<span class="string">&quot;NameHi&quot;</span>, user.getName());</span><br><span class="line">            jsonObject.addProperty(<span class="string">&quot;Sex&quot;</span>, user.isSex());</span><br><span class="line">            jsonObject.addProperty(<span class="string">&quot;Age&quot;</span>, user.getAge());</span><br><span class="line">            <span class="keyword">return</span> jsonObject;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).create();</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;leavesC&quot;</span>, <span class="number">24</span>, <span class="literal">true</span>);</span><br><span class="line">    System.out.println();</span><br><span class="line">    System.out.println(gson.toJson(user));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1ec92160824423da39f6c0409e27a26~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>相对应的，JsonDeserializer 接口提供了反序列化的接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().registerTypeAdapter(User.class, <span class="keyword">new</span> <span class="title class_">JsonDeserializer</span>&lt;User&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> User <span class="title function_">deserialize</span><span class="params">(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)</span> <span class="keyword">throws</span> JsonParseException &#123;</span><br><span class="line">                <span class="type">JsonObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> jsonElement.getAsJsonObject();</span><br><span class="line">                <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">                <span class="comment">//同时支持 userName 和 name 两种情况</span></span><br><span class="line">                <span class="keyword">if</span> (jsonObject.has(<span class="string">&quot;userName&quot;</span>)) &#123;</span><br><span class="line">                    name = jsonObject.get(<span class="string">&quot;userName&quot;</span>).getAsString();</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (jsonObject.has(<span class="string">&quot;name&quot;</span>)) &#123;</span><br><span class="line">                    name = jsonObject.get(<span class="string">&quot;name&quot;</span>).getAsString();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;age&quot;</span>).getAsInt();</span><br><span class="line">                <span class="type">boolean</span> <span class="variable">sex</span> <span class="operator">=</span> jsonObject.get(<span class="string">&quot;sex&quot;</span>).getAsBoolean();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>(name, age, sex);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).create();</span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;leavesC\&quot;,\&quot;sex\&quot;:true,\&quot;age\&quot;:24&#125;&quot;</span>;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> gson.fromJson(json, User.class);</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(user);</span><br><span class="line"></span><br><span class="line">        json = <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;leavesC\&quot;,\&quot;sex\&quot;:true,\&quot;age\&quot;:24&#125;&quot;</span>;</span><br><span class="line">        user = gson.fromJson(json, User.class);</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9adbf6fa0b94ee4b0f2a32e26925174~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>这里有个比较麻烦的地方，那就是在使用 <strong>TypeAdapter 、JsonSerializer</strong> 和 <strong>JsonDeserializer</strong> 时，总需要调用 <strong>registerTypeAdapter</strong> 方法进行注册，那有没有更简单的注册方法呢？<br>有的，Gosn 还提供了另一个注解 <strong>@JsonAdapter</strong> 用于进行简单的声明</p>
+<p>类似于这样，声明了 User 类的序列化或反序列化操作由 UserTypeAdapter 完成，注解的优先级高于 <strong>registerTypeAdapter</strong> 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JsonAdapter(UserTypeAdapter.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="七、TypeAdapterFactory"><a href="#七、TypeAdapterFactory" class="headerlink" title="七、TypeAdapterFactory"></a>七、TypeAdapterFactory</h1><p>TypeAdapterFactory 是用于创建 TypeAdapter 的工厂类，通过参数 TypeToken 来查找确定对应的 TypeAdapter，如果没有就返回 null 并由 Gson 默认的处理方法来进行序列化和反序列化操作，否则就由用户预定义的 TypeAdapter 来进行处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Gson</span> <span class="variable">gson</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GsonBuilder</span>().registerTypeAdapterFactory(<span class="keyword">new</span> <span class="title class_">TypeAdapterFactory</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T&gt; TypeAdapter&lt;T&gt; <span class="title function_">create</span><span class="params">(Gson gson, TypeToken&lt;T&gt; typeToken)</span> &#123;</span><br><span class="line">        <span class="comment">//如果 Gson 需要与 User 类相关的 TypeAdapter ，则返回我们自己定义的 TypeAdapter 对象</span></span><br><span class="line">        <span class="keyword">if</span> (typeToken.getType().getTypeName().equals(User.class.getTypeName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> (TypeAdapter&lt;T&gt;) <span class="keyword">new</span> <span class="title class_">UserTypeAdapter</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//找不到则返回null</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).create();</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="八、结语"><a href="#八、结语" class="headerlink" title="八、结语"></a>八、结语</h1><p>这一篇文章好像写得太长了一点？Gson 的知识点介绍到这里也差不多了，以后如果还发现新内容的话我会继续补充，现在就先这样啦</p>
+<p>我的 GitHub： <a target="_blank" rel="noopener" href="https://github.com/leavesCZY">leavesC</a>  -&gt; <a target="_blank" rel="noopener" href="https://github.com/leavesCZY">https://github.com/leavesCZY</a></p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E6%8E%A2%E7%A9%B6%20Kotlin%20%E7%9A%84%E9%9A%90%E8%97%8F%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80%E4%B8%8E%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          探究 Kotlin 的隐藏性能开销与避坑指南
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E4%B8%80%E6%96%87%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20Kotlin%20%E5%8D%8F%E7%A8%8B/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          一文快速入门 Kotlin 协程
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

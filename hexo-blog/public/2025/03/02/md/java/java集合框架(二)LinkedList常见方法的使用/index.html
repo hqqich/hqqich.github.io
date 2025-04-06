@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>6 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>1.5k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>@[toc]</p>
+<h2 id="一、什么是LinkedList"><a href="#一、什么是LinkedList" class="headerlink" title="一、什么是LinkedList"></a>一、什么是LinkedList</h2><p>LinkedList是Java中的一个双向链表。</p>
+<p>它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。</p>
+<p>LinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。</p>
+<p>相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。</p>
+<p>LinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。</p>
+<h2 id="二、常用的方法"><a href="#二、常用的方法" class="headerlink" title="二、常用的方法"></a>二、常用的方法</h2><table>
+<thead>
+<tr>
+<th>返回类型</th>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>add(E o)</td>
+<td>将指定元素追加到此列表的结尾。</td>
+</tr>
+<tr>
+<td>void</td>
+<td>add(int index, E element)</td>
+<td>在此列表中指定的位置插入指定的元素。</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>addAll(Collection&lt;? extends E&gt; c)</td>
+<td>追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>addAll(int index, Collection&lt;? extends E&gt; c)</td>
+<td>将指定集合中的所有元素从指定位置开始插入此列表。</td>
+</tr>
+<tr>
+<td>void</td>
+<td>addFirst(E o)</td>
+<td>将指定元素插入此列表的开头。</td>
+</tr>
+<tr>
+<td>void</td>
+<td>addLast(E o)</td>
+<td>将指定元素追加到此列表的结尾。</td>
+</tr>
+<tr>
+<td>void</td>
+<td>clear()</td>
+<td>从此列表中移除所有元素。</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>contains(Object o)</td>
+<td>如果此列表包含指定元素，则返回 true。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>get(int index)</td>
+<td>返回此列表中指定位置处的元素。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>getFirst()</td>
+<td>返回此列表的第一个元素。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>getLast()</td>
+<td>返回此列表的最后一个元素。</td>
+</tr>
+<tr>
+<td>int</td>
+<td>indexOf(Object o)</td>
+<td>返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。</td>
+</tr>
+<tr>
+<td>int</td>
+<td>lastIndexOf(Object o)</td>
+<td>返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。</td>
+</tr>
+<tr>
+<td>ListIterator<E></td>
+<td>listIterator(int index)</td>
+<td>返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>peek()</td>
+<td>找到但不移除此列表的头（第一个元素）。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>remove()</td>
+<td>找到并移除此列表的头（第一个元素）。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>remove(int index)</td>
+<td>移除此列表中指定位置处的元素。</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>remove(Object o)</td>
+<td>移除此列表中首次出现的指定元素。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>removeFirst()</td>
+<td>移除并返回此列表的第一个元素。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>removeLast()</td>
+<td>移除并返回此列表的最后一个元素。</td>
+</tr>
+<tr>
+<td>E</td>
+<td>set(int index, E element)</td>
+<td>将此列表中指定位置的元素替换为指定的元素。</td>
+</tr>
+<tr>
+<td>int</td>
+<td>size()</td>
+<td>返回此列表的元素数。</td>
+</tr>
+</tbody></table>
+<p>下面是一个示例代码：</p>
+<h3 id="2-1-add-："><a href="#2-1-add-：" class="headerlink" title="2.1 add()："></a>2.1 add()：</h3><p>在链表的末尾添加元素。如果需要在指定位置添加元素，则可以使用add(index, element)方法。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[apple, banana, orange]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-remove-："><a href="#2-2-remove-：" class="headerlink" title="2.2 remove()："></a>2.2 remove()：</h3><p>在链表中删除指定元素。如果需要删除指定位置的元素，则可以使用remove(index)方法。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.remove(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[apple, orange]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-get-："><a href="#2-3-get-：" class="headerlink" title="2.3 get()："></a>2.3 get()：</h3><p>获取指定位置的元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">second</span> <span class="operator">=</span> list.get(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(second); <span class="comment">// 结果:banana</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-set-："><a href="#2-4-set-：" class="headerlink" title="2.4 set()："></a>2.4 set()：</h3><p>替换指定位置的元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.set(<span class="number">1</span>, <span class="string">&quot;grape&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[apple, grape, orange]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-clear-："><a href="#2-5-clear-：" class="headerlink" title="2.5 clear()："></a>2.5 clear()：</h3><p>清空链表中的所有元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.clear();</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-size-："><a href="#2-6-size-：" class="headerlink" title="2.6 size()："></a>2.6 size()：</h3><p>返回链表中的元素数量。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> list.size();</span><br><span class="line"></span><br><span class="line">System.out.println(size); <span class="comment">//结果:3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-contains-："><a href="#2-7-contains-：" class="headerlink" title="2.7 contains()："></a>2.7 contains()：</h3><p>判断链表中是否包含指定元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">boolean</span> <span class="variable">hasApple</span> <span class="operator">=</span> list.contains(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(hasApple); <span class="comment">//结果: true</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8-addFirst-："><a href="#2-8-addFirst-：" class="headerlink" title="2.8 addFirst()："></a>2.8 addFirst()：</h3><p>在链表的头部插入元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.addFirst(<span class="string">&quot;pear&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[pear, apple, banana, orange]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-9-addLast-："><a href="#2-9-addLast-：" class="headerlink" title="2.9 addLast()："></a>2.9 addLast()：</h3><p>在链表的尾部插入元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.addLast(<span class="string">&quot;pear&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[apple, banana, orange, pear]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-10-getFirst-："><a href="#2-10-getFirst-：" class="headerlink" title="2.10 getFirst()："></a>2.10 getFirst()：</h3><p>获取链表的第一个元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">first</span> <span class="operator">=</span> list.getFirst();</span><br><span class="line"></span><br><span class="line">System.out.println(first); <span class="comment">// 结果:apple</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-11-getLast-："><a href="#2-11-getLast-：" class="headerlink" title="2.11 getLast()："></a>2.11 getLast()：</h3><p>获取链表的最后一个元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">last</span> <span class="operator">=</span> list.getLast();</span><br><span class="line"></span><br><span class="line">System.out.println(last); <span class="comment">// 结果:orange</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-12-removeFirst-："><a href="#2-12-removeFirst-：" class="headerlink" title="2.12 removeFirst()："></a>2.12 removeFirst()：</h3><p>移除链表的第一个元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.removeFirst();</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[banana, orange]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-13-removeLast-："><a href="#2-13-removeLast-：" class="headerlink" title="2.13 removeLast()："></a>2.13 removeLast()：</h3><p>移除链表的最后一个元素。</p>
+<p>代码演示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">LinkedList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">list.add(<span class="string">&quot;apple&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;banana&quot;</span>);</span><br><span class="line">list.add(<span class="string">&quot;orange&quot;</span>);</span><br><span class="line"></span><br><span class="line">list.removeLast();</span><br><span class="line"></span><br><span class="line">System.out.println(list); <span class="comment">// 结果:[apple, banana]</span></span><br></pre></td></tr></table></figure>
+
+<p>所有代码演示的,运行结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[apple, banana, orange]</span><br><span class="line">[apple, orange]</span><br><span class="line">banana</span><br><span class="line">[apple, grape, orange]</span><br><span class="line">[]</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="literal">true</span></span><br><span class="line">[pear, apple, banana, orange]</span><br><span class="line">[apple, banana, orange, pear]</span><br><span class="line">apple</span><br><span class="line">orange</span><br><span class="line">[banana, orange]</span><br><span class="line">[apple, banana]</span><br></pre></td></tr></table></figure>
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6(%E4%B8%89)ArrayList%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/java/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6(%E4%B8%80)%20Java%E4%B8%ADMap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%BA%94%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

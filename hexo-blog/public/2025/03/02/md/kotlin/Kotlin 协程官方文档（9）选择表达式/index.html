@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>Kotlin 协程官方文档（9）选择表达式 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        Kotlin 协程官方文档（9）选择表达式
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        Kotlin 协程官方文档（9）选择表达式
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>12 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.4k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a target="_blank" rel="noopener" href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md">coroutines-guide</a></p>
+</blockquote>
+<p>select 表达式可以同时等待多个挂起函数，并选择第一个可用的函数来执行</p>
+<blockquote>
+<p>选择表达式是 <code>kotlinx.coroutines</code> 的一个实验性的特性，这些 API 预计将在 <code>kotlinx.coroutines</code> 库的即将到来的更新中衍化，并可能会有突破性的变化</p>
+</blockquote>
+<h1 id="一、Selecting-from-channels"><a href="#一、Selecting-from-channels" class="headerlink" title="一、Selecting from channels"></a>一、Selecting from channels</h1><p>我们现在有两个字符串生产者：<code>fizz</code> 和 <code>buzz</code> 。其中 <code>fizz</code> 每 300 毫秒生成一个字符串“Fizz”：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">fizz</span><span class="params">()</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// sends &quot;Fizz&quot; every 300 ms</span></span><br><span class="line">        delay(<span class="number">300</span>)</span><br><span class="line">        send(<span class="string">&quot;Fizz&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着 <code>buzz</code> 每 500 毫秒生成一个字符串“Buzz!”：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">buzz</span><span class="params">()</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// sends &quot;Buzz!&quot; every 500 ms</span></span><br><span class="line">        delay(<span class="number">500</span>)</span><br><span class="line">        send(<span class="string">&quot;Buzz!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用挂起函数 receive，我们可以从两个通道接收其中一个的数据。但是 select 表达式允许我们使用其 onReceive 子句同时从两者接收：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">selectFizzBuzz</span><span class="params">(fizz: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;, buzz: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    select&lt;<span class="built_in">Unit</span>&gt; &#123; <span class="comment">// &lt;Unit&gt; means that this select expression does not produce any result </span></span><br><span class="line">        fizz.onReceive &#123; value -&gt;  <span class="comment">// this is the first select clause</span></span><br><span class="line">            println(<span class="string">&quot;fizz -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        buzz.onReceive &#123; value -&gt;  <span class="comment">// this is the second select clause</span></span><br><span class="line">            println(<span class="string">&quot;buzz -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们运行代码 7 次：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.channels.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.selects.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">fizz</span><span class="params">()</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// sends &quot;Fizz&quot; every 300 ms</span></span><br><span class="line">        delay(<span class="number">300</span>)</span><br><span class="line">        send(<span class="string">&quot;Fizz&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">buzz</span><span class="params">()</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// sends &quot;Buzz!&quot; every 500 ms</span></span><br><span class="line">        delay(<span class="number">500</span>)</span><br><span class="line">        send(<span class="string">&quot;Buzz!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">selectFizzBuzz</span><span class="params">(fizz: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;, buzz: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    select&lt;<span class="built_in">Unit</span>&gt; &#123; <span class="comment">// &lt;Unit&gt; means that this select expression does not produce any result </span></span><br><span class="line">        fizz.onReceive &#123; value -&gt;  <span class="comment">// this is the first select clause</span></span><br><span class="line">            println(<span class="string">&quot;fizz -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        buzz.onReceive &#123; value -&gt;  <span class="comment">// this is the second select clause</span></span><br><span class="line">            println(<span class="string">&quot;buzz -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> fizz = fizz()</span><br><span class="line">    <span class="keyword">val</span> buzz = buzz()</span><br><span class="line">    repeat(<span class="number">7</span>) &#123;</span><br><span class="line">        selectFizzBuzz(fizz, buzz)</span><br><span class="line">    &#125;</span><br><span class="line">    coroutineContext.cancelChildren() <span class="comment">// cancel fizz &amp; buzz coroutines</span></span><br><span class="line"><span class="comment">//sampleEnd        </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fizz -&gt; <span class="string">&#x27;Fizz&#x27;</span></span><br><span class="line">buzz -&gt; <span class="string">&#x27;Buzz!&#x27;</span></span><br><span class="line">fizz -&gt; <span class="string">&#x27;Fizz&#x27;</span></span><br><span class="line">fizz -&gt; <span class="string">&#x27;Fizz&#x27;</span></span><br><span class="line">buzz -&gt; <span class="string">&#x27;Buzz!&#x27;</span></span><br><span class="line">fizz -&gt; <span class="string">&#x27;Fizz&#x27;</span></span><br><span class="line">buzz -&gt; <span class="string">&#x27;Buzz!&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="二、Selecting-on-close"><a href="#二、Selecting-on-close" class="headerlink" title="二、Selecting on close"></a>二、Selecting on close</h1><p>当通道关闭时，select 中的 onReceive 子句会失败并导致相应的 select 引发异常。我们可以使用 onReceiveOrNull 子句在通道关闭时执行特定操作。下面的示例还显示了 select 是一个返回其查询方法结果的表达式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">selectAorB</span><span class="params">(a: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;, b: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;)</span></span>: String =</span><br><span class="line">    select&lt;String&gt; &#123;</span><br><span class="line">        a.onReceiveOrNull &#123; value -&gt; </span><br><span class="line">            <span class="keyword">if</span> (value == <span class="literal">null</span>) </span><br><span class="line">                <span class="string">&quot;Channel &#x27;a&#x27; is closed&quot;</span> </span><br><span class="line">            <span class="keyword">else</span> </span><br><span class="line">                <span class="string">&quot;a -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        b.onReceiveOrNull &#123; value -&gt; </span><br><span class="line">            <span class="keyword">if</span> (value == <span class="literal">null</span>) </span><br><span class="line">                <span class="string">&quot;Channel &#x27;b&#x27; is closed&quot;</span></span><br><span class="line">            <span class="keyword">else</span>    </span><br><span class="line">                <span class="string">&quot;b -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，onReceiveOrNull 是一个扩展函数，仅可用于具有不可为空元素的通道，这样就不会意外混淆<strong>通道是已关闭</strong>还是<strong>返回了空值</strong>这两种情况</p>
+<p>让我们将其与生成四次“Hello”字符串的通道 <code>a</code> 和生成四次“World”字符串的通道 <code>b</code> 一起使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.channels.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.selects.*</span><br><span class="line"></span><br><span class="line"><span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">selectAorB</span><span class="params">(a: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;, b: <span class="type">ReceiveChannel</span>&lt;<span class="type">String</span>&gt;)</span></span>: String =</span><br><span class="line">    select&lt;String&gt; &#123;</span><br><span class="line">        a.onReceiveOrNull &#123; value -&gt; </span><br><span class="line">            <span class="keyword">if</span> (value == <span class="literal">null</span>) </span><br><span class="line">                <span class="string">&quot;Channel &#x27;a&#x27; is closed&quot;</span> </span><br><span class="line">            <span class="keyword">else</span> </span><br><span class="line">                <span class="string">&quot;a -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        b.onReceiveOrNull &#123; value -&gt; </span><br><span class="line">            <span class="keyword">if</span> (value == <span class="literal">null</span>) </span><br><span class="line">                <span class="string">&quot;Channel &#x27;b&#x27; is closed&quot;</span></span><br><span class="line">            <span class="keyword">else</span>    </span><br><span class="line">                <span class="string">&quot;b -&gt; &#x27;<span class="variable">$value</span>&#x27;&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> a = produce&lt;String&gt; &#123;</span><br><span class="line">        repeat(<span class="number">4</span>) &#123; send(<span class="string">&quot;Hello <span class="variable">$it</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">val</span> b = produce&lt;String&gt; &#123;</span><br><span class="line">        repeat(<span class="number">4</span>) &#123; send(<span class="string">&quot;World <span class="variable">$it</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    repeat(<span class="number">8</span>) &#123; <span class="comment">// print first eight results</span></span><br><span class="line">        println(selectAorB(a, b))</span><br><span class="line">    &#125;</span><br><span class="line">    coroutineContext.cancelChildren()  </span><br><span class="line"><span class="comment">//sampleEnd      </span></span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>这段代码的结果非常有趣，所以我们将在细节中分析它：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a -&gt; <span class="string">&#x27;Hello 0&#x27;</span></span><br><span class="line">a -&gt; <span class="string">&#x27;Hello 1&#x27;</span></span><br><span class="line">b -&gt; <span class="string">&#x27;World 0&#x27;</span></span><br><span class="line">a -&gt; <span class="string">&#x27;Hello 2&#x27;</span></span><br><span class="line">a -&gt; <span class="string">&#x27;Hello 3&#x27;</span></span><br><span class="line">b -&gt; <span class="string">&#x27;World 1&#x27;</span></span><br><span class="line">Channel <span class="string">&#x27;a&#x27;</span> <span class="keyword">is</span> closed</span><br><span class="line">Channel <span class="string">&#x27;a&#x27;</span> <span class="keyword">is</span> closed</span><br></pre></td></tr></table></figure>
+
+<p>从中可以观察到几点</p>
+<p>首先，select 偏向于第一个子句。当同时可以选择多个子句时，将选择其中的第一个子句。在这里，两个通道都在不断地产生字符串，因此作为 select 中的第一个子句的通道获胜。但是，因为我们使用的是无缓冲通道，所以 a 在其发送调用时会不时地被挂起，从而给了 b 发送的机会</p>
+<p>第二个观察结果是，当通道已经关闭时，onReceiveOrNull 将立即被选中</p>
+<h1 id="三、Selecting-to-send"><a href="#三、Selecting-to-send" class="headerlink" title="三、Selecting to send"></a>三、Selecting to send</h1><p>select 表达式有 onSend 子句，可以与 selection 的偏向性质结合使用。<br>让我们写一个整数生产者的例子，当主通道上的消费者跟不上时，它会将其值发送到 <code>side</code> 通道：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">produceNumbers</span><span class="params">(side: <span class="type">SendChannel</span>&lt;<span class="type">Int</span>&gt;)</span></span> = produce&lt;<span class="built_in">Int</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">for</span> (num <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123; <span class="comment">// produce 10 numbers from 1 to 10</span></span><br><span class="line">        delay(<span class="number">100</span>) <span class="comment">// every 100 ms</span></span><br><span class="line">        select&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">            onSend(num) &#123;&#125; <span class="comment">// Send to the primary channel</span></span><br><span class="line">            side.onSend(num) &#123;&#125; <span class="comment">// or to the side channel     </span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>消费者将会非常缓慢，每个数值处理需要 250 毫秒：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.channels.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.selects.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">produceNumbers</span><span class="params">(side: <span class="type">SendChannel</span>&lt;<span class="type">Int</span>&gt;)</span></span> = produce&lt;<span class="built_in">Int</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">for</span> (num <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123; <span class="comment">// produce 10 numbers from 1 to 10</span></span><br><span class="line">        delay(<span class="number">100</span>) <span class="comment">// every 100 ms</span></span><br><span class="line">        select&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line">            onSend(num) &#123;&#125; <span class="comment">// Send to the primary channel</span></span><br><span class="line">            side.onSend(num) &#123;&#125; <span class="comment">// or to the side channel     </span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> side = Channel&lt;<span class="built_in">Int</span>&gt;() <span class="comment">// allocate side channel</span></span><br><span class="line">    launch &#123; <span class="comment">// this is a very fast consumer for the side channel</span></span><br><span class="line">        side.consumeEach &#123; println(<span class="string">&quot;Side channel has <span class="variable">$it</span>&quot;</span>) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    produceNumbers(side).consumeEach &#123; </span><br><span class="line">        println(<span class="string">&quot;Consuming <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">        delay(<span class="number">250</span>) <span class="comment">// let us digest the consumed number properly, do not hurry</span></span><br><span class="line">    &#125;</span><br><span class="line">    println(<span class="string">&quot;Done consuming&quot;</span>)</span><br><span class="line">    coroutineContext.cancelChildren()  </span><br><span class="line"><span class="comment">//sampleEnd      </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们看看会发生什么：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Consuming <span class="number">1</span></span><br><span class="line">Side channel has <span class="number">2</span></span><br><span class="line">Side channel has <span class="number">3</span></span><br><span class="line">Consuming <span class="number">4</span></span><br><span class="line">Side channel has <span class="number">5</span></span><br><span class="line">Side channel has <span class="number">6</span></span><br><span class="line">Consuming <span class="number">7</span></span><br><span class="line">Side channel has <span class="number">8</span></span><br><span class="line">Side channel has <span class="number">9</span></span><br><span class="line">Consuming <span class="number">10</span></span><br><span class="line">Done consuming</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、Selecting-deferred-values"><a href="#四、Selecting-deferred-values" class="headerlink" title="四、Selecting deferred values"></a>四、Selecting deferred values</h1><p>延迟值可以使用 onAwait 子句来查询。让我们启动一个异步函数，它在随机的延迟后会延迟返回字符串：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncString</span><span class="params">(time: <span class="type">Int</span>)</span></span> = async &#123;</span><br><span class="line">    delay(time.toLong())</span><br><span class="line">    <span class="string">&quot;Waited for <span class="variable">$time</span> ms&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们随机启动十余个异步函数，每个都延迟随机的时间</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncStringsList</span><span class="params">()</span></span>: List&lt;Deferred&lt;String&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> random = Random(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">return</span> List(<span class="number">12</span>) &#123; asyncString(random.nextInt(<span class="number">1000</span>)) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，main 函数等待它们中的第一个完成，并统计仍处于活动状态的延迟值的数量。注意，我们在这里使用 <code>select</code> 表达式事实上是一种 Kotlin DSL，因此我们可以使用任意代码为它提供子句。在本例中，我们遍历一个延迟值列表，为每个延迟值提供 <code>onAwait</code> 子句。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.selects.*</span><br><span class="line"><span class="keyword">import</span> java.util.*</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncString</span><span class="params">(time: <span class="type">Int</span>)</span></span> = async &#123;</span><br><span class="line">    delay(time.toLong())</span><br><span class="line">    <span class="string">&quot;Waited for <span class="variable">$time</span> ms&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncStringsList</span><span class="params">()</span></span>: List&lt;Deferred&lt;String&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> random = Random(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">return</span> List(<span class="number">12</span>) &#123; asyncString(random.nextInt(<span class="number">1000</span>)) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> list = asyncStringsList()</span><br><span class="line">    <span class="keyword">val</span> result = select&lt;String&gt; &#123;</span><br><span class="line">        list.withIndex().forEach &#123; (index, deferred) -&gt;</span><br><span class="line">            deferred.onAwait &#123; answer -&gt;</span><br><span class="line">                <span class="string">&quot;Deferred <span class="variable">$index</span> produced answer &#x27;<span class="variable">$answer</span>&#x27;&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    println(result)</span><br><span class="line">    <span class="keyword">val</span> countActive = list.count &#123; it.isActive &#125;</span><br><span class="line">    println(<span class="string">&quot;<span class="variable">$countActive</span> coroutines are still active&quot;</span>)</span><br><span class="line"><span class="comment">//sampleEnd</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Deferred <span class="number">4</span> produced answer <span class="string">&#x27;Waited for 128 ms&#x27;</span></span><br><span class="line"><span class="number">11</span> coroutines are still active</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、Switch-over-a-channel-of-deferred-values"><a href="#五、Switch-over-a-channel-of-deferred-values" class="headerlink" title="五、Switch over a channel of deferred values"></a>五、Switch over a channel of deferred values</h1><p>现在我们来编写一个通道生产者函数，它消费一个产生延迟字符串的通道，并等待每个接收的延迟值，但它只在下一个延迟值到达或者通道关闭之前处于运行状态。此示例将 onReceiveOrNull 和 onAwait 子句放在同一个 <code>select</code> 中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">switchMapDeferreds</span><span class="params">(input: <span class="type">ReceiveChannel</span>&lt;<span class="type">Deferred</span>&lt;<span class="type">String</span>&gt;&gt;)</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">var</span> current = input.receive() <span class="comment">// start with first received deferred value</span></span><br><span class="line">    <span class="keyword">while</span> (isActive) &#123; <span class="comment">// loop while not cancelled/closed</span></span><br><span class="line">        <span class="keyword">val</span> next = select&lt;Deferred&lt;String&gt;?&gt; &#123; <span class="comment">// return next deferred value from this select or null</span></span><br><span class="line">            input.onReceiveOrNull &#123; update -&gt;</span><br><span class="line">                update <span class="comment">// replaces next value to wait</span></span><br><span class="line">            &#125;</span><br><span class="line">            current.onAwait &#123; value -&gt;  </span><br><span class="line">                send(value) <span class="comment">// send value that current deferred has produced</span></span><br><span class="line">                input.receiveOrNull() <span class="comment">// and use the next deferred from the input channel</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (next == <span class="literal">null</span>) &#123;</span><br><span class="line">            println(<span class="string">&quot;Channel was closed&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span> <span class="comment">// out of loop</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            current = next</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了测试它，我们将用一个简单的异步函数，它在特定的延迟后返回特定的字符串：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncString</span><span class="params">(str: <span class="type">String</span>, time: <span class="type">Long</span>)</span></span> = async &#123;</span><br><span class="line">    delay(time)</span><br><span class="line">    str</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>main 函数只是启动一个协程来打印 <code>switchMapDeferreds</code> 的结果并向它发送一些测试数据：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.channels.*</span><br><span class="line"><span class="keyword">import</span> kotlinx.coroutines.selects.*</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">switchMapDeferreds</span><span class="params">(input: <span class="type">ReceiveChannel</span>&lt;<span class="type">Deferred</span>&lt;<span class="type">String</span>&gt;&gt;)</span></span> = produce&lt;String&gt; &#123;</span><br><span class="line">    <span class="keyword">var</span> current = input.receive() <span class="comment">// start with first received deferred value</span></span><br><span class="line">    <span class="keyword">while</span> (isActive) &#123; <span class="comment">// loop while not cancelled/closed</span></span><br><span class="line">        <span class="keyword">val</span> next = select&lt;Deferred&lt;String&gt;?&gt; &#123; <span class="comment">// return next deferred value from this select or null</span></span><br><span class="line">            input.onReceiveOrNull &#123; update -&gt;</span><br><span class="line">                update <span class="comment">// replaces next value to wait</span></span><br><span class="line">            &#125;</span><br><span class="line">            current.onAwait &#123; value -&gt;  </span><br><span class="line">                send(value) <span class="comment">// send value that current deferred has produced</span></span><br><span class="line">                input.receiveOrNull() <span class="comment">// and use the next deferred from the input channel</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (next == <span class="literal">null</span>) &#123;</span><br><span class="line">            println(<span class="string">&quot;Channel was closed&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span> <span class="comment">// out of loop</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            current = next</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> CoroutineScope.<span class="title">asyncString</span><span class="params">(str: <span class="type">String</span>, time: <span class="type">Long</span>)</span></span> = async &#123;</span><br><span class="line">    delay(time)</span><br><span class="line">    str</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> = runBlocking&lt;<span class="built_in">Unit</span>&gt; &#123;</span><br><span class="line"><span class="comment">//sampleStart</span></span><br><span class="line">    <span class="keyword">val</span> chan = Channel&lt;Deferred&lt;String&gt;&gt;() <span class="comment">// the channel for test</span></span><br><span class="line">    launch &#123; <span class="comment">// launch printing coroutine</span></span><br><span class="line">        <span class="keyword">for</span> (s <span class="keyword">in</span> switchMapDeferreds(chan)) </span><br><span class="line">            println(s) <span class="comment">// print each received string</span></span><br><span class="line">    &#125;</span><br><span class="line">    chan.send(asyncString(<span class="string">&quot;BEGIN&quot;</span>, <span class="number">100</span>))</span><br><span class="line">    delay(<span class="number">200</span>) <span class="comment">// enough time for &quot;BEGIN&quot; to be produced</span></span><br><span class="line">    chan.send(asyncString(<span class="string">&quot;Slow&quot;</span>, <span class="number">500</span>))</span><br><span class="line">    delay(<span class="number">100</span>) <span class="comment">// not enough time to produce slow</span></span><br><span class="line">    chan.send(asyncString(<span class="string">&quot;Replace&quot;</span>, <span class="number">100</span>))</span><br><span class="line">    delay(<span class="number">500</span>) <span class="comment">// give it time before the last one</span></span><br><span class="line">    chan.send(asyncString(<span class="string">&quot;END&quot;</span>, <span class="number">500</span>))</span><br><span class="line">    delay(<span class="number">1000</span>) <span class="comment">// give it time to process</span></span><br><span class="line">    chan.close() <span class="comment">// close the channel ... </span></span><br><span class="line">    delay(<span class="number">500</span>) <span class="comment">// and wait some time to let it finish</span></span><br><span class="line"><span class="comment">//sampleEnd</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码的执行结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BEGIN</span><br><span class="line">Replace</span><br><span class="line">END</span><br><span class="line">Channel was closed</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Kotlin%20%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%888%EF%BC%89%E5%85%B1%E4%BA%AB%E5%8F%AF%E5%8F%98%E7%8A%B6%E6%80%81%E5%92%8C%E5%B9%B6%E5%8F%91%E6%80%A7/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Kotlin 协程官方文档（8）共享可变状态和并发性
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Kotlin%20%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%883%EF%BC%89%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          Kotlin 协程官方文档（3）组合挂起函数
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

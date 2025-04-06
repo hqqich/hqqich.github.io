@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>java中C3P0、Druid、HikariCP 、DBCP连接池的jar包下载与IDEA配置 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        java中C3P0、Druid、HikariCP 、DBCP连接池的jar包下载与IDEA配置
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        java中C3P0、Druid、HikariCP 、DBCP连接池的jar包下载与IDEA配置
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>11 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>3k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/html/">html</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <h2 id="一、什么是连接池"><a href="#一、什么是连接池" class="headerlink" title="一、什么是连接池"></a>一、什么是连接池</h2><p>连接池是应用程序与数据库之间的一个缓冲区，它存储了一定数量的空闲数据库连接，当应用程序需要连接数据库时，可以从连接池中获取一个可用连接，使用完毕后再将连接归还给连接池，从而避免了每次连接都需要创建和销毁连接的开销，提高了应用程序的性能和可伸缩性。连接池也可以控制数据库连接的数量和复用，从而减少了数据库的负担。</p>
+<p>简单理解的话就是将连接放到自己家抽屉里，需要用的时候就去拿，不用了就放回去，减少了连接的时间，不用去远处去拿。</p>
+<h2 id="二、连接池的好处"><a href="#二、连接池的好处" class="headerlink" title="二、连接池的好处"></a>二、连接池的好处</h2><p>连接池的好处可以总结为以下几点：</p>
+<h3 id="1-提高性能"><a href="#1-提高性能" class="headerlink" title="1. 提高性能"></a>1. 提高性能</h3><p>数据库连接是资源密集型操作，每次建立连接都需要进行TCP握手，验证用户身份等操作。连接池缓存了一定数量的已经建立的连接，可以更快速地获取和释放连接，减少了连接建立和关闭的时间，提高了应用程序的性能。</p>
+<h3 id="2-稳定性"><a href="#2-稳定性" class="headerlink" title="2. 稳定性"></a>2. 稳定性</h3><p>当并发量较高时，如果每个请求都建立一个新的数据库连接，可能会导致数据库服务器过载。使用连接池可以控制连接的数量，避免过多的连接导致数据库服务器崩溃。</p>
+<h3 id="3-节省资源"><a href="#3-节省资源" class="headerlink" title="3. 节省资源"></a>3. 节省资源</h3><p>使用连接池可以重复利用已有的数据库连接，避免了频繁创建和关闭连接的开销，从而节省了资源。</p>
+<h3 id="4-提高可靠性"><a href="#4-提高可靠性" class="headerlink" title="4. 提高可靠性"></a>4. 提高可靠性</h3><p>连接池可以监控数据库连接的状态，并在连接出现问题时自动重置连接。这对于保持应用程序的可靠性和稳定性非常重要。</p>
+<p>有四种连接池c3p0、driuid、HikariCP、DBCP</p>
+<h2 id="三、导入jar包"><a href="#三、导入jar包" class="headerlink" title="三、导入jar包"></a>三、导入jar包</h2><p><strong>因为所有导入jar包步骤都是一致的，所以单拎出来写</strong></p>
+<p>因为需要测试连接池连接数据库是否成功，我们这里使用的是MySql</p>
+<p>MySql.jar包：<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/connector/j/">https://dev.mysql.com/downloads/connector/j/</a></p>
+<h3 id="下载MySqljar包"><a href="#下载MySqljar包" class="headerlink" title="下载MySqljar包"></a>下载MySqljar包</h3><p><img src="https://img-blog.csdnimg.cn/direct/97e8ce7ab76b446183d93a26d44ee538.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/direct/b63fb95b25f848acb6f809510e0fb2f9.png" alt="在这里插入图片描述"></p>
+<h3 id="导入jar包"><a href="#导入jar包" class="headerlink" title="导入jar包"></a>导入jar包</h3><p>将下载好的jar包复制到项目中，建议大家建一个文件专门用来放置jar包。<br><img src="https://img-blog.csdnimg.cn/direct/344bf81226c14992aeafce67177df33c.png" alt="在这里插入图片描述"><br>复制进去就是这样，接下来添加为库</p>
+<h3 id="添加为库"><a href="#添加为库" class="headerlink" title="添加为库"></a>添加为库</h3><p>右击jar包添加为库<br><img src="https://img-blog.csdnimg.cn/direct/f75e873734824b34a919e349a1ccbc8a.png" alt="在这里插入图片描述"></p>
+<p>根据需求选择级别之后直接确定<br><img src="https://img-blog.csdnimg.cn/direct/3ce890f4b56f4e7a936fc93b3054c92e.png" alt="在这里插入图片描述"><br>所有jar包都是这样导入。</p>
+<h2 id="四、c3p0连接池"><a href="#四、c3p0连接池" class="headerlink" title="四、c3p0连接池"></a>四、c3p0连接池</h2><h3 id="下载jar包"><a href="#下载jar包" class="headerlink" title="下载jar包"></a>下载jar包</h3><p>C3P0jar包：<br><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/c3p0/">https://sourceforge.net/projects/c3p0/</a><br><img src="https://img-blog.csdnimg.cn/direct/e2afbb316dcd4aca9f96d819e78b44c4.png" alt="在这里插入图片描述"></p>
+<h3 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h3><p>创建c3p0-config.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;c3p0-config&gt;</span><br><span class="line">&lt;!--默认配置--&gt;</span><br><span class="line">&lt;default-config&gt;</span><br><span class="line">&lt;!--数据库驱动--&gt;</span><br><span class="line">&lt;property name=&quot;driverClass&quot;&gt;com.mysql.cj.jdbc.Driver&lt;/property&gt;</span><br><span class="line">&lt;!--数据库的url--&gt;</span><br><span class="line">&lt;property name=&quot;jdbcUrl&quot;&gt;jdbc:mysql://localhost:3306/vehicleUpkeepDB&lt;/property&gt;</span><br><span class="line">&lt;!--用户名写自己的--&gt;</span><br><span class="line">&lt;property name=&quot;user&quot;&gt;root&lt;/property&gt;</span><br><span class="line">&lt;!--密码写自己的--&gt;</span><br><span class="line">&lt;property name=&quot;password&quot;&gt;sasa&lt;/property&gt;</span><br><span class="line">&lt;!--初始连接数--&gt;</span><br><span class="line">&lt;property name=&quot;initialPoolSize&quot;&gt;10&lt;/property&gt;</span><br><span class="line">&lt;!--最大连接数--&gt;</span><br><span class="line">&lt;property name=&quot;maxPoolSize&quot;&gt;100&lt;/property&gt;</span><br><span class="line">&lt;!--最小连接数--&gt;</span><br><span class="line">&lt;property name=&quot;minPoolSize&quot;&gt;10&lt;/property&gt;</span><br><span class="line">&lt;/default-config&gt;</span><br><span class="line">&lt;/c3p0-config&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="测试连接"><a href="#测试连接" class="headerlink" title="测试连接"></a>测试连接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 ComboPooledDataSource 对象，该对象间接实现了 java 官方提供的 DataSource 接口</span></span><br><span class="line"><span class="type">ComboPooledDataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ComboPooledDataSource</span>();</span><br><span class="line"><span class="comment">//获取连接，这里会有个异常可能连接不成功，你可以抛出或者处理</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> dataSource.getConnection();</span><br><span class="line"><span class="comment">//执行sql语句，这里会有个异常sql语句可能出错，你可以抛出或者处理</span></span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">resultSet</span> <span class="operator">=</span> connection.prepareStatement(<span class="string">&quot;select count(0) from user &quot;</span>).executeQuery();</span><br><span class="line"><span class="comment">//处理结果</span></span><br><span class="line"><span class="keyword">if</span>(resultSet.next())&#123;</span><br><span class="line">System.out.println(resultSet.getInt(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//释放资源</span></span><br><span class="line">resultSet.close();</span><br><span class="line">connection.close();</span><br></pre></td></tr></table></figure>
+<p>结果<br>会有很多事务的东西，需要手动去关闭<br><img src="https://img-blog.csdnimg.cn/direct/2d834c9615e04944bf110dbff2221938.png" alt="在这里插入图片描述"><br>这样就是连接成功了！</p>
+<h2 id="五、driuid连接池"><a href="#五、driuid连接池" class="headerlink" title="五、driuid连接池"></a>五、driuid连接池</h2><h3 id="下载jar包-1"><a href="#下载jar包-1" class="headerlink" title="下载jar包"></a>下载jar包</h3><p>driuid.jar包:<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/com/alibaba/druid/1.2.0/">https://repo1.maven.org/maven2/com/alibaba/druid/1.2.0/</a><br><img src="https://img-blog.csdnimg.cn/direct/a90c4989ac6549b7b6c92e887ae4460e.png" alt="在这里插入图片描述"><br>导入项目，所有步骤都是一样的，不会就看上面c3p0</p>
+<h3 id="创建配置文件-1"><a href="#创建配置文件-1" class="headerlink" title="创建配置文件"></a>创建配置文件</h3><p>创建driuid.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 驱动名称(连接Mysql)</span><br><span class="line">driverClassName = com.mysql.cj.jdbc.Driver</span><br><span class="line"># 参数?rewriteBatchedStatements=True表示支持批处理机制</span><br><span class="line">url = jdbc:mysql://localhost:3306/cinemaDB?useServerPrepStmts=true</span><br><span class="line"># 用户名,注意这里是按&quot;userName&quot;来读取的</span><br><span class="line">userName = root</span><br><span class="line"># 用户密码(自己改)</span><br><span class="line">password = sasa</span><br><span class="line"># 初始化连接数量</span><br><span class="line">initialSize = 10</span><br><span class="line"># 最小连接数量</span><br><span class="line">minIdle = 10</span><br><span class="line"># 最大连接数量</span><br><span class="line">maxActive = 50</span><br><span class="line"># 超时时间5000ms (在等待队列中的最长等待时间,若超时,)</span><br><span class="line">maxWait = 5000</span><br></pre></td></tr></table></figure>
+<h3 id="测试连接-1"><a href="#测试连接-1" class="headerlink" title="测试连接"></a>测试连接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加载配置文件,会报错，可能找不到文件，可以选择抛出或者处理</span></span><br><span class="line"><span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">properties.load(Files.newInputStream(Paths.get(<span class="string">&quot;src\\driuid.properties&quot;</span>)));</span><br><span class="line"><span class="comment">//在工厂中创建一个数据源,数据源的连接信息来源于properties配置文件中</span></span><br><span class="line"><span class="type">DataSource</span> <span class="variable">dataSource</span> <span class="operator">=</span> DruidDataSourceFactory.createDataSource(properties);</span><br><span class="line"><span class="comment">//从连接池,获取连接对象</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> dataSource.getConnection();</span><br><span class="line"><span class="comment">//对sql语句进行预处理</span></span><br><span class="line"><span class="type">PreparedStatement</span> <span class="variable">preparedStatement</span> <span class="operator">=</span> connection.prepareStatement(<span class="string">&quot;select count(0) from user &quot;</span>);</span><br><span class="line"><span class="comment">//执行命令</span></span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">resultSet</span> <span class="operator">=</span> preparedStatement.executeQuery();</span><br><span class="line"><span class="comment">//处理结果</span></span><br><span class="line"><span class="keyword">if</span>(resultSet.next())&#123;</span><br><span class="line">System.out.println(resultSet.getInt(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//释放资源</span></span><br><span class="line">resultSet.close();</span><br><span class="line">connection.close();</span><br></pre></td></tr></table></figure>
+<p>结果<br><img src="https://img-blog.csdnimg.cn/direct/ffa75c5e2aa945ff9655731b0ffa6aa8.png" alt="在这里插入图片描述"></p>
+<p>这样就是连接成功了！</p>
+<h2 id="六、HikariCP连接池"><a href="#六、HikariCP连接池" class="headerlink" title="六、HikariCP连接池"></a>六、HikariCP连接池</h2><p>HikariCP需要下载三个jar包</p>
+<p>HiariCP.jar包：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/com/zaxxer/HikariCP/4.0.3/">https://repo1.maven.org/maven2/com/zaxxer/HikariCP/4.0.3/</a><br>slf4j.jar包：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/">https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/</a><br>log4j12.jar包：<a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/slf4j/slf4j-log4j12/1.7.25/">https://repo1.maven.org/maven2/org/slf4j/slf4j-log4j12/1.7.25/</a></p>
+<h3 id="下载jar包-2"><a href="#下载jar包-2" class="headerlink" title="下载jar包"></a>下载jar包</h3><p>三个jar包都是找到**.jar**的后缀<br><img src="https://img-blog.csdnimg.cn/direct/81f704e9557d4ed9a437477758178030.png" alt="在这里插入图片描述"></p>
+<h3 id="创建配置文件-2"><a href="#创建配置文件-2" class="headerlink" title="创建配置文件"></a>创建配置文件</h3><p>创建HikariCP.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"># 驱动参数</span><br><span class="line">jdbcUrl=jdbc:mysql://localhost:3306/vehicleUpkeepDB?characterEncoding=utf8&amp;serverTimezone=GMT%2B8</span><br><span class="line">#驱动名称(连接MySql)</span><br><span class="line">DriverClassName = com.mysql.cj.jdbc.Driver</span><br><span class="line">#账号</span><br><span class="line">username=root</span><br><span class="line">#密码</span><br><span class="line">password=sasa</span><br><span class="line">上面的都是必须要的，下面都有默认参数一般不用配置</span><br><span class="line"></span><br><span class="line">#常用的参数</span><br><span class="line"># 从池中借出的连接是否默认自动提交事务</span><br><span class="line"># 默认 true</span><br><span class="line">autoCommit=true</span><br><span class="line"></span><br><span class="line"># 当我从池中借出连接时，愿意等待多长时间。如果超时，将抛出 SQLException</span><br><span class="line"># 默认 30000 ms，最小值 250 ms。支持 JMX 动态修改</span><br><span class="line">connectionTimeout=30000</span><br><span class="line"></span><br><span class="line"># 一个连接在池里闲置多久时会被抛弃</span><br><span class="line"># 当 minimumIdle &lt; maximumPoolSize 才生效</span><br><span class="line"># 默认值 600000 ms，最小值为 10000 ms，0表示禁用该功能。支持 JMX 动态修改</span><br><span class="line">idleTimeout=600000</span><br><span class="line"></span><br><span class="line"># 多久检查一次连接的活性</span><br><span class="line"># 检查时会先把连接从池中拿出来（空闲的话），然后调用isValid()或执行connectionTestQuery来校验活性，如果通过校验，则放回池里。</span><br><span class="line"># 默认 0 （不启用），最小值为 30000 ms，必须小于 maxLifetime。支持 JMX 动态修改</span><br><span class="line">keepaliveTime=0</span><br><span class="line"></span><br><span class="line"># 当一个连接存活了足够久，HikariCP 将会在它空闲时把它抛弃</span><br><span class="line"># 默认 1800000 ms，最小值为 30000 ms，0 表示禁用该功能。支持 JMX 动态修改</span><br><span class="line">maxLifetime=1800000</span><br><span class="line"></span><br><span class="line"># 用来检查连接活性的 sql，要求是一个查询语句，常用select &#x27;x&#x27;</span><br><span class="line"># 如果驱动支持 JDBC4.0，建议不设置，这时默认会调用 Connection.isValid() 来检查，该方式会更高效一些</span><br><span class="line"># 默认为空</span><br><span class="line"># connectionTestQuery=</span><br><span class="line"></span><br><span class="line"># 池中至少要有多少空闲连接。</span><br><span class="line"># 当空闲连接 &lt; minimumIdle，总连接 &lt; maximumPoolSize 时，将新增连接</span><br><span class="line"># 默认等于 maximumPoolSize。支持 JMX 动态修改</span><br><span class="line">minimumIdle=5</span><br><span class="line"></span><br><span class="line"># 池中最多容纳多少连接（包括空闲的和在用的）</span><br><span class="line"># 默认为 10。支持 JMX 动态修改</span><br><span class="line">maximumPoolSize=10</span><br><span class="line"></span><br><span class="line"># 用于记录连接池各项指标的 MetricRegistry 实现类</span><br><span class="line"># 默认为空，只能通过代码设置</span><br><span class="line"># metricRegistry=</span><br><span class="line"></span><br><span class="line"># 用于报告连接池健康状态的 HealthCheckRegistry 实现类</span><br><span class="line"># 默认为空，只能通过代码设置</span><br><span class="line"># healthCheckRegistry=</span><br><span class="line"></span><br><span class="line"># 连接池名称。</span><br><span class="line"># 默认自动生成</span><br><span class="line">poolName=zzsCP</span><br><span class="line"></span><br><span class="line">#少用的参数</span><br><span class="line"># 如果启动连接池时不能成功初始化连接，是否快速失败 TODO</span><br><span class="line"># &gt;0 时，会尝试获取连接。如果获取时间超过指定时长，不会开启连接池，并抛出异常</span><br><span class="line"># =0 时，会尝试获取并验证连接。如果获取成功但验证失败则不开启池，但是如果获取失败还是会开启池</span><br><span class="line"># &lt;0 时，不管是否获取或校验成功都会开启池。</span><br><span class="line"># 默认为 1</span><br><span class="line">initializationFailTimeout=1</span><br><span class="line"></span><br><span class="line"># 是否在事务中隔离 HikariCP 自己的查询。</span><br><span class="line"># autoCommit 为 false 时才生效</span><br><span class="line"># 默认 false</span><br><span class="line">isolateInternalQueries=false</span><br><span class="line"></span><br><span class="line"># 是否允许通过 JMX 挂起和恢复连接池</span><br><span class="line"># 默认为 false</span><br><span class="line">allowPoolSuspension=false</span><br><span class="line"></span><br><span class="line"># 当连接从池中取出时是否设置为只读</span><br><span class="line"># 默认值 false</span><br><span class="line">readOnly=false</span><br><span class="line"></span><br><span class="line"># 是否开启 JMX</span><br><span class="line"># 默认 false</span><br><span class="line">registerMbeans=true</span><br><span class="line"></span><br><span class="line"># 数据库 catalog</span><br><span class="line"># 默认由驱动决定</span><br><span class="line"># catalog=</span><br><span class="line"></span><br><span class="line"># 在每个连接创建后、放入池前，需要执行的初始化语句</span><br><span class="line"># 如果执行失败，该连接会被丢弃</span><br><span class="line"># 默认为空</span><br><span class="line"># connectionInitSql=</span><br><span class="line"></span><br><span class="line"># JDBC 驱动使用的 Driver 实现类</span><br><span class="line"># 一般根据 jdbcUrl 判断就行，报错说找不到驱动时才需要加</span><br><span class="line"># 默认为空</span><br><span class="line"># driverClassName=</span><br><span class="line"></span><br><span class="line"># 连接的默认事务隔离级别</span><br><span class="line"># 默认值为空，由驱动决定</span><br><span class="line"># transactionIsolation=</span><br><span class="line"></span><br><span class="line"># 校验连接活性允许的超时时间</span><br><span class="line"># 默认 5000 ms，最小值为 250 ms，要求小于 connectionTimeout。支持 JMX 动态修改</span><br><span class="line">validationTimeout=5000</span><br><span class="line"></span><br><span class="line"># 连接对象可以被借出多久</span><br><span class="line"># 默认 0（不开启），最小允许值为 2000 ms。支持 JMX 动态修改</span><br><span class="line">leakDetectionThreshold=0</span><br><span class="line"></span><br><span class="line"># 直接指定 DataSource 实例，而不是通过 dataSourceClassName 来反射构造</span><br><span class="line"># 默认为空，只能通过代码设置</span><br><span class="line"># dataSource=</span><br><span class="line"></span><br><span class="line"># 数据库 schema</span><br><span class="line"># 默认由驱动决定</span><br><span class="line"># schema=</span><br><span class="line"></span><br><span class="line"># 指定连接池获取线程的 ThreadFactory 实例</span><br><span class="line"># 默认为空，只能通过代码设置</span><br><span class="line"># threadFactory=</span><br><span class="line"></span><br><span class="line"># 指定连接池开启定时任务的 ScheduledExecutorService 实例（建议设置setRemoveOnCancelPolicy(true)）</span><br><span class="line"># 默认为空，只能通过代码设置</span><br><span class="line"># scheduledExecutor=</span><br><span class="line"></span><br><span class="line"># JNDI 配置的数据源名</span><br><span class="line"># 默认为空</span><br><span class="line"># dataSourceJndiName=null</span><br></pre></td></tr></table></figure>
+<h3 id="测试连接-2"><a href="#测试连接-2" class="headerlink" title="测试连接"></a>测试连接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//加载配置文件</span></span><br><span class="line"><span class="type">HikariConfig</span> <span class="variable">hikariConfig</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HikariConfig</span>(<span class="string">&quot;src\\HikariCP.properties&quot;</span>);</span><br><span class="line"><span class="comment">//在工厂中创建一个数据源,数据源的连接信息来源于hikariConfig配置文件中</span></span><br><span class="line"><span class="type">HikariDataSource</span> <span class="variable">ds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HikariDataSource</span>(hikariConfig);</span><br><span class="line"><span class="comment">//获取连接</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> ds.getConnection();</span><br><span class="line"><span class="comment">//执行sql语句</span></span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> conn.prepareStatement(<span class="string">&quot;select count(*) from user&quot;</span>).executeQuery();</span><br><span class="line"><span class="comment">//处理结果</span></span><br><span class="line"><span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">System.out.println(rs.getInt(<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//释放资源</span></span><br><span class="line">conn.close();</span><br><span class="line">rs.close();</span><br></pre></td></tr></table></figure>
+<p>结果<br><img src="https://img-blog.csdnimg.cn/direct/39a0d90c9534448fb1af4a00be936d8c.png" alt="在这里插入图片描述"><br>这样就是连接成功了！</p>
+<h2 id="七、DBCP连接池"><a href="#七、DBCP连接池" class="headerlink" title="七、DBCP连接池"></a>七、DBCP连接池</h2><p>DBCP需要下载两个jar包</p>
+<p>DBCP.jar包：<a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi">https://commons.apache.org/proper/commons-dbcp/download_dbcp.cgi</a></p>
+<p>pool.jar包：<a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-pool/download_pool.cgi">https://commons.apache.org/proper/commons-pool/download_pool.cgi</a></p>
+<h3 id="下载jar包-3"><a href="#下载jar包-3" class="headerlink" title="下载jar包"></a>下载jar包</h3><p>两个都是这个位置<br><img src="https://img-blog.csdnimg.cn/direct/9518484f4a3b47bc98610d3675f2a34a.png" alt="在这里插入图片描述"></p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>创建DBCP.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#数据库连接地址</span><br><span class="line">#url=jdbc:mysql://localhost:3306/数据库名（?配置参数）</span><br><span class="line">url=jdbc:mysql://localhost:3306/vehicleUpkeepDB?useUnicode=true&amp;characterEncoding=utf-8</span><br><span class="line">#数据库驱动类的全名</span><br><span class="line">#driverClassName=com.mysql.jdbc.Driver</span><br><span class="line">#数据库帐号</span><br><span class="line">username=root</span><br><span class="line">#数据库密码 等于号后面直接填密码，不需要引号，密码为空时可以不填或 &quot;&quot;</span><br><span class="line">password=sasa</span><br><span class="line">#初始化连接池时,创建的连接数量</span><br><span class="line">initialSize=5</span><br><span class="line">#连接池的最大连接容量，连接使用完后不释放会很容易达到最大值，导致之后的连接被卡住</span><br><span class="line">maxActive=20</span><br><span class="line">#空闲时允许保留的最大连接数量</span><br><span class="line">maxIdle=5</span><br><span class="line">#空闲时允许保留的最小连接数量</span><br><span class="line">minIdle=5</span><br><span class="line">#排队等候的超时时间(毫秒)</span><br><span class="line">maxWait=3000</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="测试连接-3"><a href="#测试连接-3" class="headerlink" title="测试连接"></a>测试连接</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//文件输入流</span></span><br><span class="line"><span class="type">InputStream</span> <span class="variable">is</span> <span class="operator">=</span> DBCP_Demo.class.getClassLoader().getResourceAsStream(<span class="string">&quot;DBCP.properties&quot;</span>);</span><br><span class="line"><span class="comment">//将配置文件,转换为Properties对象</span></span><br><span class="line"><span class="type">Properties</span> <span class="variable">ppt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">ppt.load(is);</span><br><span class="line"><span class="comment">//通过连接池的工厂类(DruidDataSourceFactory)的创建连接池的方法(createDataSource())</span></span><br><span class="line"><span class="type">DataSource</span> <span class="variable">ds</span> <span class="operator">=</span> BasicDataSourceFactory.createDataSource(ppt);</span><br><span class="line"><span class="comment">//从连接池,获取连接对象</span></span><br><span class="line"><span class="type">Connection</span> <span class="variable">con</span> <span class="operator">=</span> ds.getConnection();</span><br><span class="line"><span class="comment">//对sql语句进行预处理</span></span><br><span class="line"><span class="type">PreparedStatement</span> <span class="variable">ps</span> <span class="operator">=</span> con.prepareStatement(<span class="string">&quot;select count(*) from user&quot;</span>);</span><br><span class="line"><span class="comment">//执行命令</span></span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">re</span> <span class="operator">=</span> ps.executeQuery();</span><br><span class="line"><span class="comment">//处理结果</span></span><br><span class="line"><span class="keyword">if</span>(re.next())&#123;</span><br><span class="line"><span class="type">int</span> <span class="variable">anInt</span> <span class="operator">=</span> re.getInt(<span class="number">1</span>);</span><br><span class="line">System.out.println(anInt);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//释放资源</span></span><br><span class="line">re.close();</span><br><span class="line">ps.close();</span><br><span class="line">con.close();</span><br></pre></td></tr></table></figure>
+<p>结果：<br><img src="https://img-blog.csdnimg.cn/direct/aacec267ec76445ea64277a0ac926725.png" alt="在这里插入图片描述"></p>
+<h3 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h3><p>NoClassDefFoundError 错误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.NoClassDefFoundError: Could not initialize class lesson04.utils.JDBCUtils_DBCP</span><br></pre></td></tr></table></figure>
+
+<p>原因：DBCP2之后的版本需要 logging 包<br>官网下载：<a target="_blank" rel="noopener" href="https://commons.apache.org/proper/commons-logging/download_logging.cgi">https://commons.apache.org/proper/commons-logging/download_logging.cgi</a><br>按照上面的步骤导入 IDEA 中即可</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/java/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6(%E4%B8%80)%20Java%E4%B8%ADMap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8%E5%8F%8A%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%BA%94%E7%A7%8D%E6%96%B9%E5%BC%8F/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/dev-log/%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93Docker%E4%B8%8EK8S%E7%9A%84%E5%85%B3%E7%B3%BB/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          一句话总结Docker与K8S的关系
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

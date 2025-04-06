@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>13 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.9k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <h2 id="3-1、MYSQL-存储过程中的关键语法"><a href="#3-1、MYSQL-存储过程中的关键语法" class="headerlink" title="3.1、MYSQL 存储过程中的关键语法"></a>3.1、MYSQL 存储过程中的关键语法</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 将语句的结束符号从分号;临时改为两个$$(可以是自定义)，其中，使用命令delimiter ; 将语句的结束符号恢复为分号。</span><br><span class="line"># <span class="number">1</span>、声明语句结束符，可以自定义:</span><br><span class="line">DELIMITER $$ </span><br><span class="line">或</span><br><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"># <span class="number">2</span>、声明存储过程:</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> demo_in_parameter(<span class="keyword">IN</span> p_in <span class="type">int</span>)     </span><br><span class="line">   </span><br><span class="line"># <span class="number">3</span>、存储过程开始和结束符号:   </span><br><span class="line"><span class="keyword">BEGIN</span> .... <span class="keyword">END</span></span><br><span class="line"># <span class="number">4</span>、变量赋值:</span><br><span class="line"><span class="keyword">SET</span> <span class="variable">@p_in</span><span class="operator">=</span><span class="number">1</span></span><br><span class="line"># <span class="number">5</span>、变量定义:</span><br><span class="line"><span class="keyword">DECLARE</span> l_int <span class="type">int</span> unsigned <span class="keyword">default</span> <span class="number">0</span>; </span><br><span class="line"># <span class="number">6</span>、创建mysql存储过程、存储函数:</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> 存储过程名(参数)</span><br><span class="line"># <span class="number">7</span>、存储过程体:</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">function</span> 存储函数名(参数)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2、存储过程的案例"><a href="#3-2、存储过程的案例" class="headerlink" title="3.2、存储过程的案例"></a>3.2、存储过程的案例</h2><p>　　</p>
+<blockquote>
+<p>解析：默认情况下，存储过程和默认数据库相关联，如果想指定存储过程创建在某个特定的数据库下，那么在过程名前面加数据库名做前缀。 在定义过程时，使用 DELIMITER 命令将语句的结束符号从分号;临时改为两个 ，使得过程体中使用的分号被直接传递到服务器，而不会被客户端（如mysql）解释。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 mysql&gt; delimiter $$　　# 将语句的结束符号从分号;临时改为两个$$(可以是自定义)。</span><br><span class="line">2 mysql&gt; CREATE PROCEDURE delete_matches(IN p_playerno INTEGER)</span><br><span class="line">3     -&gt; BEGIN</span><br><span class="line">4     -&gt; 　　DELETE FROM MATCHES</span><br><span class="line">5     -&gt;     WHERE playerno = p_playerno;</span><br><span class="line">6     -&gt; END$$</span><br><span class="line">7 Query OK, 0 rows affected (0.01 sec)</span><br><span class="line">8  </span><br><span class="line">9 mysql&gt; delimiter;　　# 将语句的结束符号恢复为分号。</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3、调用存储过程："><a href="#3-3、调用存储过程：" class="headerlink" title="3.3、调用存储过程："></a>3.3、调用存储过程：</h2><blockquote>
+<p>解析：在存储过程中设置了需要传参的变量p_playerno，调用存储过程的时候，通过传参将57赋值给p_playerno，然后进行存储过程里的SQL操作。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 call sp_name[(传参)];</span><br></pre></td></tr></table></figure>
+
+<h5 id="调用存储过程的案例，如下所示："><a href="#调用存储过程的案例，如下所示：" class="headerlink" title="调用存储过程的案例，如下所示："></a>调用存储过程的案例，如下所示：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> 1 mysql&gt; select * from MATCHES;</span><br><span class="line"> 2 +---------+--------+----------+-----+------+</span><br><span class="line"> 3 | MATCHNO | TEAMNO | PLAYERNO | WON | LOST |</span><br><span class="line"> 4 +---------+--------+----------+-----+------+</span><br><span class="line"> 5 |       1 |      1 |        6 |   3 |    1 |</span><br><span class="line"> 6 |       7 |      1 |       57 |   3 |    0 |</span><br><span class="line"> 7 |       8 |      1 |        8 |   0 |    3 |</span><br><span class="line"> 8 |       9 |      2 |       27 |   3 |    2 |</span><br><span class="line"> 9 |      11 |      2 |      112 |   2 |    3 |</span><br><span class="line">10 +---------+--------+----------+-----+------+</span><br><span class="line">11 5 rows in set (0.00 sec)</span><br><span class="line">12  </span><br><span class="line">13 mysql&gt; call delete_matches(57);</span><br><span class="line">14 Query OK, 1 row affected (0.03 sec)</span><br><span class="line">15  </span><br><span class="line">16 mysql&gt; select * from MATCHES;</span><br><span class="line">17 +---------+--------+----------+-----+------+</span><br><span class="line">18 | MATCHNO | TEAMNO | PLAYERNO | WON | LOST |</span><br><span class="line">19 +---------+--------+----------+-----+------+</span><br><span class="line">20 |       1 |      1 |        6 |   3 |    1 |</span><br><span class="line">21 |       8 |      1 |        8 |   0 |    3 |</span><br><span class="line">22 |       9 |      2 |       27 |   3 |    2 |</span><br><span class="line">23 |      11 |      2 |      112 |   2 |    3 |</span><br><span class="line">24 +---------+--------+----------+-----+------+</span><br><span class="line">25 4 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="3-4、存储过程体"><a href="#3-4、存储过程体" class="headerlink" title="3.4、存储过程体"></a>3.4、存储过程体</h2><p>　　存储过程体包含了在过程调用时必须执行的语句，例如：dml、ddl语句，if-then-else和while-do语句、声明变量的declare语句等。<br>　　过程体格式：以begin开始，以end结束(可嵌套)。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">　　<span class="keyword">BEGIN</span></span><br><span class="line">　　　　<span class="keyword">BEGIN</span></span><br><span class="line">　　　　　　statements; </span><br><span class="line">　　　　<span class="keyword">END</span></span><br><span class="line">　　<span class="keyword">END</span></span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：每个嵌套块及其中的每条语句，必须以分号结束，表示过程体结束的begin-end块(又叫做复合语句compound statement)，则不需要分号。</p>
+</blockquote>
+<h2 id="3-5、为语句块贴标签："><a href="#3-5、为语句块贴标签：" class="headerlink" title="3.5、为语句块贴标签："></a>3.5、为语句块贴标签：</h2><p><strong>标签有两个作用：</strong></p>
+<ul>
+<li><p>1）、增强代码的可读性。</p>
+</li>
+<li><p>2）、在某些语句(例如:leave和iterate语句)，需要用到标签。</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[begin_label:] <span class="keyword">BEGIN</span></span><br><span class="line">　　[statement_list]</span><br><span class="line"><span class="keyword">END</span> [end_label]</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">label1: <span class="keyword">BEGIN</span></span><br><span class="line">　　label2: <span class="keyword">BEGIN</span></span><br><span class="line">　　　　label3: <span class="keyword">BEGIN</span></span><br><span class="line">　　　　　　statements; </span><br><span class="line">　　　　<span class="keyword">END</span> label3 ;</span><br><span class="line">　　<span class="keyword">END</span> label2;</span><br><span class="line"><span class="keyword">END</span> label1</span><br></pre></td></tr></table></figure>
+
+<h1 id="4、存储过程的参数"><a href="#4、存储过程的参数" class="headerlink" title="4、存储过程的参数"></a>4、存储过程的参数</h1><p>MySQL存储过程的参数用在存储过程的定义，共有三种参数类型，IN、OUT、INOUT，形式如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> 存储过程名([[<span class="keyword">IN</span> <span class="operator">|</span><span class="keyword">OUT</span> <span class="operator">|</span><span class="keyword">INOUT</span> ] 参数名 数据类形...])</span><br></pre></td></tr></table></figure>
+
+<p>如果过程没有参数，也必须在过程名后面写上小括号例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> sp_name ([proc_parameter[,...]]) ……</span><br></pre></td></tr></table></figure>
+
+<p>确保参数的名字不等于列的名字，否则在过程体中，参数名被当做列名来处理。</p>
+<h2 id="4-1、IN输入参数"><a href="#4-1、IN输入参数" class="headerlink" title="4.1、IN输入参数"></a>4.1、IN输入参数</h2><blockquote>
+<p>IN 输入参数：表示调用者向过程传入值（传入值可以是字面量或变量），默认是IN输入参数，如果不填写，就是默认的IN输入参数。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">以下可以看出，p_in 在存储过程中被修改，但并不影响 @p_in 的值，因为前者为局部变量、后者为全局变量。</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter $$</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">create procedure in_param(<span class="keyword">in</span> p_in int)</span></span><br><span class="line">    -&gt; begin</span><br><span class="line">    -&gt; 　　select p_in;</span><br><span class="line">    -&gt; 　　set p_in=2;</span><br><span class="line">    -&gt;    select P_in;</span><br><span class="line">    -&gt; end$$</span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter ;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="built_in">set</span> @p_in=1;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">call in_param(@p_in);</span></span><br><span class="line">+------+</span><br><span class="line">| p_in |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">+------+</span><br><span class="line"> </span><br><span class="line">+------+</span><br><span class="line">| P_in |</span><br><span class="line">+------+</span><br><span class="line">|    2 |</span><br><span class="line">+------+</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="keyword">select</span> @p_in;</span></span><br><span class="line">+-------+</span><br><span class="line">| @p_in |</span><br><span class="line">+-------+</span><br><span class="line">|     1 |</span><br><span class="line">+-------+</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-2、OUT输出参数"><a href="#4-2、OUT输出参数" class="headerlink" title="4.2、OUT输出参数"></a>4.2、OUT输出参数</h2><blockquote>
+<p>OUT 输出参数：表示过程向调用者传出值(可以返回多个值)（传出值只能是变量）。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter //</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">create procedure out_param(out p_out int)</span></span><br><span class="line">    -&gt;   begin</span><br><span class="line">    -&gt;     select p_out;</span><br><span class="line">    -&gt;     set p_out=2;</span><br><span class="line">    -&gt;     select p_out;</span><br><span class="line">    -&gt;   end</span><br><span class="line">    -&gt; //</span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter ;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="built_in">set</span> @p_out=1;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">call out_param(@p_out);</span></span><br><span class="line">+-------+</span><br><span class="line">| p_out |</span><br><span class="line">+-------+</span><br><span class="line">|  NULL |</span><br><span class="line">+-------+</span><br><span class="line"><span class="meta prompt_">　　#</span><span class="language-bash">因为out是向调用者输出参数，不接收输入的参数，所以存储过程里的p_out为null</span></span><br><span class="line">+-------+</span><br><span class="line">| p_out |</span><br><span class="line">+-------+</span><br><span class="line">|     2 |</span><br><span class="line">+-------+</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="keyword">select</span> @p_out;</span></span><br><span class="line">+--------+</span><br><span class="line">| @p_out |</span><br><span class="line">+--------+</span><br><span class="line">|      2 |</span><br><span class="line">+--------+</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">调用了out_param存储过程，输出参数，改变了p_out变量的值</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-3、INOUT-输入输出参数"><a href="#4-3、INOUT-输入输出参数" class="headerlink" title="4.3、INOUT 输入输出参数"></a>4.3、INOUT 输入输出参数</h2><blockquote>
+<p>INOUT 输入输出参数：既表示调用者向过程传入值，又表示过程向调用者传出值（值只能是变量）。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter $$</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">create procedure inout_param(inout p_inout int)</span></span><br><span class="line">    -&gt;   begin</span><br><span class="line">    -&gt;     select p_inout;</span><br><span class="line">    -&gt;     set p_inout=2;</span><br><span class="line">    -&gt;     select p_inout;</span><br><span class="line">    -&gt;   end</span><br><span class="line">    -&gt; $$</span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">delimiter ;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="built_in">set</span> @p_inout=1;</span></span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">call inout_param(@p_inout);</span></span><br><span class="line">+---------+</span><br><span class="line">| p_inout |</span><br><span class="line">+---------+</span><br><span class="line">|       1 |</span><br><span class="line">+---------+</span><br><span class="line"> </span><br><span class="line">+---------+</span><br><span class="line">| p_inout |</span><br><span class="line">+---------+</span><br><span class="line">|       2 |</span><br><span class="line">+---------+</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash"><span class="keyword">select</span> @p_inout;</span></span><br><span class="line">+----------+</span><br><span class="line">| @p_inout |</span><br><span class="line">+----------+</span><br><span class="line">|        2 |</span><br><span class="line">+----------+</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">调用了inout_param存储过程，接受了输入的参数，也输出参数，改变了变量</span></span><br></pre></td></tr></table></figure>
+<h1 id="5、存储过程声明变量"><a href="#5、存储过程声明变量" class="headerlink" title="5、存储过程声明变量"></a>5、存储过程声明变量</h1><ul>
+<li><p>1）、用户变量名一般以@开头。</p>
+</li>
+<li><p>2）、滥用用户变量会导致程序难以理解及管理。</p>
+</li>
+</ul>
+<h2 id="5-1、变量定义"><a href="#5-1、变量定义" class="headerlink" title="5.1、变量定义"></a>5.1、变量定义</h2><blockquote>
+<p>局部变量声明一定要放在存储过程体的开始：</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> variable_name [,variable_name...] datatype [<span class="keyword">DEFAULT</span> <span class="keyword">value</span>];</span><br></pre></td></tr></table></figure>
+
+<p>其中，datatype 为 MySQL 的数据类型，如: int, float, date,varchar(length)，例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DECLARE</span> l_int <span class="type">int</span> unsigned <span class="keyword">default</span> <span class="number">4000000</span>;  </span><br><span class="line"><span class="keyword">DECLARE</span> l_numeric number(<span class="number">8</span>,<span class="number">2</span>) <span class="keyword">DEFAULT</span> <span class="number">9.95</span>;  </span><br><span class="line"><span class="keyword">DECLARE</span> l_date <span class="type">date</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;1999-12-31&#x27;</span>;  </span><br><span class="line"><span class="keyword">DECLARE</span> l_datetime datetime <span class="keyword">DEFAULT</span> <span class="string">&#x27;1999-12-31 23:59:59&#x27;</span>;  </span><br><span class="line"><span class="keyword">DECLARE</span> l_varchar <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;This will not be padded&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2、变量赋值"><a href="#5-2、变量赋值" class="headerlink" title="5.2、变量赋值"></a>5.2、变量赋值</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> 变量名 <span class="operator">=</span> 表达式值 [,variable_name <span class="operator">=</span> expression ...]</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="5-3、用户变量"><a href="#5-3、用户变量" class="headerlink" title="5.3、用户变量"></a>5.3、用户变量</h2><p>在MySQL客户端使用用户变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; SELECT &#x27;Hello World&#x27; into @x;  </span><br><span class="line">mysql &gt; SELECT @x;  </span><br><span class="line">+-------------+  </span><br><span class="line">|   @x        |  </span><br><span class="line">+-------------+  </span><br><span class="line">| Hello World |  </span><br><span class="line">+-------------+  </span><br><span class="line">mysql &gt; SET @y=&#x27;Goodbye Cruel World&#x27;;  </span><br><span class="line">mysql &gt; SELECT @y;  </span><br><span class="line">+---------------------+  </span><br><span class="line">|     @y              |  </span><br><span class="line">+---------------------+  </span><br><span class="line">| Goodbye Cruel World |  </span><br><span class="line">+---------------------+  </span><br><span class="line"> </span><br><span class="line">mysql &gt; SET @z=1+2+3;  </span><br><span class="line">mysql &gt; SELECT @z;  </span><br><span class="line">+------+  </span><br><span class="line">| @z   |  </span><br><span class="line">+------+  </span><br><span class="line">|  6   |  </span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
+
+<p>在存储过程中使用用户变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; CREATE PROCEDURE GreetWorld( ) SELECT CONCAT(@greeting,&#x27; World&#x27;);  </span><br><span class="line">mysql &gt; SET @greeting=&#x27;Hello&#x27;;  </span><br><span class="line">mysql &gt; CALL GreetWorld( );  </span><br><span class="line">+----------------------------+  </span><br><span class="line">| CONCAT(@greeting,&#x27; World&#x27;) |  </span><br><span class="line">+----------------------------+  </span><br><span class="line">|  Hello World               |  </span><br><span class="line">+----------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>在存储过程间传递全局范围的用户变量：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">CREATE PROCEDURE p1()   SET @last_procedure=<span class="string">&#x27;p1&#x27;</span>;</span>  </span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">CREATE PROCEDURE p2() SELECT CONCAT(<span class="string">&#x27;Last procedure was &#x27;</span>,@last_procedure);</span>  </span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">CALL p1( );</span>  </span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">CALL p2( );</span>  </span><br><span class="line">+-----------------------------------------------+  </span><br><span class="line">| CONCAT(&#x27;Last procedure was &#x27;,@last_proc       |  </span><br><span class="line">+-----------------------------------------------+  </span><br><span class="line">| Last procedure was p1                         |  </span><br><span class="line"> +-----------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<h1 id="6、存储过程的注释"><a href="#6、存储过程的注释" class="headerlink" title="6、存储过程的注释"></a>6、存储过程的注释</h1><p>　　</p>
+<blockquote>
+<p>MySQL 存储过程可使用两种风格的注释。<br>　　<br>两个横杆–：该风格一般用于单行注释。</p>
+<p>c 风格： 一般用于多行注释。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc1 -- name存储过程名  </span><br><span class="line">     -&gt; (IN parameter1 INTEGER)   </span><br><span class="line">     -&gt; BEGIN   </span><br><span class="line">     -&gt; DECLARE variable1 CHAR(10);   </span><br><span class="line">     -&gt; IF parameter1 = 17 THEN   </span><br><span class="line">     -&gt; SET variable1 = &#x27;birds&#x27;;   -- 使用SET进行变量赋值，知识点很重要。</span><br><span class="line">     -&gt; ELSE </span><br><span class="line">     -&gt; SET variable1 = &#x27;beasts&#x27;;   </span><br><span class="line">    -&gt; END IF;   </span><br><span class="line">    -&gt; INSERT INTO table1 VALUES (variable1);  </span><br><span class="line">    -&gt; END   </span><br><span class="line">    -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+<h1 id="7、存储过程的查询、修改、删除、调用控制"><a href="#7、存储过程的查询、修改、删除、调用控制" class="headerlink" title="7、存储过程的查询、修改、删除、调用控制"></a>7、存储过程的查询、修改、删除、调用控制</h1><h2 id="7-1、MySQL存储过程的调用"><a href="#7-1、MySQL存储过程的调用" class="headerlink" title="7.1、MySQL存储过程的调用"></a>7.1、MySQL存储过程的调用</h2><p>用call和你过程名以及一个括号，括号里面根据需要，加入参数，参数包括输入参数、输出参数、输入输出参数。具体的调用方法可以参看上面的例子。</p>
+<h2 id="7-2、MySQL存储过程的查询"><a href="#7-2、MySQL存储过程的查询" class="headerlink" title="7.2、MySQL存储过程的查询"></a>7.2、MySQL存储过程的查询</h2><p>我们像知道一个数据库下面有那些表，我们一般采用 show tables; 进行查看。那么我们要查看某个数据库下面的存储过程，是否也可以采用呢？答案是，我们可以查看某个数据库下面的存储过程，但是是另一钟方式。 </p>
+<p>我们可以用以下语句进行查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name <span class="keyword">from</span> mysql.proc <span class="keyword">where</span> db<span class="operator">=</span><span class="string">&#x27;数据库名&#x27;</span>;</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">select</span> routine_name <span class="keyword">from</span> information_schema.routines <span class="keyword">where</span> routine_schema<span class="operator">=</span><span class="string">&#x27;数据库名&#x27;</span>;</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">procedure</span> status <span class="keyword">where</span> db<span class="operator">=</span><span class="string">&#x27;数据库名&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们想知道，某个存储过程的详细，那我们又该怎么做呢？是不是也可以像操作表一样用describe 表名进行查看呢？</p>
+<p>答案是：我们可以查看存储过程的详细，但是需要用另一种方法：<code>SHOW CREATE PROCEDURE 数据库.存储过程名;</code>就可以查看当前存储过程的详细。</p>
+<h2 id="7-3、MySQL存储过程的调用"><a href="#7-3、MySQL存储过程的调用" class="headerlink" title="7.3、MySQL存储过程的调用"></a>7.3、MySQL存储过程的调用</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">PROCEDURE</span></span><br></pre></td></tr></table></figure>
+
+<p>更改用 <code>CREATE PROCEDURE</code> 建立的预先指定的存储过程，其不会影响相关存储过程或存储功能。</p>
+<h2 id="7-4、MySQL存储过程的调用"><a href="#7-4、MySQL存储过程的调用" class="headerlink" title="7.4、MySQL存储过程的调用"></a>7.4、MySQL存储过程的调用</h2><p>删除一个存储过程比较简单，和删除表一样：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">PROCEDURE</span></span><br></pre></td></tr></table></figure>
+
+<p>从 MySQL 的表格中删除一个或多个存储过程。</p>
+<h1 id="8、MySQL存储过程的控制语句"><a href="#8、MySQL存储过程的控制语句" class="headerlink" title="8、MySQL存储过程的控制语句"></a>8、MySQL存储过程的控制语句</h1><h2 id="8-1、变量作用域"><a href="#8-1、变量作用域" class="headerlink" title="8.1、变量作用域"></a>8.1、变量作用域</h2><p>内部的变量在其作用域范围内享有更高的优先权，当执行到 end。变量时，内部变量消失，此时已经在其作用域外，变量不再可见了，应为在存储过程外再也不能找到这个申明的变量，但是你可以通过 out 参数或者将其值指派给会话变量来保存其值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc3()  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare x1 varchar(5) default &#x27;outer&#x27;;  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare x1 varchar(5) default &#x27;inner&#x27;;  </span><br><span class="line">      -&gt; select x1;  </span><br><span class="line">      -&gt; end;  </span><br><span class="line">       -&gt; select x1;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-2、条件语句，if-then-else-语句"><a href="#8-2、条件语句，if-then-else-语句" class="headerlink" title="8.2、条件语句，if-then-else 语句"></a>8.2、条件语句，if-then-else 语句</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc2(IN parameter int)  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare var int;  </span><br><span class="line">     -&gt; set var=parameter+1;  </span><br><span class="line">     -&gt; if var=0 then </span><br><span class="line">     -&gt; insert into t values(17);  </span><br><span class="line">     -&gt; end if;  </span><br><span class="line">     -&gt; if parameter=0 then </span><br><span class="line">     -&gt; update t set s1=s1+1;  </span><br><span class="line">     -&gt; else </span><br><span class="line">     -&gt; update t set s1=s1+2;  </span><br><span class="line">     -&gt; end if;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-3、条件语句，case语句："><a href="#8-3、条件语句，case语句：" class="headerlink" title="8.3、条件语句，case语句："></a>8.3、条件语句，case语句：</h2><p>使用的语法，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span></span><br><span class="line">    <span class="keyword">when</span> var<span class="operator">=</span><span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">insert into</span> t <span class="keyword">values</span>(<span class="number">30</span>);</span><br><span class="line">    <span class="keyword">when</span> var<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">when</span> var<span class="operator">&lt;</span><span class="number">0</span> <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line"><span class="keyword">end</span> <span class="keyword">case</span></span><br></pre></td></tr></table></figure>
+
+<p>使用的案例，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc3 (in parameter int)  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare var int;  </span><br><span class="line">     -&gt; set var=parameter+1;  </span><br><span class="line">     -&gt; case var  </span><br><span class="line">     -&gt; when 0 then   </span><br><span class="line">     -&gt; insert into t values(17);  </span><br><span class="line">     -&gt; when 1 then   </span><br><span class="line">     -&gt; insert into t values(18);  </span><br><span class="line">     -&gt; else   </span><br><span class="line">     -&gt; insert into t values(19);  </span><br><span class="line">     -&gt; end case;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-4、循环语句while-····-end-while"><a href="#8-4、循环语句while-····-end-while" class="headerlink" title="8.4、循环语句while ···· end while"></a>8.4、循环语句while ···· end while</h2><p>使用的语法，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">while 条件 do</span><br><span class="line">    <span class="comment">--循环体</span></span><br><span class="line"><span class="keyword">end</span> while</span><br></pre></td></tr></table></figure>
+
+<p>使用的案例，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc4()  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare var int;  </span><br><span class="line">     -&gt; set var=0;  </span><br><span class="line">     -&gt; while var&lt;6 do  </span><br><span class="line">     -&gt; insert into t values(var);  </span><br><span class="line">     -&gt; set var=var+1;  </span><br><span class="line">     -&gt; end while;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-5、循环语句repeat····-end-repeat"><a href="#8-5、循环语句repeat····-end-repeat" class="headerlink" title="8.5、循环语句repeat···· end repeat"></a>8.5、循环语句repeat···· end repeat</h2><p>它在执行操作后检查结果，而 while 则是执行前进行检查。</p>
+<p>使用的语法，如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">repeat</span><br><span class="line">    <span class="comment">--循环体</span></span><br><span class="line">until 循环条件  </span><br><span class="line"><span class="keyword">end</span> repeat;</span><br></pre></td></tr></table></figure>
+
+<p>使用的案例，如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc5 ()  </span><br><span class="line">     -&gt; begin   </span><br><span class="line">     -&gt; declare v int;  </span><br><span class="line">     -&gt; set v=0;  </span><br><span class="line">     -&gt; repeat  </span><br><span class="line">     -&gt; insert into t values(v);  </span><br><span class="line">     -&gt; set v=v+1;  </span><br><span class="line">     -&gt; until v&gt;=5  </span><br><span class="line">     -&gt; end repeat;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-6、循环语句loop-·····endloop"><a href="#8-6、循环语句loop-·····endloop" class="headerlink" title="8.6、循环语句loop ·····endloop"></a>8.6、循环语句loop ·····endloop</h2><p>loop 循环不需要初始条件，这点和 while 循环相似，同时和 repeat 循环一样不需要结束条件, leave 语句的意义是离开循环。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc6 ()  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare v int;  </span><br><span class="line">     -&gt; set v=0;  </span><br><span class="line">     -&gt; LOOP_LABLE:loop  </span><br><span class="line">     -&gt; insert into t values(v);  </span><br><span class="line">     -&gt; set v=v+1;  </span><br><span class="line">     -&gt; if v &gt;=5 then </span><br><span class="line">     -&gt; leave LOOP_LABLE;  </span><br><span class="line">     -&gt; end if;  </span><br><span class="line">     -&gt; end loop;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-7、循环语句LABLES-标号："><a href="#8-7、循环语句LABLES-标号：" class="headerlink" title="8.7、循环语句LABLES 标号："></a>8.7、循环语句LABLES 标号：</h2><p>标号可以用在 begin repeat while 或者 loop 语句前，语句标号只能在合法的语句前面使用。可以跳出循环，使运行指令达到复合语句的最后一步。</p>
+<p>ITERATE 通过引用复合语句的标号,来从新开始复合语句:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; DELIMITER //  </span><br><span class="line">mysql &gt; CREATE PROCEDURE proc10 ()  </span><br><span class="line">     -&gt; begin </span><br><span class="line">     -&gt; declare v int;  </span><br><span class="line">     -&gt; set v=0;  </span><br><span class="line">     -&gt; LOOP_LABLE:loop  </span><br><span class="line">     -&gt; if v=3 then   </span><br><span class="line">     -&gt; set v=v+1;  </span><br><span class="line">     -&gt; ITERATE LOOP_LABLE;  </span><br><span class="line">     -&gt; end if;  </span><br><span class="line">     -&gt; insert into t values(v);  </span><br><span class="line">     -&gt; set v=v+1;  </span><br><span class="line">     -&gt; if v&gt;=5 then </span><br><span class="line">     -&gt; leave LOOP_LABLE;  </span><br><span class="line">     -&gt; end if;  </span><br><span class="line">     -&gt; end loop;  </span><br><span class="line">     -&gt; end;  </span><br><span class="line">     -&gt; //  </span><br><span class="line">mysql &gt; DELIMITER ;</span><br></pre></td></tr></table></figure>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E6%8E%A2%E7%A9%B6%20Bitmap%20%E7%9A%84%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          探究 Bitmap 的优化手段
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%8811%EF%BC%89OkHttp%20%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          主流开源库源码分析（11）OkHttp 源码详解
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

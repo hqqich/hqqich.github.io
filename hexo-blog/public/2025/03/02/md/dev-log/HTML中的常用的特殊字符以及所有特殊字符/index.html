@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>HTML中的常用的特殊字符以及所有特殊字符 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        HTML中的常用的特殊字符以及所有特殊字符
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        HTML中的常用的特殊字符以及所有特殊字符
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>4 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>872 words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/html/">html</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <h2 id="HTML常用特殊字符"><a href="#HTML常用特殊字符" class="headerlink" title="HTML常用特殊字符"></a>HTML常用特殊字符</h2><p>以下是HTML中常用的特殊符号及其编码：</p>
+<table>
+<thead>
+<tr>
+<th>特殊符号</th>
+<th>编码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;lt;</code></td>
+<td><code>&amp;amp;lt;</code></td>
+<td>小于号</td>
+</tr>
+<tr>
+<td><code>&amp;gt;</code></td>
+<td><code>&amp;amp;gt;</code></td>
+<td>大于号</td>
+</tr>
+<tr>
+<td><code>&amp;amp;</code></td>
+<td><code>&amp;amp;amp;</code></td>
+<td>&amp;符号</td>
+</tr>
+<tr>
+<td><code>&amp;quot;</code></td>
+<td><code>&amp;amp;quot;</code></td>
+<td>双引号</td>
+</tr>
+<tr>
+<td><code>&amp;apos;</code></td>
+<td><code>&amp;amp;apos;</code></td>
+<td>单引号</td>
+</tr>
+</tbody></table>
+<h2 id="HTML所有特殊字符"><a href="#HTML所有特殊字符" class="headerlink" title="HTML所有特殊字符"></a>HTML所有特殊字符</h2><p>以下是HTML中所有特殊符号及其编码：</p>
+<table>
+<thead>
+<tr>
+<th>特殊符号</th>
+<th>编码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nbsp;</code></td>
+<td><code>&amp;amp;nbsp;</code></td>
+<td>空格</td>
+</tr>
+<tr>
+<td><code>&amp;iexcl;</code></td>
+<td><code>&amp;amp;iexcl;</code></td>
+<td>逆向感叹号</td>
+</tr>
+<tr>
+<td><code>&amp;cent;</code></td>
+<td><code>&amp;amp;cent;</code></td>
+<td>分</td>
+</tr>
+<tr>
+<td><code>&amp;pound;</code></td>
+<td><code>&amp;amp;pound;</code></td>
+<td>英镑</td>
+</tr>
+<tr>
+<td><code>&amp;curren;</code></td>
+<td><code>&amp;amp;curren;</code></td>
+<td>通用货币符号</td>
+</tr>
+<tr>
+<td><code>&amp;yen;</code></td>
+<td><code>&amp;amp;yen;</code></td>
+<td>日元</td>
+</tr>
+<tr>
+<td><code>&amp;brvbar;</code></td>
+<td><code>&amp;amp;brvbar;</code></td>
+<td>断竖线</td>
+</tr>
+<tr>
+<td><code>&amp;sect;</code></td>
+<td><code>&amp;amp;sect;</code></td>
+<td>小节符号</td>
+</tr>
+<tr>
+<td><code>&amp;uml;</code></td>
+<td><code>&amp;amp;uml;</code></td>
+<td>分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;copy;</code></td>
+<td><code>&amp;amp;copy;</code></td>
+<td>版权符号</td>
+</tr>
+<tr>
+<td><code>&amp;ordf;</code></td>
+<td><code>&amp;amp;ordf;</code></td>
+<td>序数指示符（女）</td>
+</tr>
+<tr>
+<td><code>&amp;laquo;</code></td>
+<td><code>&amp;amp;laquo;</code></td>
+<td>左法语引号</td>
+</tr>
+<tr>
+<td><code>&amp;not;</code></td>
+<td><code>&amp;amp;not;</code></td>
+<td>非</td>
+</tr>
+<tr>
+<td><code>&amp;shy;</code></td>
+<td><code>&amp;amp;shy;</code></td>
+<td>不显式断字</td>
+</tr>
+<tr>
+<td><code>&amp;reg;</code></td>
+<td><code>&amp;amp;reg;</code></td>
+<td>注册符号</td>
+</tr>
+<tr>
+<td><code>&amp;macr;</code></td>
+<td><code>&amp;amp;macr;</code></td>
+<td>长音符</td>
+</tr>
+<tr>
+<td><code>&amp;deg;</code></td>
+<td><code>&amp;amp;deg;</code></td>
+<td>度数符号</td>
+</tr>
+<tr>
+<td><code>&amp;plusmn;</code></td>
+<td><code>&amp;amp;plusmn;</code></td>
+<td>正负号</td>
+</tr>
+<tr>
+<td><code>&amp;sup2;</code></td>
+<td><code>&amp;amp;sup2;</code></td>
+<td>上角标2</td>
+</tr>
+<tr>
+<td><code>&amp;sup3;</code></td>
+<td><code>&amp;amp;sup3;</code></td>
+<td>上角标3</td>
+</tr>
+<tr>
+<td><code>&amp;acute;</code></td>
+<td><code>&amp;amp;acute;</code></td>
+<td>急促音符</td>
+</tr>
+<tr>
+<td><code>&amp;micro;</code></td>
+<td><code>&amp;amp;micro;</code></td>
+<td>微符号</td>
+</tr>
+<tr>
+<td><code>&amp;para;</code></td>
+<td><code>&amp;amp;para;</code></td>
+<td>段落符</td>
+</tr>
+<tr>
+<td><code>&amp;middot;</code></td>
+<td><code>&amp;amp;middot;</code></td>
+<td>间隔符</td>
+</tr>
+<tr>
+<td><code>&amp;cedil;</code></td>
+<td><code>&amp;amp;cedil;</code></td>
+<td>大写逗号</td>
+</tr>
+<tr>
+<td><code>&amp;sup1;</code></td>
+<td><code>&amp;amp;sup1;</code></td>
+<td>上角标1</td>
+</tr>
+<tr>
+<td><code>&amp;ordm;</code></td>
+<td><code>&amp;amp;ordm;</code></td>
+<td>序数指示符（男）</td>
+</tr>
+<tr>
+<td><code>&amp;raquo;</code></td>
+<td><code>&amp;amp;raquo;</code></td>
+<td>右法语引号</td>
+</tr>
+<tr>
+<td><code>&amp;frac14;</code></td>
+<td><code>&amp;amp;frac14;</code></td>
+<td>分数1&#x2F;4</td>
+</tr>
+<tr>
+<td><code>&amp;frac12;</code></td>
+<td><code>&amp;amp;frac12;</code></td>
+<td>分数1&#x2F;2</td>
+</tr>
+<tr>
+<td><code>&amp;frac34;</code></td>
+<td><code>&amp;amp;frac34;</code></td>
+<td>分数3&#x2F;4</td>
+</tr>
+<tr>
+<td><code>&amp;iquest;</code></td>
+<td><code>&amp;amp;iquest;</code></td>
+<td>逆向问号</td>
+</tr>
+<tr>
+<td><code>&amp;Agrave;</code></td>
+<td><code>&amp;amp;Agrave;</code></td>
+<td>大写a重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Aacute;</code></td>
+<td><code>&amp;amp;Aacute;</code></td>
+<td>大写a重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Acirc;</code></td>
+<td><code>&amp;amp;Acirc;</code></td>
+<td>大写a带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;Atilde;</code></td>
+<td><code>&amp;amp;Atilde;</code></td>
+<td>大写a带波浪符号</td>
+</tr>
+<tr>
+<td><code>&amp;Auml;</code></td>
+<td><code>&amp;amp;Auml;</code></td>
+<td>大写a带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;Aring;</code></td>
+<td><code>&amp;amp;Aring;</code></td>
+<td>大写a带圆圈（瑞典）</td>
+</tr>
+<tr>
+<td><code>&amp;AElig;</code></td>
+<td><code>&amp;amp;AElig;</code></td>
+<td>大写ae字母</td>
+</tr>
+<tr>
+<td><code>&amp;Ccedil;</code></td>
+<td><code>&amp;amp;Ccedil;</code></td>
+<td>大写c带大写逗号</td>
+</tr>
+<tr>
+<td><code>&amp;Egrave;</code></td>
+<td><code>&amp;amp;Egrave;</code></td>
+<td>大写e重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Eacute;</code></td>
+<td><code>&amp;amp;Eacute;</code></td>
+<td>大写e重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Ecirc;</code></td>
+<td><code>&amp;amp;Ecirc;</code></td>
+<td>大写e带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;Euml;</code></td>
+<td><code>&amp;amp;Euml;</code></td>
+<td>大写e带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;Igrave;</code></td>
+<td><code>&amp;amp;Igrave;</code></td>
+<td>大写i重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Iacute;</code></td>
+<td><code>&amp;amp;Iacute;</code></td>
+<td>大写i重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Icirc;</code></td>
+<td><code>&amp;amp;Icirc;</code></td>
+<td>大写i带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;Iuml;</code></td>
+<td><code>&amp;amp;Iuml;</code></td>
+<td>大写i带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;ETH;</code></td>
+<td><code>&amp;amp;ETH;</code></td>
+<td>大写eth字母</td>
+</tr>
+<tr>
+<td><code>&amp;Ntilde;</code></td>
+<td><code>&amp;amp;Ntilde;</code></td>
+<td>大写n带波浪符号</td>
+</tr>
+<tr>
+<td><code>&amp;Ograve;</code></td>
+<td><code>&amp;amp;Ograve;</code></td>
+<td>大写o重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Oacute;</code></td>
+<td><code>&amp;amp;Oacute;</code></td>
+<td>大写o重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Ocirc;</code></td>
+<td><code>&amp;amp;Ocirc;</code></td>
+<td>大写o带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;Otilde;</code></td>
+<td><code>&amp;amp;Otilde;</code></td>
+<td>大写o带波浪符号</td>
+</tr>
+<tr>
+<td><code>&amp;Ouml;</code></td>
+<td><code>&amp;amp;Ouml;</code></td>
+<td>大写o带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;times;</code></td>
+<td><code>&amp;amp;times;</code></td>
+<td>乘号</td>
+</tr>
+<tr>
+<td><code>&amp;Oslash;</code></td>
+<td><code>&amp;amp;Oslash;</code></td>
+<td>大写o带斜杠</td>
+</tr>
+<tr>
+<td><code>&amp;Ugrave;</code></td>
+<td><code>&amp;amp;Ugrave;</code></td>
+<td>大写u重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Uacute;</code></td>
+<td><code>&amp;amp;Uacute;</code></td>
+<td>大写u重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;Ucirc;</code></td>
+<td><code>&amp;amp;Ucirc;</code></td>
+<td>大写u带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;Uuml;</code></td>
+<td><code>&amp;amp;Uuml;</code></td>
+<td>大写u带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;Yacute;</code></td>
+<td><code>&amp;amp;Yacute;</code></td>
+<td>大写y重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;THORN;</code></td>
+<td><code>&amp;amp;THORN;</code></td>
+<td>大写thorn字母</td>
+</tr>
+<tr>
+<td><code>&amp;szlig;</code></td>
+<td><code>&amp;amp;szlig;</code></td>
+<td>小写sharp s符号</td>
+</tr>
+<tr>
+<td><code>&amp;agrave;</code></td>
+<td><code>&amp;amp;agrave;</code></td>
+<td>小写a重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;aacute;</code></td>
+<td><code>&amp;amp;aacute;</code></td>
+<td>小写a重音字母</td>
+</tr>
+<tr>
+<td><code>&amp;acirc;</code></td>
+<td><code>&amp;amp;acirc;</code></td>
+<td>小写a带抑扬顿</td>
+</tr>
+<tr>
+<td><code>&amp;atilde;</code></td>
+<td><code>&amp;amp;atilde;</code></td>
+<td>小写a带波浪符号</td>
+</tr>
+<tr>
+<td><code>&amp;auml;</code></td>
+<td><code>&amp;amp;auml;</code></td>
+<td>小写a带分音符号</td>
+</tr>
+<tr>
+<td><code>&amp;aring;</code></td>
+<td><code>&amp;amp;aring;</code></td>
+<td>小写a带圆圈（瑞典）</td>
+</tr>
+<tr>
+<td><code>&amp;aelig;</code></td>
+<td><code>&amp;amp;aelig;</code></td>
+<td>小写ae字母</td>
+</tr>
+<tr>
+<td><code>&amp;ccedil;</code></td>
+<td><code>&amp;amp;ccedil;</code></td>
+<td>小写c带大写逗号</td>
+</tr>
+<tr>
+<td><code>&amp;egrave;</code></td>
+<td><code>&amp;amp;egrave;</code></td>
+<td>小写e重音字母</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Gson%20%E5%92%8C%20Kotlin%20Data%20Class%20%E7%9A%84%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Gson 和 Kotlin Data Class 的避坑指南
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/dev-log/README/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          开发日志
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

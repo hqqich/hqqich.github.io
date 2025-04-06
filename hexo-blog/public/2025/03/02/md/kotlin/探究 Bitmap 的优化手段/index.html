@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>探究 Bitmap 的优化手段 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        探究 Bitmap 的优化手段
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        探究 Bitmap 的优化手段
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>14 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>3.5k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<p>Bitmap 应该是很多应用中最占据内存空间的一类资源了，Bitmap 也是导致应用 OOM 的常见原因之一。例如，Pixel 手机的相机拍摄的照片最大可达 4048 * 3036 像素（1200 万像素），如果使用的位图配置为 ARGB_8888（Android 2.3 及更高版本的默认设置），将单张照片加载到内存大约需要 48MB 内存（4048 * 3036 * 4 字节），如此庞大的内存需求可能会立即耗尽应用的所有可用内存</p>
+<p>本篇文章就来讲下 Bitmap 一些比较有用的知识点，希望对你有所帮助 🤣🤣</p>
+<p>全文可以概括为以下几个问题：</p>
+<ol>
+<li>Bitmap 所占内存大小的计算公式？</li>
+<li>Bitmap 所占内存大小和所在的 drawable 文件夹的关系？</li>
+<li>Bitmap 所占内存大小和 ImageView 的宽高的关系？</li>
+<li>Bitmap 如何减少内存大小？</li>
+</ol>
+<h1 id="1、预备知识"><a href="#1、预备知识" class="headerlink" title="1、预备知识"></a>1、预备知识</h1><p>在开始讲关于 Bitmap 的知识点前，需要先阐述一些基础概念作为预备知识</p>
+<p>我们知道，在不同手机屏幕上 1dp 所对应的 px 值可能是会有很大差异的。例如，在小屏幕手机上 1dp 可能对应 1px，在大屏幕手机上对应的可能是 3px，这也是我们的应用实现屏幕适配的原理基础之一。想要知道在特定一台手机上 1dp 对应多少 px，或者是想要知道屏幕宽高大小，这些信息都可以通过 DisplayMetrics 来获取</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> displayMetrics = applicationContext.resources.displayMetrics</span><br></pre></td></tr></table></figure>
+
+<p>打印出本文所使用的模拟器的 DisplayMetrics 信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DisplayMetrics&#123;density=<span class="number">3.0</span>, width=<span class="number">1080</span>, height=<span class="number">1920</span>, scaledDensity=<span class="number">3.0</span>, xdpi=<span class="number">480.0</span>, ydpi=<span class="number">480.0</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从中就可以提取出几点信息：</p>
+<ol>
+<li>density 等于 3，说明在该模拟器上 1dp 等于 3px</li>
+<li>屏幕宽高大小为 1920 x 1080 px，即 640 x 360 dp</li>
+<li>屏幕像素密度为 480dpi</li>
+</ol>
+<p>dpi 是一个很重要的值，指的是在系统软件上指定的单位尺寸的像素数量，往往是写在系统出厂配置文件的一个固定值。Android 系统定义的屏幕像素密度基准值是 160dpi，该基准值下 1dp 就等于 1px，依此类推 320dpi 下 1dp 就等于 2px</p>
+<p>dpi 决定了应用在显示 drawable 时是选择哪一个文件夹内的切图。每个 drawable 文件夹都对应不同的 dpi 大小，Android 系统会自动根据当前手机的实际 dpi 大小从合适的 drawable 文件夹内选取图片，不同的后缀名对应的 dpi 大小就如以下表格所示。<strong>如果 drawable 文件夹名不带后缀，那么该文件夹就对应 160dpi</strong></p>
+<table>
+<thead>
+<tr>
+<th>drawable</th>
+<th>dpi</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ldpi</td>
+<td>120 dpi</td>
+</tr>
+<tr>
+<td>mdpi</td>
+<td>160 dpi</td>
+</tr>
+<tr>
+<td>hdpi</td>
+<td>240 dpi</td>
+</tr>
+<tr>
+<td>xhdpi</td>
+<td>320 dpi</td>
+</tr>
+<tr>
+<td>xxhdpi</td>
+<td>480 dpi</td>
+</tr>
+<tr>
+<td>xxxhdpi</td>
+<td>640 dpi</td>
+</tr>
+</tbody></table>
+<p>举个例子。对于 320dpi 的设备来说，应用在选择图片时就会优先从 <code>drawable-xhdpi</code> 文件夹拿，如果该文件夹内没找到图片，就会依照 <code>xxhdpi -&gt; xxxhdpi -&gt; hdpi -&gt; mdpi -&gt; ldpi</code> 的顺序进行查找，<strong>优先使用高密度版本，然后从中选择最接近当前屏幕密度的图片资源</strong></p>
+<h1 id="2、内存大小的计算公式"><a href="#2、内存大小的计算公式" class="headerlink" title="2、内存大小的计算公式"></a>2、内存大小的计算公式</h1><p>先将一张大小为 1920 x 1080 px 的图片保存到 <code>drawable-xxhdpi</code> 文件夹内，然后将其显示在一个宽高均为 180dp 的 ImageView 上，该 Bitmap 所占用的内存就通过 <code>bitmap.byteCount</code>来获取</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line">log(<span class="string">&quot;imageView width: &quot;</span> + imageView.width)</span><br><span class="line">log(<span class="string">&quot;imageView height: &quot;</span> + imageView.height)</span><br><span class="line">log(<span class="string">&quot;bitmap width: &quot;</span> + bitmap.width)</span><br><span class="line">log(<span class="string">&quot;bitmap height: &quot;</span> + bitmap.height)</span><br><span class="line">log(<span class="string">&quot;bitmap config: &quot;</span> + bitmap.config)</span><br><span class="line">log(<span class="string">&quot;inDensity: &quot;</span> + options.inDensity)</span><br><span class="line">log(<span class="string">&quot;inTargetDensity: &quot;</span> + options.inTargetDensity)</span><br><span class="line">log(<span class="string">&quot;bitmap byteCount: &quot;</span> + bitmap.byteCount)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BitmapMainActivity: imageView width: <span class="number">540</span></span><br><span class="line">BitmapMainActivity: imageView height: <span class="number">540</span></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">1920</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">1080</span></span><br><span class="line">BitmapMainActivity: bitmap config: ARGB_8888</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">8294400</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于模拟器的 density 等于 3，所以 ImageView 的宽高都是 540 px</li>
+<li>Bitmap 的宽高还是保持其原有大小，即1920 x 1080 px</li>
+<li>ARGB_8888 代表的是该 Bitmap 的编码格式，该格式下一个像素点需要占用 4 byte</li>
+<li><code>inDensity</code> 代表的是系统最终选择的 drawable 文件夹类型，等于 480 说明取的是 <code>drawable-xxhdpi</code>文件夹下的图片</li>
+<li><code>inTargetDensity</code> 代表的是当前设备的 dpi</li>
+<li>8294400 就是 Bitmap 所占用的内存大小，单位是 byte</li>
+</ul>
+<p>从最终结果可以很容易地就逆推出 Bitmap 所占内存大小的计算公式：<strong>bitmapWidth * bitmapHeight * 单位像素点所占用的字节数</strong>，即 1920 * 1080 * 4 &#x3D; 8294400</p>
+<h1 id="3、和-drawable-文件夹的关系"><a href="#3、和-drawable-文件夹的关系" class="headerlink" title="3、和 drawable 文件夹的关系"></a>3、和 drawable 文件夹的关系</h1><p>上面之所以很容易就逆推出了 Bitmap 所占内存大小的计算公式，是因为所有条件都被我故意设定为最优情况了，才使得计算过程这么简单。而实际上 Bitmap 所占内存大小和其所在的 drawable 文件夹是有很大关系的，虽然计算公式没变</p>
+<p>现在的大部分应用为了达到最优的显示效果，会为应用准备多套切图放在不同的 drawable 文件夹下，而<code>BitmapFactory.decodeResource</code> 方法在解码 Bitmap 的时候，就会自动根据当前设备的 dpi 和 drawable 文件夹类型来判断是否需要对图片进行缩放显示</p>
+<p>将图片从 <code>drawable-xxhdpi</code>迁移到 <code>drawable-xhdpi</code>文件夹，然后再打印日志信息</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BitmapMainActivity: imageView width: <span class="number">540</span></span><br><span class="line">BitmapMainActivity: imageView height: <span class="number">540</span></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">2880</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">1620</span></span><br><span class="line">BitmapMainActivity: bitmap config: ARGB_8888</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">320</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">18662400</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，Bitmap 的宽高都发生了变化，<code>inDensity</code> 等于 320 也说明了选取的是<code>drawable-xhdpi</code>文件夹内的图片，Bitmap 所占内存居然增加了一倍多</p>
+<p>模拟器的 dpi 是 480，拿到了 dpi 为 320 的<code>drawable-xhdpi</code>文件夹下的图片，在系统的理解中该文件夹存放的都是小图标，是为小屏幕手机准备的，现在要在大屏幕手机上展示的话就需要对其进行放大，放大的比例就是 480 &#x2F; 320 &#x3D; 1.5 倍，因此 Bitmap 的宽就会变为 1920 * 1.5 &#x3D; 2880 px，高就会变为 1080 * 1.5 &#x3D; 1620 px，最终占用的内存空间大小就是 2880 * 1620 * 4 &#x3D; 18662400</p>
+<p>所以说，对于同一台手机，Bitmap 在不同 drawable 文件夹下对其最终占用的内存大小是有很大关系的，虽然计算公式没变，但是由于系统会进行自动缩放，导致 Bitmap 的最终宽高都发生了变化，从而影响到了其占用的内存空间大小。同理，对于同个 drawable 文件夹下的同一张图片，在不同的手机屏幕上也可能会占用不同的内存空间，因为不同的手机的 dpi 大小可能是不一样的，BitmapFactory 进行缩放的比例也就不一样</p>
+<h1 id="4、和-ImageView-的宽高的关系"><a href="#4、和-ImageView-的宽高的关系" class="headerlink" title="4、和 ImageView 的宽高的关系"></a>4、和 ImageView 的宽高的关系</h1><p>在上一个例子里，Bitmap 的宽高是 2880 * 1620 px，ImageView 的宽高是 540 * 540 px，该 Bitmap 肯定是会显示不全的，读者可以试着自己改变 ImageView 的宽高大小来验证是否会对 Bitmap 的大小产生影响</p>
+<p>这里就不贴代码了，直接来说结论，答案是<strong>没有关系</strong>。原因也很简单，毕竟上述例子是先将 Bitmap 加载到内存中后再设置给 ImageView 的，ImageView 自然不会影响到 Bitmap 的加载过程，该 Bitmap 的大小也只受<strong>其所在的 drawable 文件夹类型</strong>以及<strong>手机的 dpi 大小</strong>这两个因素的影响。但这个结论是需要考虑测试方式的，如果你是使用 Glide 来加载图片，Glide 内部实现了按需加载的机制，会根据 ImageView 的大小对 Bitmap 进行自动缩放，避免内存浪费的情况，这种情况下 ImageView 的宽高就会影响到 Bitmap 的内存大小了</p>
+<h1 id="5、BitmapFactory"><a href="#5、BitmapFactory" class="headerlink" title="5、BitmapFactory"></a>5、BitmapFactory</h1><p>BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：<code>decodeFile、decodeResourceStream、decodeResource、decodeByteArray、decodeStream</code> 等多个，但只有 <code>decodeResourceStream</code> 和 <code>decodeResource</code> 这两个方法才会根据 dpi 进行自动缩放。如果是从磁盘或者 assert 目录加载图片的话是不会进行自动缩放的，毕竟这些来源也不具备 dpi 信息，Bitmap 的分辨率也只能保持其原有大小</p>
+<p><code>decodeResource</code> 方法也会调用到<code>decodeResourceStream</code>方法，<code>decodeResourceStream</code>方法如果判断到<code>inDensity</code> 和 <code>inTargetDensity</code> 两个属性外部没有主动赋值的话，就会根据实际情况进行赋值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title function_">decodeResourceStream</span><span class="params">(<span class="meta">@Nullable</span> Resources res, <span class="meta">@Nullable</span> TypedValue value,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> InputStream is, <span class="meta">@Nullable</span> Rect pad, <span class="meta">@Nullable</span> Options opts)</span> &#123;</span><br><span class="line">    validate(opts);</span><br><span class="line">    <span class="keyword">if</span> (opts == <span class="literal">null</span>) &#123;</span><br><span class="line">        opts = <span class="keyword">new</span> <span class="title class_">Options</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (opts.inDensity == <span class="number">0</span> &amp;&amp; value != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">density</span> <span class="operator">=</span> value.density;</span><br><span class="line">        <span class="keyword">if</span> (density == TypedValue.DENSITY_DEFAULT) &#123;</span><br><span class="line">            <span class="comment">//如果 density 没有赋值的话（等于0），那么就使用基准值 160 dpi</span></span><br><span class="line">            opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (density != TypedValue.DENSITY_NONE) &#123;</span><br><span class="line">            <span class="comment">//在这里进行赋值，density 就等于 drawable 对应的 dpi</span></span><br><span class="line">            opts.inDensity = density;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">if</span> (opts.inTargetDensity == <span class="number">0</span> &amp;&amp; res != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">//如果没有主动设置 inTargetDensity 的话，inTargetDensity 就等于设备的 dpi</span></span><br><span class="line">        opts.inTargetDensity = res.getDisplayMetrics().densityDpi;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> decodeStream(is, pad, opts);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="6、BitmapConfig"><a href="#6、BitmapConfig" class="headerlink" title="6、BitmapConfig"></a>6、BitmapConfig</h1><p>Bitmap.Config 定义了四种常见的编码格式，分别是：</p>
+<ul>
+<li>ALPHA_8。每个像素点需要一个字节的内存，只存储位图的透明度，没有颜色信息</li>
+<li>ARGB_4444。A(Alpha)、R(Red)、G(Green)、B（Blue）各占四位精度，共计十六位的精度，折合两个字节，也就是说一个像素点占两个字节的内存，会存储位图的透明度和颜色信息</li>
+<li>ARGB_8888。ARGB 各占八个位的精度，折合四个字节，会存储位图的透明度和颜色信息</li>
+<li>RGB_565。R占五位精度，G占六位精度，B占五位精度，一共是十六位精度，折合两个字节，只存储颜色信息，没有透明度信息</li>
+</ul>
+<h1 id="7、优化-Bitmap"><a href="#7、优化-Bitmap" class="headerlink" title="7、优化 Bitmap"></a>7、优化 Bitmap</h1><p>根据 Bitmap 所占内存大小的计算公式：<strong>bitmapWidth * bitmapHeight * 单位像素点所占用的字节数</strong>，想要尽量减少 Bitmap 占用的内存大小的话就要从<strong>降低图片分辨率</strong>和<strong>降低单位像素需要的字节数</strong>这两方面来考虑了</p>
+<p>在一开始的情况下加载到的 Bitmap 的宽高是 1920 * 1080，占用的内存空间是 1920 * 1080 * 4 &#x3D; 8294400，约 7.9 MB，这是优化前的状态</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line">log(<span class="string">&quot;bitmap width: &quot;</span> + bitmap.width)</span><br><span class="line">log(<span class="string">&quot;bitmap height: &quot;</span> + bitmap.height)</span><br><span class="line">log(<span class="string">&quot;bitmap config: &quot;</span> + bitmap.config)</span><br><span class="line">log(<span class="string">&quot;inDensity: &quot;</span> + options.inDensity)</span><br><span class="line">log(<span class="string">&quot;inTargetDensity: &quot;</span> + options.inTargetDensity)</span><br><span class="line">log(<span class="string">&quot;bitmap byteCount: &quot;</span> + bitmap.byteCount)</span><br><span class="line"></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">1920</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">1080</span></span><br><span class="line">BitmapMainActivity: bitmap config: ARGB_8888</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">8294400</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1、inSampleSize"><a href="#1、inSampleSize" class="headerlink" title="1、inSampleSize"></a>1、inSampleSize</h2><p>由于 ImageView 的宽高只有 540 * 540 px，如果按照原图进行加载的话其实会造成很大的内存浪费，此时我们就可以通过 inSampleSize 属性来压缩图片尺寸</p>
+<p>例如，将 inSampleSize 设置为 2 后，Bitmap 的宽高就都会缩减为原先的一半，占用的内存空间就变成了原先的四分之一， 960 * 540 * 4 &#x3D; 2073600，约 1.9 MB</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line">options.inSampleSize = <span class="number">2</span></span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line">log(<span class="string">&quot;bitmap width: &quot;</span> + bitmap.width)</span><br><span class="line">log(<span class="string">&quot;bitmap height: &quot;</span> + bitmap.height)</span><br><span class="line">log(<span class="string">&quot;bitmap config: &quot;</span> + bitmap.config)</span><br><span class="line">log(<span class="string">&quot;inDensity: &quot;</span> + options.inDensity)</span><br><span class="line">log(<span class="string">&quot;inTargetDensity: &quot;</span> + options.inTargetDensity)</span><br><span class="line">log(<span class="string">&quot;bitmap byteCount: &quot;</span> + bitmap.byteCount)</span><br><span class="line"></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">960</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">540</span></span><br><span class="line">BitmapMainActivity: bitmap config: ARGB_8888</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">2073600</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看出来，inSampleSize 属性应该设置多少是需要根据 <strong>Bitmap 的实际宽高</strong>和 <strong>ImageView 的实际宽高</strong>这两个条件来一起决定的。我们在正式加载 Bitmap 前要先获取到 Bitmap 的实际宽高大小，这可以通过 inJustDecodeBounds 属性来实现。设置 inJustDecodeBounds  为 true 后 <code>decodeResource</code>方法只会去读取 Bitmap 的宽高属性而不会去进行实际加载，这个操作是比较轻量级的。然后通过每次循环对半折减，计算出 inSampleSize 需要设置为多少才能尽量接近到 ImageView 的实际宽高，之后将 inJustDecodeBounds 设置为 false 去实际加载 Bitmap</p>
+<p>需要注意的是，inSampleSize 使用的最终值将是向下舍入为最接近的 2 的幂，BitmapFactory 内部会自动会该值进行校验修正</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line">options.inJustDecodeBounds = <span class="literal">true</span></span><br><span class="line">BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line"><span class="keyword">val</span> inSampleSize = calculateInSampleSize(options, imageView.width, imageView.height)</span><br><span class="line">options.inSampleSize = inSampleSize</span><br><span class="line">options.inJustDecodeBounds = <span class="literal">false</span></span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">calculateInSampleSize</span><span class="params">(options: <span class="type">BitmapFactory</span>.<span class="type">Options</span>, reqWidth: <span class="type">Int</span>, reqHeight: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">    <span class="comment">// Raw height and width of image</span></span><br><span class="line">    <span class="keyword">val</span> (height: <span class="built_in">Int</span>, width: <span class="built_in">Int</span>) = options.run &#123; outHeight to outWidth &#125;</span><br><span class="line">    <span class="keyword">var</span> inSampleSize = <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> (height &gt; reqHeight || width &gt; reqWidth) &#123;</span><br><span class="line">        <span class="keyword">val</span> halfHeight: <span class="built_in">Int</span> = height / <span class="number">2</span></span><br><span class="line">        <span class="keyword">val</span> halfWidth: <span class="built_in">Int</span> = width / <span class="number">2</span></span><br><span class="line">        <span class="comment">// Calculate the largest inSampleSize value that is a power of 2 and keeps both</span></span><br><span class="line">        <span class="comment">// height and width larger than the requested height and width.</span></span><br><span class="line">        <span class="keyword">while</span> (halfHeight / inSampleSize &gt;= reqHeight &amp;&amp; halfWidth / inSampleSize &gt;= reqWidth) &#123;</span><br><span class="line">            inSampleSize *= <span class="number">2</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inSampleSize</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、inTargetDensity"><a href="#2、inTargetDensity" class="headerlink" title="2、inTargetDensity"></a>2、inTargetDensity</h2><p>如果我们不主动设置 inTargetDensity 的话，<code>decodeResource</code> 方法会自动根据当前设备的 dpi 来对 Bitmap 进行缩放处理，我们可以通过主动设置 inTargetDensity 来控制缩放比例，从而控制 Bitmap 的最终宽高。最终宽高的生成规则： 180 &#x2F; 480 * 1920 &#x3D; 720，180 &#x2F; 480 * 1080 &#x3D; 405，占用的内存空间是 720 * 405 * 4 &#x3D; 1166400，约 1.1 MB</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line">options.inTargetDensity = <span class="number">180</span></span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line">log(<span class="string">&quot;bitmap width: &quot;</span> + bitmap.width)</span><br><span class="line">log(<span class="string">&quot;bitmap height: &quot;</span> + bitmap.height)</span><br><span class="line">log(<span class="string">&quot;bitmap config: &quot;</span> + bitmap.config)</span><br><span class="line">log(<span class="string">&quot;inDensity: &quot;</span> + options.inDensity)</span><br><span class="line">log(<span class="string">&quot;inTargetDensity: &quot;</span> + options.inTargetDensity)</span><br><span class="line">log(<span class="string">&quot;bitmap byteCount: &quot;</span> + bitmap.byteCount)</span><br><span class="line"></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">720</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">405</span></span><br><span class="line">BitmapMainActivity: bitmap config: ARGB_8888</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">1166400</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、Bitmap-Config"><a href="#3、Bitmap-Config" class="headerlink" title="3、Bitmap.Config"></a>3、Bitmap.Config</h2><p>BitmapFactory 默认使用的编码图片格式是 ARGB_8888，每个像素点占用四个字节，我们可以按需改变要采用的图片格式。例如，如果要加载的 Bitmap 不包含透明通道的，我们可以使用 RGB_565，该格式每个像素点占用两个字节，占用的内存空间是 1920 * 1080 * 2 &#x3D; 4147200，约 3.9 MB</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> options = BitmapFactory.Options()</span><br><span class="line">options.inPreferredConfig = Bitmap.Config.RGB_565</span><br><span class="line"><span class="keyword">val</span> bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)</span><br><span class="line">imageView.setImageBitmap(bitmap)</span><br><span class="line">log(<span class="string">&quot;bitmap width: &quot;</span> + bitmap.width)</span><br><span class="line">log(<span class="string">&quot;bitmap height: &quot;</span> + bitmap.height)</span><br><span class="line">log(<span class="string">&quot;bitmap config: &quot;</span> + bitmap.config)</span><br><span class="line">log(<span class="string">&quot;inDensity: &quot;</span> + options.inDensity)</span><br><span class="line">log(<span class="string">&quot;inTargetDensity: &quot;</span> + options.inTargetDensity)</span><br><span class="line">log(<span class="string">&quot;bitmap byteCount: &quot;</span> + bitmap.byteCount)</span><br><span class="line"></span><br><span class="line">BitmapMainActivity: bitmap width: <span class="number">1920</span></span><br><span class="line">BitmapMainActivity: bitmap height: <span class="number">1080</span></span><br><span class="line">BitmapMainActivity: bitmap config: RGB_565</span><br><span class="line">BitmapMainActivity: inDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: inTargetDensity: <span class="number">480</span></span><br><span class="line">BitmapMainActivity: bitmap byteCount: <span class="number">4147200</span></span><br></pre></td></tr></table></figure>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/hello-world/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Hello World
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/mysql/mysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

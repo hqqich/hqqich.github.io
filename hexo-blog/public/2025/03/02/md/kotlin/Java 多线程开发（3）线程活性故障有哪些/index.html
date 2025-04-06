@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EHXM4GYP5W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EHXM4GYP5W');
+</script>
+<!-- End Google Analytics -->
+
+
+
+<!-- Baidu Analytics -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?0a6515fb9c839d6a56d4cfd8b7d243d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- End Baidu Analytics -->
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="hqqich">
+
+
+  <meta name="subtitle" content="忙碌把时光缩短, 苦难把岁月拉长">
+
+
+
+
+<title>Java 多线程开发（3）线程活性故障有哪些 | Hexo-blog</title>
+
+
+
+<link rel="icon" href="/hexo-blog/public/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/hexo-blog/public/css/main.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/nprogress/nprogress.css">
+
+
+
+<script src="/hexo-blog/public/lib/jquery.min.js"></script>
+
+
+<script src="/hexo-blog/public/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/hexo-blog/public/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+
+    $("#toggle-dark").click((event) => {
+      const isAppearanceTransition = document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!isAppearanceTransition) {
+        toggleDark()
+        return
+      }
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y),
+      )
+      const transition = document.startViewTransition(async () => {
+        toggleDark()
+      })
+
+      transition.ready
+        .then(() => {
+          const isDark = document.documentElement.classList.contains("dark")
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ]
+          document.documentElement.animate(
+            {
+              clipPath: isDark
+                ? [...clipPath].reverse()
+                : clipPath,
+            },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isDark
+                ? '::view-transition-old(root)'
+                : '::view-transition-new(root)',
+            },
+          )
+        })
+    });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/hexo-blog/public/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="https://moe-counter-vercel-gamma.vercel.app/a?theme=rule34" alt="Hexo-blog" />
+          Hexo-blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        Java 多线程开发（3）线程活性故障有哪些
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/archives">Posts</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/category">Categories</a>
+        
+          <a class="hidden sm:flex" href="/hexo-blog/public/tag">Tags</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hqqich">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Github" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/category" class="flex h-12 sm:h-auto items-center">Categories</a>
+        </li>
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/hexo-blog/public/tag" class="flex h-12 sm:h-auto items-center">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/hexo-blog/public/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        Java 多线程开发（3）线程活性故障有哪些
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2025-03-02</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>32 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>8.1k words</span>
+          </span>
+          
+            <span class="text-gray-400">·</span>
+            <span class="flex items-center gap-1">
+              <iconify-icon width="16" icon="icon-park-outline:box" class="mr-2"></iconify-icon>
+              <a class="article-category-link" href="/hexo-blog/public/categories/kotlin/">kotlin</a>
+            </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <blockquote>
+<p>公众号：<a target="_blank" rel="noopener" href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image">字节数组</a></p>
+<p>希望对你有所帮助 🤣🤣</p>
+</blockquote>
+<blockquote>
+<p>目前，多线程编程可以说是在大部分平台和应用上都需要实现的一个基本需求。本系列文章就来对 <strong>Java 平台下的多线程编程知识</strong>进行讲解，从<strong>概念入门</strong>、<strong>底层实现</strong>到<strong>上层应用</strong>都会涉及到，预计一共会有五篇文章，希望对你有所帮助 😎😎</p>
+<p>本篇文章是第三篇，来介绍四种不同类型的线程活性故障现象，这是开发者所必须应对的异常情况</p>
+</blockquote>
+<p><strong>线程活性故障</strong>是由于资源稀缺性或者程序自身的问题导致线程一直处于非 Runnable 状态，或者线程虽然处于 Runnable 状态但是其要执行的任务一直无法取得进展的一种故障现象</p>
+<p>下面就来介绍几种常见类型的线程活性故障：</p>
+<ol>
+<li><p>死锁</p>
+</li>
+<li><p>锁死</p>
+</li>
+<li><p>线程饥饿</p>
+</li>
+<li><p>活锁</p>
+</li>
+</ol>
+<h1 id="一、死锁"><a href="#一、死锁" class="headerlink" title="一、死锁"></a>一、死锁</h1><p>如果多个线程因互相等待对方而被永远暂停（生命周期状态为 Blocked 或者 Waiting），那么就称这些线程产生了死锁（Deadlock）。由于产生死锁的线程的生命周期状态永远是非运行状态，所以如果没有外力作用，这些线程所要执行的任务就永远也无法取得进展</p>
+<p>例如，线程 A 在持有锁 L1 的情况下申请锁 L2，同时线程 B 在持有锁 L2 的情况下在申请锁 L1，而线程 A 和线程 B 各自要求只有在取得对方的锁后才能释放持有的锁，这就导致了两个锁都将处于无限等待的状态，此时死锁就发生了</p>
+<p>有关死锁的一个经典问题是<strong>哲学家就餐问题</strong>。五位哲学家围着一张圆桌，每位哲学家之间均放着一根筷子，即一共有五根筷子。每位哲学家要么处于思考状态，要么是在吃饭。吃饭前，每位哲学家均会先拿起左手边的筷子，再拿起右手边的筷子，只有当手上持有了一双筷子时哲学家才能够吃饭，且除非本次吃饭行为完成，否则哲学家不会放下手中已持有的筷子。哲学家吃完饭后就会放下手中的筷子，再次思考一段时间后再进行吃饭</p>
+<p>在这个问题中，每位哲学家就相当于一个线程，每根筷子就相当于多条线程间的共享资源。且筷子明显是一个排他性资源，因为每根筷子每次只能由一位哲学家持有，因此哲学家在拿起筷子前需要先取得筷子对应的锁。由于筷子和哲学家的数量相等，而每位哲学家需要的筷子数量是现有的两倍，所以发生死锁的可能性还是很大的</p>
+<p>我们可以用一段程序来模拟并验证上述的情况</p>
+<p>先对筷子 Chopstick 进行定义，其能被操作的行为只有两种，即：<strong>拿起</strong>和<strong>放下</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="keyword">class</span> <span class="title class_">ChopstickStatus</span> &#123;</span><br><span class="line">    UP,</span><br><span class="line">    Down</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Chopstick</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> status = ChopstickStatus.Down</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">set</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">pickUp</span><span class="params">()</span></span> &#123;</span><br><span class="line">        status = ChopstickStatus.UP</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">putDown</span><span class="params">()</span></span> &#123;</span><br><span class="line">        status = ChopstickStatus.Down</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每位哲学家 Philosopher 均对应一个唯一的标识 id，一根左手边的筷子 left，一根右手边的筷子 right。会不间断地进行“思考”和“吃饭”两种行为，每种行为均包含一段随机的时间间隔（随机的线程休眠）</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">object</span> Tools &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">randomSleep</span><span class="params">(max: <span class="type">Long</span> = <span class="number">30</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> realMax = max.coerceAtLeast(<span class="number">1</span>)</span><br><span class="line">        ThreadLocalRandom.current().nextLong(<span class="keyword">if</span> (realMax == <span class="number">1L</span>) <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span>, max + <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Philosopher</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> left: Chopstick, <span class="keyword">val</span> right: Chopstick) : Thread(<span class="string">&quot;Philosopher-<span class="variable">$id</span>&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            think()</span><br><span class="line">            eat()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">eat</span><span class="params">()</span></span> &#123;</span><br><span class="line">        synchronized(left) &#123;</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 拿起了左边的筷子: &quot;</span> + left.id)</span><br><span class="line">            left.pickUp()</span><br><span class="line">            synchronized(right) &#123;</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 拿起了右边的筷子: &quot;</span> + right.id)</span><br><span class="line">                right.pickUp()</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 开始吃饭.....&quot;</span>)</span><br><span class="line">                Tools.randomSleep(<span class="number">10</span>)</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 吃饭结束!!!!!!!!!!&quot;</span>)</span><br><span class="line">                right.putDown()</span><br><span class="line">            &#125;</span><br><span class="line">            left.putDown()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">think</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 思考中....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们创建五根筷子，并将每根筷子按顺序分配给每位哲学家，然后就启动哲学家的思考和吃饭行为（启动线程）</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> philosopherNumber = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> chopstickList = mutableListOf&lt;Chopstick&gt;()</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until philosopherNumber) &#123;</span><br><span class="line">        chopstickList.add(Chopstick(i))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> philosopherList = mutableListOf&lt;Philosopher&gt;()</span><br><span class="line">    <span class="keyword">for</span> (index <span class="keyword">in</span> <span class="number">0</span> until philosopherNumber) &#123;</span><br><span class="line">        <span class="keyword">val</span> left = chopstickList[index]</span><br><span class="line">        <span class="keyword">val</span> right = chopstickList.getOrNull(index - <span class="number">1</span>) ?: chopstickList.last()</span><br><span class="line">        philosopherList.add(Philosopher(index, left, right))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    philosopherList.forEach &#123;</span><br><span class="line">        println(it.name + <span class="string">&quot; 左手边的筷子是：&quot;</span> + it.left + <span class="string">&quot; 右手边的筷子是：&quot;</span> + it.right)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    philosopherList.forEach &#123;</span><br><span class="line">        it.start()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，运行程序后，只要我们为哲学家设定每次思考和吃饭的耗时时间不要太长，那么应该就能很快看到程序没有继续输出日志了，似乎被卡住了，此时即发生了死锁</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">Philosopher-<span class="number">0</span> 左手边的筷子是：Chopstick(id=<span class="number">0</span>) 右手边的筷子是：Chopstick(id=<span class="number">4</span>)</span><br><span class="line">Philosopher-<span class="number">1</span> 左手边的筷子是：Chopstick(id=<span class="number">1</span>) 右手边的筷子是：Chopstick(id=<span class="number">0</span>)</span><br><span class="line">Philosopher-<span class="number">2</span> 左手边的筷子是：Chopstick(id=<span class="number">2</span>) 右手边的筷子是：Chopstick(id=<span class="number">1</span>)</span><br><span class="line">Philosopher-<span class="number">3</span> 左手边的筷子是：Chopstick(id=<span class="number">3</span>) 右手边的筷子是：Chopstick(id=<span class="number">2</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> 左手边的筷子是：Chopstick(id=<span class="number">4</span>) 右手边的筷子是：Chopstick(id=<span class="number">3</span>)</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">1</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">2</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">3</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了左边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了左边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了右边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">2</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">2</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了右边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">3</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">3</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了右边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">4</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">2</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">1</span> 拿起了左边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了左边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了左边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>根据输出日志可以分析出，最后每位哲学家均拿到了其左手边的筷子，且均在等待右手边的筷子被放下，但此时由于筷子是独占资源，所以每位哲学家都只能干瞪着眼无法吃饭，最终导致了死锁</p>
+<h1 id="二、死锁的产生条件"><a href="#二、死锁的产生条件" class="headerlink" title="二、死锁的产生条件"></a>二、死锁的产生条件</h1><p>哲学家就餐问题反映了发生死锁的<strong>必要条件</strong>，线程一旦发生死锁，那么这些线程及相关的共享资源就一定同时满足以下条件：</p>
+<ol>
+<li>资源互斥。涉及的资源必须是排他性资源，即每个资源每次只能由一个线程持有</li>
+<li>资源不可抢夺。涉及的资源只能由其持有线程主动释放，其它线程无法从持有线程中主动夺得</li>
+<li>占用并等待其它资源。涉及的线程当前至少已经持有了一个排他性资源，并在申请其它资源，而这些资源同时又被其它线程所持有。在这个资源等待过程中，线程不会主动释放持有的现有资源</li>
+<li>循环等待资源。在涉及到的所有线程列表内部，每个线程均在互相等待其它线程释放持有的资源，形成了互相等待的圆形依赖关系。即存在一个处于等待状态的线程集合 {T1, T2, …, Tn}，其中 Ti 等待的资源被 T(i+1) 占有（i 大于等于 1 小于 n），Tn 等待的资源被 T1 占有</li>
+</ol>
+<p>以上条件是死锁产生的必要条件而非充分条件，即只要产生了死锁，以上条件就一定同时成立，但是上诉条件即使同时成立也未必就一定能产生死锁。例如，对于上诉的第四点，如果线程 T1 等待的资源数大于一，除了等待 T2 主动释放持有的一份资源外，T1 还可以通过获取<strong>循环圈</strong>外的多余资源来打破线程间的循环等待关系，从而避免造成死锁</p>
+<h1 id="三、规避死锁"><a href="#三、规避死锁" class="headerlink" title="三、规避死锁"></a>三、规避死锁</h1><p>如果把 Java 平台下的锁（Lock）当做一种资源，那么这种资源就正好符合“资源互斥”和“资源不可抢夺”的要求，在这种情况下，产生死锁的代码特征就是在持有一个锁的情况下去申请另外一个锁，这通常意味着锁的嵌套。但是，一个线程在已经持有一个锁的情况下再次申请这个锁并不会导致死锁，这是因为 Java 中的锁都是可重入的（Reentrant），这种情形下线程重复申请某个锁是可以成功的</p>
+<p>从上诉的四个发生死锁的必要条件来反推，我们只要消除死锁产生的任意一个必要条件就可以规避死锁了。由于锁具有排他性且只能由其持有线程来主动释放，因此由锁导致的死锁只能从消除“占用并等待资源”和消除“循环等待资源”这两个方向入手。以下就来介绍基于这两个思路来规避死锁的方法</p>
+<h2 id="1、粗锁法"><a href="#1、粗锁法" class="headerlink" title="1、粗锁法"></a>1、粗锁法</h2><p>粗锁法即使用粗粒度的锁来代替多个锁。“占用并等待资源”这个条件隐含的情况即：线程在持有一个锁的同时还去申请另一个锁。那么，只要采用一个粒度较粗的锁来替代原先粒度较细的锁，使得涉及的资源都只需要申请一个锁就可以获得，那么就可以避免死锁</p>
+<p>对应上诉的哲学家就餐问题，只要将 Philosopher 拿左手边筷子和拿右手边筷子的行为统一放到同个锁内，就可以消除“占用并等待资源”和“循环等待资源”这两个条件了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Philosopher</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> left: Chopstick, <span class="keyword">val</span> right: Chopstick) : Thread(<span class="string">&quot;Philosopher-<span class="variable">$id</span>&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> LOCK = Object()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            think()</span><br><span class="line">            eat()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">eat</span><span class="params">()</span></span> &#123;</span><br><span class="line">        synchronized(LOCK) &#123;</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 拿起了左边的筷子: &quot;</span> + left.id)</span><br><span class="line">            left.pickUp()</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 拿起了右边的筷子: &quot;</span> + right.id)</span><br><span class="line">            right.pickUp()</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 开始吃饭.....&quot;</span>)</span><br><span class="line">            Tools.randomSleep(<span class="number">10</span>)</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 吃饭结束!!!!!!!!!!&quot;</span>)</span><br><span class="line">            right.putDown()</span><br><span class="line">            left.putDown()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">think</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 思考中....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>粗锁法的缺点就是它明显降低了并发性并可能导致资源浪费。修改过后的代码，每次只有一位哲学家能够吃饭。如果每位哲学家吃饭的耗时相对其思考的时间要长得多，那么在持有筷子的哲学家吃饭结束前，有可能其他哲学家都已经处于等待筷子的状态了（即锁的争用程度比较高，多个线程由于申请不到锁而被暂停，每次锁的争夺可能会经历多次线程上下文切换）。而如果每位哲学家吃饭的耗时相对其思考的时间要短得多，那么就有可能在非持有筷子的哲学家结束思考前，持有筷子的哲学家就已经吃饭结束了（即锁的争用比较低，每次只有一个线程来申请锁，此时就不会由于申请锁而导致线程上下文切换）</p>
+<p>即使锁的争用程度比较低，一位哲学家在吃饭的时候也仅需要占用两根筷子，剩下的三根筷子本来还可以提供给另外一位哲学家使用，此时采用粗锁法就明显导致了资源的浪费。因此，粗锁法的适用范围较为有限</p>
+<h2 id="2、锁排序法"><a href="#2、锁排序法" class="headerlink" title="2、锁排序法"></a>2、锁排序法</h2><p>锁排序法的思路是：对所有锁按照一定规则进行排序，所有线程在申请锁之前均按照先后顺序进行申请，以此来消除“循环等待资源”这个条件，从而来规避死锁</p>
+<p>例如，对上诉的哲学家问题进行简单化。假设哲学家的数量是 2。哲学家1的左手边是筷子2，右手边是筷子1；哲学家2的左手边是筷子1，右手边是筷子2。当两位哲学家同时拿起左手边的筷子时，此时就会发生死锁。而如果对筷子的申请顺序进行要求，要求哲学家需要先拿起 ID 较小的筷子才能去申请 ID 较大的筷子，那么此时先拿到筷子1的哲学家就可以无竞争地拿到筷子2，从而避免了“循环等待资源”的情况</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Philosopher</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> left: Chopstick, <span class="keyword">val</span> right: Chopstick) : Thread(<span class="string">&quot;Philosopher-<span class="variable">$id</span>&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> one: Chopstick</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> theOther: Chopstick</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        <span class="comment">//每位哲学家都对其左右两边的筷子进行排序</span></span><br><span class="line">        <span class="comment">//都按照“先取ID小的筷子再取ID大的筷子”的这种规则来拿筷子</span></span><br><span class="line">        <span class="keyword">if</span> (left.id &lt; right.id) &#123;</span><br><span class="line">            one = left</span><br><span class="line">            theOther = right</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            one = right</span><br><span class="line">            theOther = left</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            think()</span><br><span class="line">            eat()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">eat</span><span class="params">()</span></span> &#123;</span><br><span class="line">        synchronized(one) &#123;</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> 拿起了左边的筷子: &quot;</span> + left.id)</span><br><span class="line">            left.pickUp()</span><br><span class="line">            synchronized(theOther) &#123;</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 拿起了右边的筷子: &quot;</span> + right.id)</span><br><span class="line">                right.pickUp()</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 开始吃饭.....&quot;</span>)</span><br><span class="line">                Tools.randomSleep(<span class="number">10</span>)</span><br><span class="line">                println(<span class="string">&quot;<span class="variable">$name</span> 吃饭结束!!!!!!!!!!&quot;</span>)</span><br><span class="line">                right.putDown()</span><br><span class="line">                left.putDown()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">think</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 思考中....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、资源限时申请"><a href="#3、资源限时申请" class="headerlink" title="3、资源限时申请"></a>3、资源限时申请</h2><p>避免死锁的另一种方法是在申请资源时设定一个超时时间，避免无限制地等待资源，从而消除“占用并等待资源”这种情况。当等待时间超出既定的限制时，释放已持有的资源（哲学家放下左手边的筷子转而去继续思考）先给其它线程使用，待后续再重新申请资源</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Philosopher</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> left: Chopstick, <span class="keyword">val</span> right: Chopstick) : Thread(<span class="string">&quot;Philosopher-<span class="variable">$id</span>&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> LOCK_MAP = ConcurrentHashMap&lt;Chopstick, ReentrantLock&gt;()</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        LOCK_MAP.putIfAbsent(left, ReentrantLock())</span><br><span class="line">        LOCK_MAP.putIfAbsent(right, ReentrantLock())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            think()</span><br><span class="line">            eat()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">eat</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> leftLock = LOCK_MAP[left]!!</span><br><span class="line">        <span class="keyword">val</span> leftLockAcquired = leftLock.tryLock(<span class="number">10</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">        <span class="keyword">if</span> (!leftLockAcquired) &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">val</span> rightLock = LOCK_MAP[right]!!</span><br><span class="line">        <span class="keyword">val</span> rightLockAcquired = rightLock.tryLock(<span class="number">10</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">        <span class="keyword">if</span> (!rightLockAcquired) &#123;</span><br><span class="line">            leftLock.unlock()</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 拿起了左边的筷子: &quot;</span> + left.id)</span><br><span class="line">        left.pickUp()</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 拿起了右边的筷子: &quot;</span> + right.id)</span><br><span class="line">        right.pickUp()</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 开始吃饭.....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">10</span>)</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 吃饭结束!!!!!!!!!!&quot;</span>)</span><br><span class="line">        right.putDown()</span><br><span class="line">        left.putDown()</span><br><span class="line">        leftLock.unlock()</span><br><span class="line">        rightLock.unlock()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">think</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 思考中....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、死锁的恢复"><a href="#四、死锁的恢复" class="headerlink" title="四、死锁的恢复"></a>四、死锁的恢复</h1><p>死锁的恢复有着一定难度，原因主要有以下几点</p>
+<ul>
+<li>如果代码中使用的是内部锁，或者使用的是显式锁的 <code>Lock.lock()</code> 方法，那么这些锁导致的死锁是无法恢复的，此时只能通过重启 Java 虚拟机来停止程序</li>
+<li>可以通过定义一个工作者线程专门用于检测和恢复死锁。该线程定时检测系统中是否存在死锁，如果存在，则选择一个死锁线程向其发送中断。该中断使得相应的死锁线程被唤醒并抛出 InterruptedException 异常，死锁线程捕获到 InterruptedException 异常后主动释放已持有的资源，从而“消除并等待资源”这个条件。如果该死锁线程释放已持有的线程后依然存在死锁，工作者线程就继续选择一个死锁线程进行中断处理，直到消除死锁。这种方法依赖于发生死锁的线程能够响应中断，而<strong>能响应中断的同时并释放已持有的资源</strong>就意味着在一开始我们就考虑到了可能会发生死锁，那么我们应该在一开始就做好死锁的预防，而不是使死锁线程支持死锁的恢复处理</li>
+<li>即使死锁线程能够在响应中断的同时并释放已持有的资源，那么检测死锁的工作者线程应该按照什么顺序来中断死锁线程依然是个问题，且被中断的死锁线程可能会丢失其之前已经完成的计算任务，从而导致各种意想不到的情况</li>
+</ul>
+<p>这里根据第一节内容中会发生死锁的哲学家问题，来尝试恢复死锁</p>
+<p>定义一个死锁检测线程 DeadlockDetector，它会每隔一段时间定时检测当前系统是否发生了死锁，如果发生了的话，则从涉及到死锁的所有线程中选择一个线程向其发送中断请求，被中断的线程内部需要捕获中断异常，然后自动释放其持有的资源，尝试将资源让给其它线程使用，从而打破<strong>占用并等待其它资源</strong>和<strong>资源循环等待</strong>两个条件</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DeadlockDetector</span>(monitorInterval: <span class="built_in">Long</span>) : Thread(<span class="string">&quot;DeadlockDetector&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> tmb = ManagementFactory.getThreadMXBean()</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取发生死锁时涉及到的所有线程</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">findDeadlockedThreads</span><span class="params">()</span></span>: Array&lt;ThreadInfo&gt; &#123;</span><br><span class="line">            <span class="keyword">val</span> ids = tmb.findDeadlockedThreads()</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">if</span> (tmb.findDeadlockedThreads() == <span class="literal">null</span>) arrayOf() <span class="keyword">else</span> tmb.getThreadInfo(ids) ?: arrayOf()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">findThreadById</span><span class="params">(threadId: <span class="type">Long</span>)</span></span>: Thread? &#123;</span><br><span class="line">            <span class="keyword">for</span> (thread <span class="keyword">in</span> getAllStackTraces().keys) &#123;</span><br><span class="line">                <span class="keyword">if</span> (thread.id == threadId) &#123;</span><br><span class="line">                    <span class="keyword">return</span> thread</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//向线程发送中断</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">interruptThread</span><span class="params">(threadId: <span class="type">Long</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">            <span class="keyword">val</span> thread = findThreadById(threadId)</span><br><span class="line">            <span class="keyword">if</span> (thread != <span class="literal">null</span>) &#123;</span><br><span class="line">                thread.interrupt()</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//检测周期，单位为毫秒</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> monitorInterval: <span class="built_in">Long</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        isDaemon = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">this</span>.monitorInterval = monitorInterval</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">var</span> threadInfoList: Array&lt;ThreadInfo&gt;</span><br><span class="line">        <span class="keyword">var</span> ti: ThreadInfo?</span><br><span class="line">        <span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                threadInfoList = findDeadlockedThreads()</span><br><span class="line">                <span class="keyword">if</span> (threadInfoList.isNotEmpty()) &#123;</span><br><span class="line">                    ti = threadInfoList[i++ % threadInfoList.size]</span><br><span class="line">                    interruptThread(ti.threadId)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    i = <span class="number">0</span></span><br><span class="line">                &#125;</span><br><span class="line">                sleep(monitorInterval)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: InterruptedException) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Philosopher 通过 <code>Lock.lockInterruptibly()</code> 方法来申请锁，该方法可以响应中断。此时就可以在捕获到中断异常时自动释放已持有的资源</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Philosopher</span>(<span class="keyword">val</span> id: <span class="built_in">Int</span>, <span class="keyword">val</span> left: Chopstick, <span class="keyword">val</span> right: Chopstick) : Thread(<span class="string">&quot;Philosopher-<span class="variable">$id</span>&quot;</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">val</span> LOCK_MAP = ConcurrentHashMap&lt;Chopstick, ReentrantLock&gt;()</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        LOCK_MAP.putIfAbsent(left, ReentrantLock())</span><br><span class="line">        LOCK_MAP.putIfAbsent(right, ReentrantLock())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">run</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            think()</span><br><span class="line">            eat()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">eat</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> leftLock = LOCK_MAP[left]!!</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            leftLock.lockInterruptibly()</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: InterruptedException) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> ==========放弃等待左边的筷子: &quot;</span> + left.id)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 拿起了左边的筷子: &quot;</span> + left.id)</span><br><span class="line">        left.pickUp()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> rightLock = LOCK_MAP[right]!!</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            rightLock.lockInterruptibly()</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: InterruptedException) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> ==========放弃等待右边的筷子: &quot;</span> + right.id)</span><br><span class="line"></span><br><span class="line">            left.putDown()</span><br><span class="line">            println(<span class="string">&quot;<span class="variable">$name</span> ====================放下已持有的左边的筷子: &quot;</span> + left.id)</span><br><span class="line"></span><br><span class="line">            leftLock.unlock()</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 拿起了右边的筷子: &quot;</span> + right.id)</span><br><span class="line">        right.pickUp()</span><br><span class="line"></span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 开始吃饭.....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">10</span>)</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 吃饭结束!!!!!!!!!!&quot;</span>)</span><br><span class="line"></span><br><span class="line">        left.putDown()</span><br><span class="line">        right.putDown()</span><br><span class="line"></span><br><span class="line">        leftLock.unlock()</span><br><span class="line">        rightLock.unlock()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">think</span><span class="params">()</span></span> &#123;</span><br><span class="line">        println(<span class="string">&quot;<span class="variable">$name</span> 思考中....&quot;</span>)</span><br><span class="line">        Tools.randomSleep(<span class="number">100</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> philosopherNumber = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> chopstickList = mutableListOf&lt;Chopstick&gt;()</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until philosopherNumber) &#123;</span><br><span class="line">        chopstickList.add(Chopstick(i))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> philosopherList = mutableListOf&lt;Philosopher&gt;()</span><br><span class="line">    <span class="keyword">for</span> (index <span class="keyword">in</span> <span class="number">0</span> until philosopherNumber) &#123;</span><br><span class="line">        <span class="keyword">val</span> left = chopstickList[index]</span><br><span class="line">        <span class="keyword">val</span> right = chopstickList.getOrNull(index - <span class="number">1</span>) ?: chopstickList.last()</span><br><span class="line">        philosopherList.add(Philosopher(index, left, right))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    philosopherList.forEach &#123;</span><br><span class="line">        println(it.name + <span class="string">&quot; 左手边的筷子是：&quot;</span> + it.left + <span class="string">&quot; 右手边的筷子是：&quot;</span> + it.right)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    philosopherList.forEach &#123;</span><br><span class="line">        it.start()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    DeadlockDetector(<span class="number">2000</span>).start()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从日志输出可以看出来，<strong>线程 Philosopher-4</strong> 在收到中断请求时释放了其持有的资源，但很快又发生了死锁，因为<strong>线程 Philosopher-4</strong> 释放的资源可以由所有需要的线程进行抢夺，可能在 <strong>线程 Philosopher-4</strong> 刚释放了持有的资源时又马上自己抢占到了该资源。最极端的情况就是：每次收到中断的线程均释放了其持有的资源，但随后又马上自己抢占到了该资源，接着该线程（或者其它线程）又收到中断请求，又释放持有的资源，又自己抢占到该资源……如此循环往复。这种情况下所有线程依然无法获得依赖的目标资源，反而由于反复的锁申请和锁释放操作造成多次的线程上下文切换。且释放锁可能会导致线程之前的任务被无效化。所以说，死锁的恢复实际意义不大</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line">Philosopher-<span class="number">0</span> 左手边的筷子是：Chopstick(id=<span class="number">0</span>) 右手边的筷子是：Chopstick(id=<span class="number">4</span>)</span><br><span class="line">Philosopher-<span class="number">1</span> 左手边的筷子是：Chopstick(id=<span class="number">1</span>) 右手边的筷子是：Chopstick(id=<span class="number">0</span>)</span><br><span class="line">Philosopher-<span class="number">2</span> 左手边的筷子是：Chopstick(id=<span class="number">2</span>) 右手边的筷子是：Chopstick(id=<span class="number">1</span>)</span><br><span class="line">Philosopher-<span class="number">3</span> 左手边的筷子是：Chopstick(id=<span class="number">3</span>) 右手边的筷子是：Chopstick(id=<span class="number">2</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> 左手边的筷子是：Chopstick(id=<span class="number">4</span>) 右手边的筷子是：Chopstick(id=<span class="number">3</span>)</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">1</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">2</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">3</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了左边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了左边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了右边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">2</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">2</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">2</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">1</span> 拿起了左边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了右边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">3</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">3</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了左边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了左边的筷子: <span class="number">3</span></span><br><span class="line">java.lang.InterruptedException</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">898</span>)</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">1222</span>)</span><br><span class="line">at java.util.concurrent.locks.ReentrantLock.lockInterruptibly(ReentrantLock.java:<span class="number">335</span>)</span><br><span class="line">at thread.Philosopher.eat(DeadLockDemo.kt:<span class="number">71</span>)</span><br><span class="line">at thread.Philosopher.run(DeadLockDemo.kt:<span class="number">52</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> ==========放弃等待右边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> ====================放下已持有的左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">1</span> 拿起了右边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">1</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">1</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">1</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了右边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">2</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">2</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">2</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了右边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">1</span> 拿起了左边的筷子: <span class="number">1</span></span><br><span class="line">Philosopher-<span class="number">3</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">3</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">3</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">2</span> 拿起了左边的筷子: <span class="number">2</span></span><br><span class="line">Philosopher-<span class="number">3</span> 拿起了左边的筷子: <span class="number">3</span></span><br><span class="line">java.lang.InterruptedException</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">898</span>)</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">1222</span>)</span><br><span class="line">at java.util.concurrent.locks.ReentrantLock.lockInterruptibly(ReentrantLock.java:<span class="number">335</span>)</span><br><span class="line">at thread.Philosopher.eat(DeadLockDemo.kt:<span class="number">71</span>)</span><br><span class="line">at thread.Philosopher.run(DeadLockDemo.kt:<span class="number">52</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> ==========放弃等待右边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> ====================放下已持有的左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">java.lang.InterruptedException</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">898</span>)</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">1222</span>)</span><br><span class="line">at java.util.concurrent.locks.ReentrantLock.lockInterruptibly(ReentrantLock.java:<span class="number">335</span>)</span><br><span class="line">at thread.Philosopher.eat(DeadLockDemo.kt:<span class="number">71</span>)</span><br><span class="line">at thread.Philosopher.run(DeadLockDemo.kt:<span class="number">52</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> ==========放弃等待右边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> ====================放下已持有的左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了右边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">0</span> 开始吃饭.....</span><br><span class="line">Philosopher-<span class="number">0</span> 吃饭结束!!!!!!!!!!</span><br><span class="line">Philosopher-<span class="number">0</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">0</span> 拿起了左边的筷子: <span class="number">0</span></span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line">java.lang.InterruptedException</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">898</span>)</span><br><span class="line">at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireInterruptibly(AbstractQueuedSynchronizer.java:<span class="number">1222</span>)</span><br><span class="line">at java.util.concurrent.locks.ReentrantLock.lockInterruptibly(ReentrantLock.java:<span class="number">335</span>)</span><br><span class="line">at thread.Philosopher.eat(DeadLockDemo.kt:<span class="number">71</span>)</span><br><span class="line">at thread.Philosopher.run(DeadLockDemo.kt:<span class="number">52</span>)</span><br><span class="line">Philosopher-<span class="number">4</span> ==========放弃等待右边的筷子: <span class="number">3</span></span><br><span class="line">Philosopher-<span class="number">4</span> ====================放下已持有的左边的筷子: <span class="number">4</span></span><br><span class="line">Philosopher-<span class="number">4</span> 思考中....</span><br><span class="line">Philosopher-<span class="number">4</span> 拿起了左边的筷子: <span class="number">4</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">····</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、锁死"><a href="#五、锁死" class="headerlink" title="五、锁死"></a>五、锁死</h1><p>等待线程由于唤醒其所需的条件永远无法成立，或者是其它线程无法唤醒这个线程导致其一直处于非运行状态（线程并未终止）从而任务一直取得进展，那么我们称这个线程被锁死</p>
+<p>锁死和死锁之间有着共同的外在表现：故障线程一直处于非运行状态而使得其任务无法进展。死锁针对的是多个线程，而锁死可能只是作用在一个线程上。例如，一个调用了 <code>Object.wait()</code> 处于等待状态的线程，由于发生异常或者是代码缺陷，导致一直没有外部线程调用 <code>Object.notify()</code> 方法来唤醒等待线程，使得线程一直处于等待状态无法运行，此时就可以说该线程被锁死</p>
+<p>锁死和死锁的产生条件是不同的，即便是在产生死锁的所有必要条件都不成立的情况下（此时死锁不可能发生），锁死仍可能出现。因此应对死锁的办法未必能够用来避免锁死现象的发生。按照锁死产生的条件来分，锁死包括信号丢失锁死和嵌套监视器锁死</p>
+<h2 id="1、信号丢失锁死"><a href="#1、信号丢失锁死" class="headerlink" title="1、信号丢失锁死"></a>1、信号丢失锁死</h2><p>信号丢失锁死是由于没有相应的通知线程来唤醒等待线程而使等待线程一直处于等待状态的一种活性故障</p>
+<p>例如，某个等待线程在执行 <code>Object.wait()</code> 前没有对保护条件进行判断，而此时保护条件实际上已经成立了，然而此后可能并无其他线程会来唤醒等待线程，因为在等待线程获得 Object 内部锁之前保护条件已经是处于成立状态了，这就使得等待线程一直处于等待状态，其任务一直无法取得进展</p>
+<p>信号丢失锁死的另外一个常见例子是由于 <code>CountDownLatch.countDown()</code> 没有放在 <strong>finally</strong> 块中，而如果 <code>CountDownLatch.countDown()</code> 的执行线程运行时抛出未捕获的异常时， <code>CountDownLatch.await()</code> 的执行线程就会一直处于等待状态从而任务一直无法取得进展</p>
+<p>例如，对于以下代码，当 ServiceB 抛出异常时，main 线程就会由于一直无法收到唤醒通知从而一直处于等待状态</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: leavesCZY</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Github</span>：https://github.com/leavesCZY</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> serviceManager = ServicesManager()</span><br><span class="line">    serviceManager.startServices()</span><br><span class="line">    println(<span class="string">&quot;等待所有 Services 执行完毕&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> allSuccess = serviceManager.checkState()</span><br><span class="line">    println(<span class="string">&quot;执行结果： <span class="variable">$allSuccess</span>&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ServicesManager</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> countDownLatch = CountDownLatch(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> serviceList = mutableListOf&lt;AbstractService&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        serviceList.add(ServiceA(<span class="string">&quot;ServiceA&quot;</span>, countDownLatch))</span><br><span class="line">        serviceList.add(ServiceB(<span class="string">&quot;ServiceB&quot;</span>, countDownLatch))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">startServices</span><span class="params">()</span></span> &#123;</span><br><span class="line">        serviceList.forEach &#123;</span><br><span class="line">            it.start()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">checkState</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        countDownLatch.await()</span><br><span class="line">        <span class="keyword">return</span> serviceList.find &#123; !it.checkState() &#125; == <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractService</span>(<span class="keyword">private</span> <span class="keyword">val</span> countDownLatch: CountDownLatch) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> success = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">doTask</span><span class="params">()</span></span>: <span class="built_in">Boolean</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">start</span><span class="params">()</span></span> &#123;</span><br><span class="line">        thread &#123;</span><br><span class="line"><span class="comment">//            try &#123;</span></span><br><span class="line"><span class="comment">//                success = doTask()</span></span><br><span class="line"><span class="comment">//            &#125; finally &#123;</span></span><br><span class="line"><span class="comment">//                countDownLatch.countDown()</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line">            success = doTask()</span><br><span class="line">            countDownLatch.countDown()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">checkState</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> success</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ServiceA</span>(<span class="keyword">private</span> <span class="keyword">val</span> serviceName: String, countDownLatch: CountDownLatch) : AbstractService(countDownLatch) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">doTask</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">2000</span>)</span><br><span class="line">        println(<span class="string">&quot;<span class="subst">$&#123;serviceName&#125;</span>执行完毕&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ServiceB</span>(<span class="keyword">private</span> <span class="keyword">val</span> serviceName: String, countDownLatch: CountDownLatch) : AbstractService(countDownLatch) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">doTask</span><span class="params">()</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="number">3000</span>)</span><br><span class="line">        <span class="keyword">if</span> (Random.nextBoolean()) &#123;</span><br><span class="line">            <span class="keyword">throw</span>  RuntimeException(<span class="string">&quot;<span class="variable">$serviceName</span> failed&quot;</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            println(<span class="string">&quot;<span class="subst">$&#123;serviceName&#125;</span>执行完毕&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、嵌套监视器锁死"><a href="#2、嵌套监视器锁死" class="headerlink" title="2、嵌套监视器锁死"></a>2、嵌套监视器锁死</h2><p>嵌套监视器锁死是嵌套锁导致等待线程永远无法被唤醒的一种活性故障</p>
+<p>来看以下伪代码。假设存在一个等待线程，其先后持有了 monitorX 和 monitorY 两个不同的锁，当等待线程监测到当前执行条件不成立时，调用了 <code>monitorY.wait()</code> 等待通知线程来唤醒自身，并同时释放了锁 monitorY</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">synchronized(monitorX) &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    synchronized(monitorY) &#123;</span><br><span class="line">        <span class="keyword">while</span> (!somethingOk) &#123;</span><br><span class="line">            monitorY.wait()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//执行目标行为</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相应的通知线程其伪代码如下所示。通知线程需要持有了 monitorX 和 monitorY 两个锁才能执行到 <code>monitorY.notifyAll()</code> 这行代码来唤醒等待线程。而等待线程执行 <code>monitorY.wait()</code> 时仅会释放 monitorY，而不会释放 monitorX。这使得通知线程由于一直获得 monitorX， 从而导致等待线程一直无法被唤醒而一直处于 BLOCKED 状态</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">synchronized(monitorX) &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    synchronized(monitorY) &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        somethingOk = <span class="literal">true</span></span><br><span class="line">        monitorY.notifyAll()</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种由于嵌套锁导致通知线程始终无法唤醒等待线程的活性故障就被称为嵌套监视器锁死</p>
+<h1 id="六、线程饥饿"><a href="#六、线程饥饿" class="headerlink" title="六、线程饥饿"></a>六、线程饥饿</h1><p>线程饥饿是指线程一直无法获得所需资源从而导致任务无法取得进展的一种活性故障现象</p>
+<p>产生线程饥饿的一种情况是：线程一直没有被分配到处理器时间片。这种情况一般是由于处理器时间片一直被高优先级的线程抢占，低优先级的线程一直无法获得运行机会，此时即发生了线程饥饿现象。<code>Thread</code> 类提供了修改线程优先级的成员方法<code>setPriority(Int)</code>，定义了整数一到十之间的十个优先级级别。不同的操作系统会有不同的线程优先级等级，JVM 会把这 Thread 类的十个优先级级别映射到具体的操作系统所定义的线程优先级关系上。但是我们所设置的线程优先级对线程调度器来说只是一个建议，当我们将一个线程设置为高优先级时，既可能会被线程调度器忽略，也可能会使该线程过度优先执行而别的线程一直得不到处理器时间片，从而导致线程饥饿。因此我们应该尽量避免修改线程的优先级</p>
+<p>把锁看做一种资源，那么死锁也是一种线程饥饿。死锁的结果是所有故障线程都无法获得其所需的全部锁，从而使得其任务一直无法取得进展，这就相当于线程无法获得所需的全部资源从而导致任务无法取得进展，即产生了线程饥饿</p>
+<p>发生线程饥饿并不一定同时存在死锁。因为线程饥饿可能只发生在一个线程上（例如上述的低优先级线程无法获得时间片），且即使是同时发生在多个线程上，也可能并不满足死锁发生的必要条件之一：循环等待资源，因为此时涉及到的多个线程所等待的资源可能并没有相互依赖关系</p>
+<h1 id="七、活锁"><a href="#七、活锁" class="headerlink" title="七、活锁"></a>七、活锁</h1><p>活锁指的是任务和任务的执行线程均没有被阻塞，但由于某些条件没有满足，导致线程一直在重复<strong>尝试—失败—尝试</strong>的过程，任务一直无法取得进展。也就是说，产生活锁的线程虽然处于 Runnable 状态，但是一直在做无用功</p>
+<p>例如，对于上述的哲学家问题，假设某位哲学家“<strong>比较有礼貌</strong>”，当其拿起了左手边的筷子时，如果恰好有其他哲学家需要这根筷子，<strong>有礼貌的哲学家</strong>就主动放下筷子，让给其他哲学家使用。在最极端的情况下，每当有礼貌的哲学家一想要吃饭并拿起左手边的筷子时，就有其他哲学家需要这根筷子，此时有礼貌的哲学就会一直处于<strong>拿起筷子-放下筷子-拿起筷子</strong>这样一个循环过程中，导致一直无法吃饭。此时并没有发生死锁，但对于有礼貌的哲学家所代表的线程来说就是发生了活锁</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Java%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%BC%80%E5%8F%91%EF%BC%881%EF%BC%89%E4%BB%80%E4%B9%88%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          Java 多线程开发（1）什么是多线程
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/hexo-blog/public/2025/03/02/md/kotlin/Java%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%BC%80%E5%8F%91%EF%BC%882%EF%BC%89%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          Java 多线程开发（2）怎么实现多线程同步
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="hqqich/giscus"
+  data-repo-id="R_kgDOOCZUBA"
+  data-category="General"
+  data-category-id="DIC_kwDOOCZUBM4Cng1l"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/hexo-blog/public/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/hexo-blog/public/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/hexo-blog/public/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2022</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/xbmlz" target="_blank" rel="noopener noreferrer">xbmlz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/xbmlz/hexo-theme-maple" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/hexo-blog/public/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>
