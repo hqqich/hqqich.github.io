@@ -13,9 +13,9 @@
     <atom:link href="http://localhost:1313/hugo-blog/public/tags/emoji/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Emoji Support</title>
-      <link>http://localhost:1313/hugo-blog/public/post/emoji-support/</link>
+      <link>http://localhost:1313/hugo-blog/public/post/i18n-blog/emoji-support/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/post/emoji-support/</guid>
+      <guid>http://localhost:1313/hugo-blog/public/post/i18n-blog/emoji-support/</guid>
       <description>&lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;</description>
     </item>
   </channel>

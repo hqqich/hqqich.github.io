@@ -9,13 +9,20 @@
     <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
     <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Fri, 01 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 25 May 2025 19:58:50 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/hugo-blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>CustomTag</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/custom/</link>
-      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/custom/</guid>
+      <title>Sql</title>
+      <link>http://localhost:1313/hugo-blog/public/tags/sql/</link>
+      <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/tags/sql/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Three.js</title>
+      <link>http://localhost:1313/hugo-blog/public/tags/three.js/</link>
+      <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/tags/three.js/</guid>
       <description></description>
     </item>
     <item>
@@ -79,6 +86,13 @@
       <link>http://localhost:1313/hugo-blog/public/tags/emoji/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
       <guid>http://localhost:1313/hugo-blog/public/tags/emoji/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CustomTag</title>
+      <link>http://localhost:1313/hugo-blog/public/tags/custom/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/tags/custom/</guid>
       <description></description>
     </item>
   </channel>
