@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo Theme Tailwind Example Site</title>
+    <link>http://localhost:1313/hugo-blog/public/zh-cn/</link>
+    <description>Recent content on Hugo Theme Tailwind Example Site</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
+    <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
+    <copyright>Hqqich</copyright>
+    <lastBuildDate>Fri, 01 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/hugo-blog/public/zh-cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图片处理</title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/post/image-process/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/post/image-process/</guid>
+      <description>&lt;p&gt;&lt;div class=&#34;not-prose&#34;&gt;&#xA;&lt;picture&gt;&#xA;    &lt;source type=&#34;image/webp&#34; srcset=&#34;http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_d28b240c47dba5be.webp 320w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_43626075af0b0e8b.webp 640w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_d3b4c0aa7779af78.webp 960w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_ef12791631801114.webp 1280w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_e8f191b87dc7bce1.webp 1600w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_2b8f1634a71e0483.webp 1920w&#34; sizes=&#34;(min-width: 1024px) 100vw, 50vw&#34; /&gt;&#xA;    &lt;source type=&#34;image/jpeg&#34; srcset=&#34;http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_c33b60b8f780c2a1.jpg 320w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_c2b2439eeafceb5c.jpg 640w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_c1d2404e09326116.jpg 960w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_6d997ecd3b0d1d67.jpg 1280w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_b9f3800052abbd3a.jpg 1600w, http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_cf80853efe64b62c.jpg 1920w&#34; sizes=&#34;(min-width: 1024px) 100vw, 50vw&#34; /&gt;&#xA;    &lt;img class=&#34;h-auto max-w-full rounded-lg&#34; src=&#34;http://localhost:1313/hugo-blog/public/post/image-process/images/behnam-norouzi-_1ok63FFlM4-unsplash_hu_c2b2439eeafceb5c.jpg&#34; width=&#34;4466&#34; height=&#34;5825&#34; alt=&#34;Photo by Behnam Norouzi on Unsplash&#34; title=&#34;Photo by Behnam Norouzi on Unsplash&#34; loading=&#34;lazy&#34; /&gt;&#xA;  &lt;/picture&gt;&lt;p class=&#34;text-sm text-center text-slate-500 dark:text-slate-300&#34;&gt;Photo by Behnam Norouzi on Unsplash&lt;/p&gt;&#xA;&lt;/div&gt;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;&lt;div class=&#34;not-prose&#34;&gt;&#xA;&lt;figure&gt;&#xA;    &lt;img src=&#34;https://placeholder.co/1024x768/png&#34;&#xA;      alt=&#34;placeholder&#34;  title=&#34;Test for external image&#34; &#xA;      loading=&#34;lazy&#34;&#xA;    &gt;&lt;figcaption class=&#34;text-sm text-center text-slate-500 dark:text-slate-300&#34;&gt;Test for external image&lt;/figcaption&gt;&#xA;  &lt;/figure&gt;&lt;/div&gt;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;&lt;div class=&#34;not-prose&#34;&gt;&#xA;&lt;figure&gt;&#xA;    &lt;img src=&#34;./images/hugo-logo-wide.svg&#34;&#xA;      alt=&#34;svg&#34;  title=&#34;Test for svg&#34; &#xA;      loading=&#34;lazy&#34;&#xA;    &gt;&lt;figcaption class=&#34;text-sm text-center text-slate-500 dark:text-slate-300&#34;&gt;Test for svg&lt;/figcaption&gt;&#xA;  &lt;/figure&gt;&lt;/div&gt;&#xA;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Markdown语法指导</title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/post/markdown-syntax/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/post/markdown-syntax/</guid>
+      <description>&lt;p&gt;本文档提供可用于 Hugo 内容文件的基本 Markdown 语法示例，并且还展示了 Hugo 主题中是否用 CSS 修饰了 HTML 基本元素。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>数学符号</title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/post/math-typesetting/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/post/math-typesetting/</guid>
+      <description>&lt;p&gt;在 Hugo 项目中，可以通过使用第三方 JavaScript 库来启用数学符号。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Emoji 支持</title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/post/emoji-support/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/post/emoji-support/</guid>
+      <description>&lt;p&gt;可以在一个 Hugo 项目中通过多种方式启用 Emoji。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>关于</title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/about/</link>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/about/</guid>
+      <description>&lt;p&gt;multilingual中文测试页面&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/hugo-blog/public/zh-cn/post/rich-content/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>http://localhost:1313/hugo-blog/public/zh-cn/post/rich-content/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;#&#34; title=&#34;&amp;#43;&amp;#43;&amp;#43;&#34;&gt;//&lt;/a&gt;&#xA;: # (&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
