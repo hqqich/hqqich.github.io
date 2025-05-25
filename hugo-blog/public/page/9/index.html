@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta name="generator" content="Hugo 0.147.5"><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="Example site for hugo-theme-tailwind"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hugo Theme Tailwind Example Site">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+          <li class="">
+            <a class="block px-3 py-3 hover:text-emerald-600"
+              href="/hugo-blog/public/zh-cn/" title="中文">中文</a></li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+  
+
+  <div class="flex flex-col w-full max-w-4xl lg:max-w-5xl relative">
+    <div class="flex flex-row">
+      <section class="flex flex-col w-full md:w-2/3">
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/">Kotlin 协程官方文档（3）组合挂起函数</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>本节来介绍构成挂起函数的各种方法</p>
+<h1 id="一默认顺序">一、默认顺序</h1>
+<p>假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数</p>
+<p>我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${one + two}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      4 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A34%E5%8D%8F%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E8%B0%83%E5%BA%A6%E5%99%A8/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A34%E5%8D%8F%E7%A8%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%92%8C%E8%B0%83%E5%BA%A6%E5%99%A8/">Kotlin 协程官方文档（4）协程上下文和调度器</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>协程总是在由 Kotlin 标准库中定义的 CoroutineContext 表示的某个上下文中执行</p>
+<p>协程上下文包含多种子元素。主要的元素是协程作业（Job，我们之前见过），以及它的调度器（Dispatche，本节将介绍）</p>
+<h1 id="一调度器和线程">一、调度器和线程</h1>
+<p>协程上下文（coroutine context）包含一个协程调度器（参阅 CoroutineDispatcher），协程调度器 用于确定执行协程的目标载体，即运行于哪个线程，包含一个还是多个线程。协程调度器可以将协程的执行操作限制在特定线程上，也可以将其分派到线程池中，或者让它无限制地运行</p>
+<p>所有协程构造器（如 launch 和 async）都接受一个可选参数，即 CoroutineContext ，该参数可用于显式指定要创建的协程和其它上下文元素所要使用的调度器</p>
+<p>请尝试以下示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">launch</span> <span class="p">{</span> <span class="c1">// context of the parent, main runBlocking coroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main runBlocking      : I&#39;m working in thread </span><span class="si">${Thread.currentThread().name}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">launch</span><span class="p">(</span><span class="nc">Dispatchers</span><span class="p">.</span><span class="n">Unconfined</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// not confined -- will work with main thread
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Unconfined            : I&#39;m working in thread </span><span class="si">${Thread.currentThread().name}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">launch</span><span class="p">(</span><span class="nc">Dispatchers</span><span class="p">.</span><span class="n">Default</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// will get dispatched to DefaultDispatcher 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Default               : I&#39;m working in thread </span><span class="si">${Thread.currentThread().name}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">launch</span><span class="p">(</span><span class="n">newSingleThreadContext</span><span class="p">(</span><span class="s2">&#34;MyOwnThread&#34;</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// will get its own new thread
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;newSingleThreadContext: I&#39;m working in thread </span><span class="si">${Thread.currentThread().name}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果如下所示，日志的输出顺序可能不同</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      7 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A35%E5%BC%82%E6%AD%A5%E6%B5%81/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A35%E5%BC%82%E6%AD%A5%E6%B5%81/">Kotlin 协程官方文档（5）异步流</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>挂起函数可以异步返回单个值，但如何返回多个异步计算值呢？这就是 kotlin Flows（流） 的用处了</p>
+<h1 id="一表示多个值">一、表示多个值</h1>
+<p>可以使用集合在 kotlin 中表示多个值。例如，有一个函数 foo()，它返回包含三个数字的 List，然后使用 forEach 打印它们</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">foo</span><span class="p">():</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">listOf</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">foo</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="k">value</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="k">value</span><span class="p">)</span> <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>输出结果：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="m">1</span>
+</span></span><span class="line"><span class="cl"><span class="m">2</span>
+</span></span><span class="line"><span class="cl"><span class="m">3</span>
+</span></span></code></pre></div><h2 id="11序列">1.1、序列</h2>
+<p>如果我们使用一些 CPU 消耗型 的阻塞代码（每次计算需要100毫秒）来计算数字，那么我们可以使用一个序列(Sequence)来表示数字：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">foo</span><span class="p">():</span> <span class="n">Sequence</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">sequence</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// sequence builder
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1.</span><span class="p">.</span><span class="m">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nc">Thread</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1">// pretend we are computing it
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">yield</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1">// yield next value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">foo</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="k">value</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="k">value</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>这段代码输出相同的数字列表，但每打印一个数字前都需要等待100毫秒</p>
+<h2 id="12挂起函数">1.2、挂起函数</h2>
+<p>上一节的代码的计算操作会阻塞运行代码的主线程。当这些值由异步代码计算时，我们可以用 suspend 修饰符标记函数 foo，以便它可以在不阻塞的情况下执行其工作，并将结果作为列表返回</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>                 
+</span></span><span class="line"><span class="cl">                           
+</span></span><span class="line"><span class="cl"><span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">foo</span><span class="p">():</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="c1">// pretend we are doing something asynchronous here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="n">listOf</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">foo</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="k">value</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="k">value</span><span class="p">)</span> <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//sampleEnd
+</span></span></span></code></pre></div><p>这段代码在等待一秒后输出数字</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      15 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+      </section>
+      <aside class="hidden md:flex flex-col md:w-1/3 ml-3 top-0 sticky self-start">
+        <section class="pl-6 mt-6 w-full max-w-4xl lg:max-w-5xl">
+  <form class="" action=/hugo-blog/public/search/ method="get">
+    <div class="flex">
+      <input type="text" name="search" id="search-input" required placeholder="Search..." class="rounded-none rounded-s-lg border border-gray-300 text-slate-800 focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-3  dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-slate-200 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      <button class="inline-flex items-center px-3 text-sm text-slate-900 bg-slate-200 border border-e-0 border-gray-300 rounded-e-lg dark:bg-slate-600 dark:text-slate-400 dark:border-slate-600">
+        <i class="h-6 w-6 flex-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+        </i>
+      </button>
+    </div>
+  </form>
+</section>
+
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/categories/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M14 4h6v6h-6z"></path>
+   <path d="M4 14h6v6h-6z"></path>
+   <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M7 7m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Categories
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/syntax/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Syntax
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/themes/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Themes
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/with-slug/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        A Category with Slug
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/series/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tags" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M3 8v4.172a2 2 0 0 0 .586 1.414l5.71 5.71a2.41 2.41 0 0 0 3.408 0l3.592 -3.592a2.41 2.41 0 0 0 0 -3.408l-5.71 -5.71a2 2 0 0 0 -1.414 -.586h-4.172a2 2 0 0 0 -2 2z"></path>
+   <path d="M18 19l1.592 -1.592a4.82 4.82 0 0 0 0 -6.816l-4.592 -4.592"></path>
+   <path d="M7 10h-.01"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Series
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/series/themes-guide/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Themes Guide
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/tags/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M5 9l14 0"></path>
+   <path d="M5 15l14 0"></path>
+   <path d="M11 4l-4 16"></path>
+   <path d="M17 4l-4 16"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Tags
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/sql/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Sql
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/markdown/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Markdown
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/css/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Css
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/custom/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        CustomTag
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/emoji/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Emoji
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/html/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Html
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/privacy/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Privacy
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/shortcodes/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Shortcodes
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/tag1/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Tag1
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/tag2/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Tag2
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+
+      </aside>
+    </div>
+
+    
+<div class="flex flex-row justify-center mt-6 gap-2">
+  
+    <a href="/hugo-blog/public/page/8/"
+      class="flex flex-row text-base font-semibold rounded-md text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-gray-700 p-2 pr-3">
+      <i class="h-6 w-6 flex-none mr-1"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-left" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M14 6l-6 6l6 6v-12"></path>
+</svg>
+</i>
+      <span>Newer posts</span>
+    </a>
+  
+  
+    <a href="/hugo-blog/public/page/10/"
+      class="flex flex-row text-base font-semibold rounded-md text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-gray-700 p-2 pl-3">
+      <span>Older posts</span>
+      <i class="h-6 w-6 flex-none ml-1"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-right" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M10 18l6 -6l-6 -6v12"></path>
+</svg>
+</i>
+    </a>
+  
+</div>
+
+
+  </div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+
+
+
+</body>
+</html>

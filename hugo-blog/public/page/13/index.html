@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta name="generator" content="Hugo 0.147.5"><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="Example site for hugo-theme-tailwind"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hugo Theme Tailwind Example Site">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+          <li class="">
+            <a class="block px-3 py-3 hover:text-emerald-600"
+              href="/hugo-blog/public/zh-cn/" title="中文">中文</a></li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+  
+
+  <div class="flex flex-col w-full max-w-4xl lg:max-w-5xl relative">
+    <div class="flex flex-row">
+      <section class="flex flex-col w-full md:w-2/3">
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82-java-%E5%92%8C-kotlin-%E7%9A%84%E6%B3%9B%E5%9E%8B%E9%9A%BE%E7%82%B9/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82-java-%E5%92%8C-kotlin-%E7%9A%84%E6%B3%9B%E5%9E%8B%E9%9A%BE%E7%82%B9/">一文读懂 Java 和 Kotlin 的泛型难点</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<p>Java 和 Kotlin 的泛型算作是一块挺大的知识难点了，涉及到很多很难理解的概念：<strong>泛型型参、泛型实参、类型参数、不变、型变、协变、逆变、内联</strong>等等。本篇文章就将 Java 和 Kotlin 结合着一起讲，按照我的个人理解来阐述泛型的各个知识难点，希望对你有所帮助 🤣🤣</p>
+<h1 id="一泛型类型">一、泛型类型</h1>
+<p>泛型允许你定义带<strong>类型形参</strong>的数据类型，当这种类型的实例被创建出来后，<strong>类型形参</strong>便被替换为称为<strong>类型实参</strong>的具体类型。例如，对于 <code>List&lt;T&gt;</code>，List 称为<strong>基础类型</strong>，T 便是<strong>类型型参</strong>，T 可以是任意类型，当没有指定 T 的具体类型时，我们只能知道<code>List&lt;T&gt;</code>是一个集合列表，但不知道承载的具体数据类型。而对于 <code>List&lt;String&gt;</code>，当中的 String 便是<strong>类型实参</strong>，我们可以明白地知道该列表承载的都是字符串，在这里 String 就相当于一个参数传递给了 List，在这语义下 String 也称为<strong>类型参数</strong></p>
+<p>此外，在 Kotlin 中我们可以实现<strong>实化类型参数</strong>，在运行时的<strong>内联函数</strong>中拿到作为<strong>类型实参</strong>的具体类型，即可以实现 <code>T::class.java</code>，但在 Java 中却无法实现，因为<strong>内联函数</strong>是 Kotlin 中的概念，Java 中并不存在</p>
+<h1 id="二为什么需要泛型">二、为什么需要泛型</h1>
+<p>泛型是在 Java 5 版本开始引入的，先通过几个小例子来明白泛型的重要性</p>
+<p>以下代码可以成功编译，但是在运行时却抛出了 ClassCastException。了解 ArrayList 源码的同学就知道其内部是用一个<code>Object[]</code>数组来存储数据的，这使得 ArrayList 能够存储任何类型的对象，所以在没有泛型的年代开发者一不小心就有可能向 ArrayList 存入了非期望值，编译期完全正常，等到在运行时就会抛出类型转换异常了</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GenericTest</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="w"> </span><span class="n">stringList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">addData</span><span class="p">(</span><span class="n">stringList</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="w"> </span><span class="n">stringList</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addData</span><span class="p">(</span><span class="n">List</span><span class="w"> </span><span class="n">dataList</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">dataList</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Exception</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">thread</span><span class="w"> </span><span class="s">&#34;main&#34;</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">ClassCastException</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">Integer</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">cast</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">String</span><span class="w">
+</span></span></span></code></pre></div><p>而有了泛型后，我们就可以写出更加健壮安全的代码，以下错误就完全可以在编译阶段被发现，且取值的时候也不需要进行类型强转</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      10 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/%E4%B8%A4%E4%B8%87%E5%85%AD%E5%8D%83%E5%AD%97%E5%B8%A6%E4%BD%A0-kotlin-%E5%85%A5%E9%97%A8/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/%E4%B8%A4%E4%B8%87%E5%85%AD%E5%8D%83%E5%AD%97%E5%B8%A6%E4%BD%A0-kotlin-%E5%85%A5%E9%97%A8/">两万六千字带你 Kotlin 入门</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<p>开头先说一下，我不是标题党，本教程真的有两万六千字，以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 🤣🤣</p>
+<h1 id="一hello-world">一、Hello World</h1>
+<p>按照国际惯例，学习一门新的语言通常都是要从打印 Hello World 开始的</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">msg</span><span class="p">:</span> <span class="n">String</span> <span class="p">=</span> <span class="s2">&#34;Hello World&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>从这个简单的函数就可以列出 kotlin 和 Java 的几个不同点</p>
+<ol>
+<li>函数可以定义在文件的最外层，不需要把它放在类中</li>
+<li>用关键字 <strong>fun</strong> 来声明一个函数</li>
+<li>可以省略 <code>main</code> 方法的参数</li>
+<li>参数类型写在变量名之后，这有助于在类型自动推导时省略类型声明</li>
+<li>使用 <code>println</code> 代替了 <code>System.out.println</code> ，这是 kotlin 标准库提供的对 Java 标准库函数的简易封装</li>
+<li>可以省略代码结尾的分号</li>
+</ol>
+<h1 id="二package">二、Package</h1>
+<p>kotlin 文件都以 <strong>package</strong> 开头，同个文件中定义的所有声明（类、函数和属性）都会被放到这个包中。同个包中的声明可以直接使用，不同包的声明需要导入后使用</p>
+<p>包的声明要放在文件顶部，import 语句紧随其后</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">base</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">java.text.SimpleDateFormat</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">java.util.*</span>
+</span></span></code></pre></div><p>kotlin 不区分导入的是类还是函数，可以使用 <code>import</code> 关键字导入任何种类的声明。此外也可以在包名称后加上 <strong>.</strong>* 来导入包中定义的所有声明，从而让包中定义的类、顶层函数、和属性都可以直接引用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">learn.package2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="py">index</span> <span class="p">=</span> <span class="m">10</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">Test</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="n">Boolean</span><span class="p">)</span> <span class="p">=</span> <span class="n">println</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="k">val</span> <span class="py">x</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">y</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">isEquals1</span><span class="p">:</span> <span class="n">Boolean</span>
+</span></span><span class="line"><span class="cl">        <span class="k">get</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">isEquals2</span>
+</span></span><span class="line"><span class="cl">        <span class="k">get</span><span class="p">()</span> <span class="p">=</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">var</span> <span class="py">isEquals3</span> <span class="p">=</span> <span class="k">false</span>
+</span></span><span class="line"><span class="cl">        <span class="k">get</span><span class="p">()</span> <span class="p">=</span> <span class="n">x</span> <span class="p">&gt;</span> <span class="n">y</span>
+</span></span><span class="line"><span class="cl">        <span class="k">set</span><span class="p">(</span><span class="k">value</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">field</span> <span class="p">=</span> <span class="p">!</span><span class="k">value</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">learn.package1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">learn.package2.Point</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">learn.package2.Test</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">learn.package2.index</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">point</span> <span class="p">=</span> <span class="n">Point</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Test</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Java 语言规定类要放到和包结构<strong>匹配</strong>的文件夹目录结构中，且文件名必须和类名相同。而 kotlin 允许把多个类放到同一个文件中，文件名也可以任意选择。kotlin 也没有文件夹目录施加任何限制，包层级结构不需要遵循同样的目录层级结构 ,但 kotlin 官方还是建议根据包声明把源码文件放到相应的目录中</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      45 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+          <article class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+            <div>
+              <a href="/hugo-blog/public/post/kotlin/%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9011okhttp-%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3/">
+                
+              </a>
+            </div>
+            <div class="flex flex-col gap-y-3 p-6">
+              <h2 class="text-4xl font-semibold text-slate-800 dark:text-slate-200">
+                <a href="/hugo-blog/public/post/kotlin/%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%9011okhttp-%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3/">主流开源库源码分析（11）OkHttp 源码详解</a>
+              </h2>
+
+              
+  
+  <div class="my-4 text-large text-slate-600 dark:text-slate-300">
+    <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl">                         <span class="err">\\</span>           <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                          <span class="err">\\</span>  <span class="p">.</span><span class="n">ooo</span><span class="p">.</span>  <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                           <span class="p">.</span><span class="err">@@@@@@@@@</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">                         <span class="p">:</span><span class="err">@@@@@@@@@@@@@</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">:</span><span class="err">@@</span><span class="p">.</span> <span class="err">&#39;@@@@@&#39;</span> <span class="p">.</span><span class="err">@@</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                        <span class="err">@@@@@@@@@@@@@@@@@</span>
+</span></span><span class="line"><span class="cl">                        <span class="err">@@@@@@@@@@@@@@@@@</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                   <span class="p">:</span><span class="err">@@</span> <span class="p">:</span><span class="err">@@@@@@@@@@@@@@@@@</span><span class="p">.</span> <span class="err">@@</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                   <span class="err">@@@</span> <span class="err">&#39;@@@@@@@@@@@@@@@@@</span><span class="p">,</span> <span class="err">@@@</span>
+</span></span><span class="line"><span class="cl">                        <span class="err">@@@@@@@@@@@@@@@@@</span>
+</span></span><span class="line"><span class="cl">                        <span class="err">&#39;@@@@@@@@@@@@@@@&#39;</span>
+</span></span><span class="line"><span class="cl">                           <span class="err">@@@@</span>   <span class="err">@@@@</span>
+</span></span><span class="line"><span class="cl">                           <span class="err">@@@@</span>   <span class="err">@@@@</span>
+</span></span><span class="line"><span class="cl">                           <span class="err">@@@@</span>   <span class="err">@@@@</span>
+</span></span><span class="line"><span class="cl">                           <span class="err">&#39;@@&#39;</span>   <span class="err">&#39;@@&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">     <span class="p">:</span><span class="err">@@@</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl">   <span class="p">.</span><span class="err">@@@@@@@</span><span class="p">:</span>   <span class="p">+</span><span class="err">@@</span>       <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>
+</span></span><span class="line"><span class="cl">  <span class="p">.</span><span class="err">@@@@&#39;@@@@</span><span class="p">:</span>  <span class="p">+</span><span class="err">@@</span>       <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@@@</span>     <span class="err">@@@</span>  <span class="p">+</span><span class="err">@@</span>       <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>
+</span></span><span class="line"><span class="cl"> <span class="p">.</span><span class="err">@@</span>       <span class="err">@@</span><span class="p">:</span> <span class="p">+</span><span class="err">@@</span>   <span class="err">@@@</span> <span class="err">`@@</span>      <span class="err">@@`</span> <span class="err">@@@@@@</span> <span class="err">@@@@@@</span>  <span class="err">@@</span><span class="p">;</span><span class="err">@@@@@</span>
+</span></span><span class="line"><span class="cl"> <span class="err">@@@</span>       <span class="err">@@@</span> <span class="p">+</span><span class="err">@@</span>  <span class="err">@@@</span>  <span class="err">`@@</span>      <span class="err">@@`</span> <span class="err">@@@@@@</span> <span class="err">@@@@@@</span>  <span class="err">@@@@@@@@@</span>
+</span></span><span class="line"><span class="cl"> <span class="err">@@@</span>       <span class="err">@@@</span> <span class="p">+</span><span class="err">@@</span> <span class="err">@@@</span>   <span class="err">`@@@@@@@@@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>    <span class="err">@@@</span>   <span class="p">:</span><span class="err">@@</span>
+</span></span><span class="line"><span class="cl"> <span class="err">@@@</span>       <span class="err">@@@</span> <span class="p">+</span><span class="err">@@@@@</span>    <span class="err">`@@@@@@@@@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>    <span class="err">@@#</span>    <span class="err">@@</span><span class="p">+</span>
+</span></span><span class="line"><span class="cl"> <span class="err">@@@</span>       <span class="err">@@@</span> <span class="p">+</span><span class="err">@@@@@</span><span class="p">+</span>   <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>    <span class="err">@@</span><span class="p">:</span>    <span class="err">@@#</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@@</span><span class="p">:</span>     <span class="p">.</span><span class="err">@@`</span> <span class="p">+</span><span class="err">@@@</span><span class="p">+</span><span class="err">@@</span>   <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>    <span class="err">@@#</span>    <span class="err">@@</span><span class="p">+</span>
+</span></span><span class="line"><span class="cl">  <span class="err">@@@</span><span class="p">.</span>   <span class="p">.</span><span class="err">@@@</span>  <span class="p">+</span><span class="err">@@</span>  <span class="err">@@@</span>  <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@</span>     <span class="err">@@</span>    <span class="err">@@@</span>   <span class="p">,</span><span class="err">@@</span>
+</span></span><span class="line"><span class="cl">   <span class="err">@@@@@@@@@</span>   <span class="p">+</span><span class="err">@@</span>   <span class="err">@@@</span> <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@@@</span>   <span class="err">@@@@</span>  <span class="err">@@@@#@@@@</span>
+</span></span><span class="line"><span class="cl">    <span class="err">@@@@@@@</span>    <span class="p">+</span><span class="err">@@</span>   <span class="err">#@@</span> <span class="err">`@@</span>      <span class="err">@@`</span>   <span class="err">@@@@</span><span class="p">:</span>  <span class="err">@@@@</span><span class="p">:</span> <span class="err">@@&#39;@@@@@</span>
+</span></span><span class="line"><span class="cl">                                                     <span class="err">@@</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                                                     <span class="err">@@</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                                                     <span class="err">@@</span><span class="p">:</span>
+</span></span></code></pre></div><blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>对于 Android Developer 来说，很多开源库都是属于<strong>开发必备</strong>的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库<strong>源码解析</strong>和<strong>实战演练</strong>的文章，初定的目标是 <strong>EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil</strong> 等七个知名开源库，希望对你有所帮助 🤣🤣</p></blockquote>
+<p>本文基于 OkHttp 的以下版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：<a href="https://juejin.im/post/6880602489297895438" target="_blank" rel="noopener">两万六千字带你 Kotlin 入门</a>
+</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">dependencies</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">implementation</span> <span class="s1">&#39;com.squareup.okhttp3:okhttp:4.9.0&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><p>先来看一个小例子，后面的讲解都会基于这个例子涉及到的模块来展开</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @Author: leavesCZY
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @Github：https://github.com/leavesCZY
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
+</span></span><span class="line"><span class="cl"><span class="k">const</span> <span class="k">val</span> <span class="py">URL</span> <span class="p">=</span> <span class="s2">&#34;https://publicobject.com/helloworld.txt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">okHttClient</span> <span class="p">=</span> <span class="nc">OkHttpClient</span><span class="p">.</span><span class="n">Builder</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">connectTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">readTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">writeTimeout</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">retryOnConnectionFailure</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">build</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">request</span> <span class="p">=</span> <span class="nc">Request</span><span class="p">.</span><span class="n">Builder</span><span class="p">().</span><span class="n">url</span><span class="p">(</span><span class="n">URL</span><span class="p">).</span><span class="n">build</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">call</span> <span class="p">=</span> <span class="n">okHttClient</span><span class="p">.</span><span class="n">newCall</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">response</span> <span class="p">=</span> <span class="n">call</span><span class="p">.</span><span class="n">execute</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">body</span><span class="o">?.</span><span class="n">string</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>以上代码就完成了一次 Get 请求，其包含的操作有：</p>
+  </div>
+  
+
+
+              
+
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      13 minutes to read
+    </span>
+  </div>
+</div>
+
+              <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+            </div>
+          </article>
+        
+      </section>
+      <aside class="hidden md:flex flex-col md:w-1/3 ml-3 top-0 sticky self-start">
+        <section class="pl-6 mt-6 w-full max-w-4xl lg:max-w-5xl">
+  <form class="" action=/hugo-blog/public/search/ method="get">
+    <div class="flex">
+      <input type="text" name="search" id="search-input" required placeholder="Search..." class="rounded-none rounded-s-lg border border-gray-300 text-slate-800 focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-3  dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-slate-200 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+      <button class="inline-flex items-center px-3 text-sm text-slate-900 bg-slate-200 border border-e-0 border-gray-300 rounded-e-lg dark:bg-slate-600 dark:text-slate-400 dark:border-slate-600">
+        <i class="h-6 w-6 flex-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+        </i>
+      </button>
+    </div>
+  </form>
+</section>
+
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/categories/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-category-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M14 4h6v6h-6z"></path>
+   <path d="M4 14h6v6h-6z"></path>
+   <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M7 7m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Categories
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/syntax/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Syntax
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/themes/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Themes
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/categories/with-slug/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        A Category with Slug
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/series/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tags" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M3 8v4.172a2 2 0 0 0 .586 1.414l5.71 5.71a2.41 2.41 0 0 0 3.408 0l3.592 -3.592a2.41 2.41 0 0 0 0 -3.408l-5.71 -5.71a2 2 0 0 0 -1.414 -.586h-4.172a2 2 0 0 0 -2 2z"></path>
+   <path d="M18 19l1.592 -1.592a4.82 4.82 0 0 0 0 -6.816l-4.592 -4.592"></path>
+   <path d="M7 10h-.01"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Series
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/series/themes-guide/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Themes Guide
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+  
+
+<section class="flex flex-col w-full gap-y-3 pl-6 py-3 mt-6 text-slate-800 dark:text-slate-200">
+  <div class="flex flex-row">
+    <a class="flex flex-row" href='/hugo-blog/public/tags/'>
+      <i class="h-6 w-6 flex-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M5 9l14 0"></path>
+   <path d="M5 15l14 0"></path>
+   <path d="M11 4l-4 16"></path>
+   <path d="M17 4l-4 16"></path>
+</svg>
+
+      </i>
+      <h2 class="pl-1 uppercase">
+        Tags
+      </h2>
+    </a>
+  </div>
+
+  <ul class="flex flex-row flex-wrap">
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/sql/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Sql
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/markdown/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Markdown
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/css/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Css
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/custom/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        CustomTag
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/emoji/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Emoji
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/html/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Html
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/privacy/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Privacy
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/shortcodes/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Shortcodes
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/tag1/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Tag1
+      </a>
+    </li>
+    
+    <li class="mt-2 mr-2">
+      <a href="/hugo-blog/public/tags/tag2/"
+        class="rounded-sm px-2 py-1 text-sm text-slate-800 dark:text-slate-300 ring-1 ring-slate-900/5 dark:ring-slate-50/5 backdrop-blur-sm bg-slate-50 dark:bg-gray-700">
+        Tag2
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  
+
+
+      </aside>
+    </div>
+
+    
+<div class="flex flex-row justify-center mt-6 gap-2">
+  
+    <a href="/hugo-blog/public/page/12/"
+      class="flex flex-row text-base font-semibold rounded-md text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-gray-700 p-2 pr-3">
+      <i class="h-6 w-6 flex-none mr-1"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-left" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M14 6l-6 6l6 6v-12"></path>
+</svg>
+</i>
+      <span>Newer posts</span>
+    </a>
+  
+  
+    <a href="/hugo-blog/public/page/14/"
+      class="flex flex-row text-base font-semibold rounded-md text-slate-700 dark:text-slate-300 bg-slate-200 dark:bg-gray-700 p-2 pl-3">
+      <span>Older posts</span>
+      <i class="h-6 w-6 flex-none ml-1"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-caret-right" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M10 18l6 -6l-6 -6v12"></path>
+</svg>
+</i>
+    </a>
+  
+</div>
+
+
+  </div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+
+
+
+</body>
+</html>

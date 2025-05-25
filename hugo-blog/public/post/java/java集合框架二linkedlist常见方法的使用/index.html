@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title> :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="@[toc]
+一、什么是LinkedList LinkedList是Java中的一个双向链表。
+它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。
+LinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。
+相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。
+LinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。
+二、常用的方法 返回类型 方法 描述 boolean add(E o) 将指定元素追加到此列表的结尾。 void add(int index, E element) 在此列表中指定的位置插入指定的元素。 boolean addAll(Collection&lt;? extends E&gt; c) 追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。 boolean addAll(int index, Collection&lt;? extends E&gt; c) 将指定集合中的所有元素从指定位置开始插入此列表。 void addFirst(E o) 将指定元素插入此列表的开头。 void addLast(E o) 将指定元素追加到此列表的结尾。 void clear() 从此列表中移除所有元素。 boolean contains(Object o) 如果此列表包含指定元素，则返回 true。 E get(int index) 返回此列表中指定位置处的元素。 E getFirst() 返回此列表的第一个元素。 E getLast() 返回此列表的最后一个元素。 int indexOf(Object o) 返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 int lastIndexOf(Object o) 返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 ListIterator listIterator(int index) 返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。 E peek() 找到但不移除此列表的头（第一个元素）。 E remove() 找到并移除此列表的头（第一个元素）。 E remove(int index) 移除此列表中指定位置处的元素。 boolean remove(Object o) 移除此列表中首次出现的指定元素。 E removeFirst() 移除并返回此列表的第一个元素。 E removeLast() 移除并返回此列表的最后一个元素。 E set(int index, E element) 将此列表中指定位置的元素替换为指定的元素。 int size() 返回此列表的元素数。 下面是一个示例代码：
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BA%8Clinkedlist%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:description" content="@[toc]
+一、什么是LinkedList LinkedList是Java中的一个双向链表。
+它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。
+LinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。
+相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。
+LinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。
+二、常用的方法 返回类型 方法 描述 boolean add(E o) 将指定元素追加到此列表的结尾。 void add(int index, E element) 在此列表中指定的位置插入指定的元素。 boolean addAll(Collection&lt;? extends E&gt; c) 追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。 boolean addAll(int index, Collection&lt;? extends E&gt; c) 将指定集合中的所有元素从指定位置开始插入此列表。 void addFirst(E o) 将指定元素插入此列表的开头。 void addLast(E o) 将指定元素追加到此列表的结尾。 void clear() 从此列表中移除所有元素。 boolean contains(Object o) 如果此列表包含指定元素，则返回 true。 E get(int index) 返回此列表中指定位置处的元素。 E getFirst() 返回此列表的第一个元素。 E getLast() 返回此列表的最后一个元素。 int indexOf(Object o) 返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 int lastIndexOf(Object o) 返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 ListIterator listIterator(int index) 返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。 E peek() 找到但不移除此列表的头（第一个元素）。 E remove() 找到并移除此列表的头（第一个元素）。 E remove(int index) 移除此列表中指定位置处的元素。 boolean remove(Object o) 移除此列表中首次出现的指定元素。 E removeFirst() 移除并返回此列表的第一个元素。 E removeLast() 移除并返回此列表的最后一个元素。 E set(int index, E element) 将此列表中指定位置的元素替换为指定的元素。 int size() 返回此列表的元素数。 下面是一个示例代码：">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hugo Theme Tailwind Example Site">
+  <meta name="twitter:description" content="@[toc]
+一、什么是LinkedList LinkedList是Java中的一个双向链表。
+它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。
+LinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。
+相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。
+LinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。
+二、常用的方法 返回类型 方法 描述 boolean add(E o) 将指定元素追加到此列表的结尾。 void add(int index, E element) 在此列表中指定的位置插入指定的元素。 boolean addAll(Collection&lt;? extends E&gt; c) 追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。 boolean addAll(int index, Collection&lt;? extends E&gt; c) 将指定集合中的所有元素从指定位置开始插入此列表。 void addFirst(E o) 将指定元素插入此列表的开头。 void addLast(E o) 将指定元素追加到此列表的结尾。 void clear() 从此列表中移除所有元素。 boolean contains(Object o) 如果此列表包含指定元素，则返回 true。 E get(int index) 返回此列表中指定位置处的元素。 E getFirst() 返回此列表的第一个元素。 E getLast() 返回此列表的最后一个元素。 int indexOf(Object o) 返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 int lastIndexOf(Object o) 返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 ListIterator listIterator(int index) 返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。 E peek() 找到但不移除此列表的头（第一个元素）。 E remove() 找到并移除此列表的头（第一个元素）。 E remove(int index) 移除此列表中指定位置处的元素。 boolean remove(Object o) 移除此列表中首次出现的指定元素。 E removeFirst() 移除并返回此列表的第一个元素。 E removeLast() 移除并返回此列表的最后一个元素。 E set(int index, E element) 将此列表中指定位置的元素替换为指定的元素。 int size() 返回此列表的元素数。 下面是一个示例代码：">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BA%8Clinkedlist%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"Xiaoliang Wang"},"dateModified":"0001-01-01T00:00:00Z","datePublished":"0001-01-01T00:00:00Z","description":"@[toc]\n一、什么是LinkedList LinkedList是Java中的一个双向链表。\n它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。\nLinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。\n相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。\nLinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。\n二、常用的方法 返回类型 方法 描述 boolean add(E o) 将指定元素追加到此列表的结尾。 void add(int index, E element) 在此列表中指定的位置插入指定的元素。 boolean addAll(Collection\u0026lt;? extends E\u0026gt; c) 追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。 boolean addAll(int index, Collection\u0026lt;? extends E\u0026gt; c) 将指定集合中的所有元素从指定位置开始插入此列表。 void addFirst(E o) 将指定元素插入此列表的开头。 void addLast(E o) 将指定元素追加到此列表的结尾。 void clear() 从此列表中移除所有元素。 boolean contains(Object o) 如果此列表包含指定元素，则返回 true。 E get(int index) 返回此列表中指定位置处的元素。 E getFirst() 返回此列表的第一个元素。 E getLast() 返回此列表的最后一个元素。 int indexOf(Object o) 返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 int lastIndexOf(Object o) 返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。 ListIterator listIterator(int index) 返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。 E peek() 找到但不移除此列表的头（第一个元素）。 E remove() 找到并移除此列表的头（第一个元素）。 E remove(int index) 移除此列表中指定位置处的元素。 boolean remove(Object o) 移除此列表中首次出现的指定元素。 E removeFirst() 移除并返回此列表的第一个元素。 E removeLast() 移除并返回此列表的最后一个元素。 E set(int index, E element) 将此列表中指定位置的元素替换为指定的元素。 int size() 返回此列表的元素数。 下面是一个示例代码：\n","name":"","url":"http://localhost:1313/hugo-blog/public/post/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BA%8Clinkedlist%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BA%8Clinkedlist%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/java/java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E4%BA%8Clinkedlist%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8/"></a>
+      </h1>
+
+      
+      
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      2 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents">
+  <ul>
+    <li><a href="#一什么是linkedlist">一、什么是LinkedList</a></li>
+    <li><a href="#二常用的方法">二、常用的方法</a>
+      <ul>
+        <li><a href="#21-add">2.1 add()：</a></li>
+        <li><a href="#22-remove">2.2 remove()：</a></li>
+        <li><a href="#23-get">2.3 get()：</a></li>
+        <li><a href="#24-set">2.4 set()：</a></li>
+        <li><a href="#25-clear">2.5 clear()：</a></li>
+        <li><a href="#26-size">2.6 size()：</a></li>
+        <li><a href="#27-contains">2.7 contains()：</a></li>
+        <li><a href="#28-addfirst">2.8 addFirst()：</a></li>
+        <li><a href="#29-addlast">2.9 addLast()：</a></li>
+        <li><a href="#210-getfirst">2.10 getFirst()：</a></li>
+        <li><a href="#211-getlast">2.11 getLast()：</a></li>
+        <li><a href="#212-removefirst">2.12 removeFirst()：</a></li>
+        <li><a href="#213-removelast">2.13 removeLast()：</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <p>@[toc]</p>
+<h2 id="一什么是linkedlist">一、什么是LinkedList</h2>
+<p>LinkedList是Java中的一个双向链表。</p>
+<p>它实现了List和Deque接口，在使用时可以像List一样使用元素索引，也可以像Deque一样使用队列操作。</p>
+<p>LinkedList每个节点都包含了前一个和后一个节点的引用，因此可以很方便地在其中进行节点的插入、删除和移动。</p>
+<p>相比于ArrayList，LinkedList的插入和删除操作效率更高，但是访问元素时效率较低，因为需要遍历链表来寻找目标元素。</p>
+<p>LinkedList的使用场景主要是场景是需要频繁执行插入和删除操作且对访问操作的效率要求较低的情况。例如队列、栈等数据结构的实现，或者是需要实现LRU缓存淘汰策略的场景。</p>
+<h2 id="二常用的方法">二、常用的方法</h2>
+<table>
+  <thead>
+      <tr>
+          <th>返回类型</th>
+          <th>方法</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>boolean</td>
+          <td>add(E o)</td>
+          <td>将指定元素追加到此列表的结尾。</td>
+      </tr>
+      <tr>
+          <td>void</td>
+          <td>add(int index, E element)</td>
+          <td>在此列表中指定的位置插入指定的元素。</td>
+      </tr>
+      <tr>
+          <td>boolean</td>
+          <td>addAll(Collection&lt;? extends E&gt; c)</td>
+          <td>追加指定 collection 中的所有元素到此列表的结尾，顺序是指定 collection 的迭代器返回这些元素的顺序。</td>
+      </tr>
+      <tr>
+          <td>boolean</td>
+          <td>addAll(int index, Collection&lt;? extends E&gt; c)</td>
+          <td>将指定集合中的所有元素从指定位置开始插入此列表。</td>
+      </tr>
+      <tr>
+          <td>void</td>
+          <td>addFirst(E o)</td>
+          <td>将指定元素插入此列表的开头。</td>
+      </tr>
+      <tr>
+          <td>void</td>
+          <td>addLast(E o)</td>
+          <td>将指定元素追加到此列表的结尾。</td>
+      </tr>
+      <tr>
+          <td>void</td>
+          <td>clear()</td>
+          <td>从此列表中移除所有元素。</td>
+      </tr>
+      <tr>
+          <td>boolean</td>
+          <td>contains(Object o)</td>
+          <td>如果此列表包含指定元素，则返回 true。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>get(int index)</td>
+          <td>返回此列表中指定位置处的元素。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>getFirst()</td>
+          <td>返回此列表的第一个元素。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>getLast()</td>
+          <td>返回此列表的最后一个元素。</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>indexOf(Object o)</td>
+          <td>返回此列表中首次出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>lastIndexOf(Object o)</td>
+          <td>返回此列表中最后出现的指定元素的索引，如果列表中不包含此元素，则返回 -1。</td>
+      </tr>
+      <tr>
+          <td>ListIterator<E></td>
+          <td>listIterator(int index)</td>
+          <td>返回此列表中的元素的列表迭代器（按适当顺序），从列表中指定位置开始。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>peek()</td>
+          <td>找到但不移除此列表的头（第一个元素）。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>remove()</td>
+          <td>找到并移除此列表的头（第一个元素）。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>remove(int index)</td>
+          <td>移除此列表中指定位置处的元素。</td>
+      </tr>
+      <tr>
+          <td>boolean</td>
+          <td>remove(Object o)</td>
+          <td>移除此列表中首次出现的指定元素。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>removeFirst()</td>
+          <td>移除并返回此列表的第一个元素。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>removeLast()</td>
+          <td>移除并返回此列表的最后一个元素。</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>set(int index, E element)</td>
+          <td>将此列表中指定位置的元素替换为指定的元素。</td>
+      </tr>
+      <tr>
+          <td>int</td>
+          <td>size()</td>
+          <td>返回此列表的元素数。</td>
+      </tr>
+  </tbody>
+</table>
+<p>下面是一个示例代码：</p>
+<h3 id="21-add">2.1 add()：</h3>
+<p>在链表的末尾添加元素。如果需要在指定位置添加元素，则可以使用add(index, element)方法。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[apple, banana, orange]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="22-remove">2.2 remove()：</h3>
+<p>在链表中删除指定元素。如果需要删除指定位置的元素，则可以使用remove(index)方法。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[apple, orange]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="23-get">2.3 get()：</h3>
+<p>获取指定位置的元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">String</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">second</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:banana</span><span class="w">
+</span></span></span></code></pre></div><h3 id="24-set">2.4 set()：</h3>
+<p>替换指定位置的元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;grape&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[apple, grape, orange]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="25-clear">2.5 clear()：</h3>
+<p>清空链表中的所有元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">clear</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="26-size">2.6 size()：</h3>
+<p>返回链表中的元素数量。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">size</span><span class="p">);</span><span class="w"> </span><span class="c1">//结果:3</span><span class="w">
+</span></span></span></code></pre></div><h3 id="27-contains">2.7 contains()：</h3>
+<p>判断链表中是否包含指定元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kt">boolean</span><span class="w"> </span><span class="n">hasApple</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">hasApple</span><span class="p">);</span><span class="w"> </span><span class="c1">//结果: true</span><span class="w">
+</span></span></span></code></pre></div><h3 id="28-addfirst">2.8 addFirst()：</h3>
+<p>在链表的头部插入元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">addFirst</span><span class="p">(</span><span class="s">&#34;pear&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[pear, apple, banana, orange]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="29-addlast">2.9 addLast()：</h3>
+<p>在链表的尾部插入元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">addLast</span><span class="p">(</span><span class="s">&#34;pear&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[apple, banana, orange, pear]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="210-getfirst">2.10 getFirst()：</h3>
+<p>获取链表的第一个元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">String</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">getFirst</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">first</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:apple</span><span class="w">
+</span></span></span></code></pre></div><h3 id="211-getlast">2.11 getLast()：</h3>
+<p>获取链表的最后一个元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">String</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">.</span><span class="na">getLast</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">last</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:orange</span><span class="w">
+</span></span></span></code></pre></div><h3 id="212-removefirst">2.12 removeFirst()：</h3>
+<p>移除链表的第一个元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">removeFirst</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[banana, orange]</span><span class="w">
+</span></span></span></code></pre></div><h3 id="213-removelast">2.13 removeLast()：</h3>
+<p>移除链表的最后一个元素。</p>
+<p>代码演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;apple&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;banana&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;orange&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">list</span><span class="p">.</span><span class="na">removeLast</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// 结果:[apple, banana]</span><span class="w">
+</span></span></span></code></pre></div><p>所有代码演示的,运行结果：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">[</span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">banana</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">banana</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">grape</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">pear</span><span class="p">,</span><span class="w"> </span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">banana</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">banana</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="p">,</span><span class="w"> </span><span class="n">pear</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">apple</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">orange</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">banana</span><span class="p">,</span><span class="w"> </span><span class="n">orange</span><span class="o">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="o">[</span><span class="n">apple</span><span class="p">,</span><span class="w"> </span><span class="n">banana</span><span class="o">]</span><span class="w">
+</span></span></span></code></pre></div>
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -14,3 +14,4 @@ package-lock.json
 /hugo-blog/themes/
 /hexo-blog/themes/arknights/
 /hexo-blog/themes/maple/
+/hugo-blog/.hugo_build.lock

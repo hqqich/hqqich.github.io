@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Kotlin 协程官方文档（2）取消和超时 :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content=" 公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节讨论协程的取消和超时
+一、取消协程执行 在一个长时间运行的应用程序中，我们可能需要对协程进行细粒度控制。例如，用户可能关闭了启动了协程的页面，现在不再需要其运行结果，此时就应该主动取消协程。launch 函数的返回值 Job 对象就可用于取消正在运行的协程
+import kotlinx.coroutines.* fun main() = runBlocking { //sampleStart val job = launch { repeat(1000) { i -&gt; println(&#34;job: I&#39;m sleeping $i ...&#34;) delay(500L) } } delay(1300L) // delay a bit println(&#34;main: I&#39;m tired of waiting!&#34;) job.cancel() // cancels the job job.join() // waits for job&#39;s completion println(&#34;main: Now I can quit.&#34;) //sampleEnd } 运行结果
+job: I&#39;m sleeping 0 ... job: I&#39;m sleeping 1 ... job: I&#39;m sleeping 2 ... main: I&#39;m tired of waiting! main: Now I can quit. 只要 main 函数调用了 job.cancel，我们就看不到 job 协程的任何输出了，因为它已被取消。还有一个 Job 的扩展函数 cancelAndJoin ，它结合了 cancel 和 join 的调用。
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A32%E5%8F%96%E6%B6%88%E5%92%8C%E8%B6%85%E6%97%B6/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Kotlin 协程官方文档（2）取消和超时">
+  <meta property="og:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节讨论协程的取消和超时
+一、取消协程执行 在一个长时间运行的应用程序中，我们可能需要对协程进行细粒度控制。例如，用户可能关闭了启动了协程的页面，现在不再需要其运行结果，此时就应该主动取消协程。launch 函数的返回值 Job 对象就可用于取消正在运行的协程
+import kotlinx.coroutines.* fun main() = runBlocking { //sampleStart val job = launch { repeat(1000) { i -&gt; println(&#34;job: I&#39;m sleeping $i ...&#34;) delay(500L) } } delay(1300L) // delay a bit println(&#34;main: I&#39;m tired of waiting!&#34;) job.cancel() // cancels the job job.join() // waits for job&#39;s completion println(&#34;main: Now I can quit.&#34;) //sampleEnd } 运行结果
+job: I&#39;m sleeping 0 ... job: I&#39;m sleeping 1 ... job: I&#39;m sleeping 2 ... main: I&#39;m tired of waiting! main: Now I can quit. 只要 main 函数调用了 job.cancel，我们就看不到 job 协程的任何输出了，因为它已被取消。还有一个 Job 的扩展函数 cancelAndJoin ，它结合了 cancel 和 join 的调用。">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kotlin 协程官方文档（2）取消和超时">
+  <meta name="twitter:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节讨论协程的取消和超时
+一、取消协程执行 在一个长时间运行的应用程序中，我们可能需要对协程进行细粒度控制。例如，用户可能关闭了启动了协程的页面，现在不再需要其运行结果，此时就应该主动取消协程。launch 函数的返回值 Job 对象就可用于取消正在运行的协程
+import kotlinx.coroutines.* fun main() = runBlocking { //sampleStart val job = launch { repeat(1000) { i -&gt; println(&#34;job: I&#39;m sleeping $i ...&#34;) delay(500L) } } delay(1300L) // delay a bit println(&#34;main: I&#39;m tired of waiting!&#34;) job.cancel() // cancels the job job.join() // waits for job&#39;s completion println(&#34;main: Now I can quit.&#34;) //sampleEnd } 运行结果
+job: I&#39;m sleeping 0 ... job: I&#39;m sleeping 1 ... job: I&#39;m sleeping 2 ... main: I&#39;m tired of waiting! main: Now I can quit. 只要 main 函数调用了 job.cancel，我们就看不到 job 协程的任何输出了，因为它已被取消。还有一个 Job 的扩展函数 cancelAndJoin ，它结合了 cancel 和 join 的调用。">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A32%E5%8F%96%E6%B6%88%E5%92%8C%E8%B6%85%E6%97%B6/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"Xiaoliang Wang"},"dateModified":"0001-01-01T00:00:00Z","datePublished":"0001-01-01T00:00:00Z","description":" 公众号：字节数组 希望对你有所帮助 🤣🤣\n最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见\n协程官方文档：coroutines-guide 本节讨论协程的取消和超时\n一、取消协程执行 在一个长时间运行的应用程序中，我们可能需要对协程进行细粒度控制。例如，用户可能关闭了启动了协程的页面，现在不再需要其运行结果，此时就应该主动取消协程。launch 函数的返回值 Job 对象就可用于取消正在运行的协程\nimport kotlinx.coroutines.* fun main() = runBlocking { //sampleStart val job = launch { repeat(1000) { i -\u0026gt; println(\u0026#34;job: I\u0026#39;m sleeping $i ...\u0026#34;) delay(500L) } } delay(1300L) // delay a bit println(\u0026#34;main: I\u0026#39;m tired of waiting!\u0026#34;) job.cancel() // cancels the job job.join() // waits for job\u0026#39;s completion println(\u0026#34;main: Now I can quit.\u0026#34;) //sampleEnd } 运行结果\njob: I\u0026#39;m sleeping 0 ... job: I\u0026#39;m sleeping 1 ... job: I\u0026#39;m sleeping 2 ... main: I\u0026#39;m tired of waiting! main: Now I can quit. 只要 main 函数调用了 job.cancel，我们就看不到 job 协程的任何输出了，因为它已被取消。还有一个 Job 的扩展函数 cancelAndJoin ，它结合了 cancel 和 join 的调用。\n","name":"Kotlin 协程官方文档（2）取消和超时","url":"http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A32%E5%8F%96%E6%B6%88%E5%92%8C%E8%B6%85%E6%97%B6/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A32%E5%8F%96%E6%B6%88%E5%92%8C%E8%B6%85%E6%97%B6/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A32%E5%8F%96%E6%B6%88%E5%92%8C%E8%B6%85%E6%97%B6/">Kotlin 协程官方文档（2）取消和超时</a>
+      </h1>
+
+      
+      
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      4 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents"></nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>本节讨论协程的取消和超时</p>
+<h1 id="一取消协程执行">一、取消协程执行</h1>
+<p>在一个长时间运行的应用程序中，我们可能需要对协程进行细粒度控制。例如，用户可能关闭了启动了协程的页面，现在不再需要其运行结果，此时就应该主动取消协程。launch 函数的返回值 Job 对象就可用于取消正在运行的协程</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// delay a bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: I&#39;m tired of waiting!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span> <span class="c1">// cancels the job
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">job</span><span class="p">.</span><span class="n">join</span><span class="p">()</span> <span class="c1">// waits for job&#39;s completion 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: Now I can quit.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">tired</span> <span class="n">of</span> <span class="n">waiting</span><span class="p">!</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">Now</span> <span class="n">I</span> <span class="n">can</span> <span class="n">quit</span><span class="p">.</span>
+</span></span></code></pre></div><p>只要 main 函数调用了 <code>job.cancel</code>，我们就看不到 job 协程的任何输出了，因为它已被取消。还有一个 Job 的扩展函数 <code>cancelAndJoin</code> ，它结合了 <code>cancel</code> 和 <code>join</code> 的调用。</p>
+<blockquote>
+<p>cancel() 函数用于取消协程，join() 函数用于阻塞等待协程执行结束。之所以连续调用这两个方法，是因为 cancel() 函数调用后会马上返回而不是等待协程结束后再返回，所以此时协程不一定是马上就停止了，为了确保协程执行结束后再执行后续代码，此时就需要调用 join() 方法来阻塞等待。可以通过调用 Job 的扩展函数 cancelAndJoin() 来完成相同操作</p></blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">suspend</span> <span class="k">fun</span> <span class="nf">Job</span><span class="p">.</span><span class="n">cancelAndJoin</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cancel</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">join</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="二取消操作是协作完成的">二、取消操作是协作完成的</h1>
+<p>协程的取消操作是协作(cooperative)完成的，协程必须协作才能取消。<code>kotlinx.coroutines</code> 中的所有挂起函数都是可取消的，它们在运行时会检查协程是否被取消了，并在取消时抛出 CancellationException 。但是，如果协程正在执行计算任务，并且未检查是否已处于取消状态的话，则无法取消协程，如以下示例所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">startTime</span> <span class="p">=</span> <span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="n">launch</span><span class="p">(</span><span class="nc">Dispatchers</span><span class="p">.</span><span class="n">Default</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="py">nextPrintTime</span> <span class="p">=</span> <span class="n">startTime</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="py">i</span> <span class="p">=</span> <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="p">&lt;</span> <span class="m">5</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// computation loop, just wastes CPU
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// print a message twice a second
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">nextPrintTime</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m sleeping </span><span class="si">${i++}</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nextPrintTime</span> <span class="o">+=</span> <span class="m">500L</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// delay a bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: I&#39;m tired of waiting!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">cancelAndJoin</span><span class="p">()</span> <span class="c1">// cancels the job and waits for its completion
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: Now I can quit.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>运行代码可以看到即使在 cancel 之后协程 job 也会继续打印 &ldquo;I&rsquo;m sleeping&rdquo; ，直到 Job 在迭代五次后（运行条件不再成立）自行结束</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">tired</span> <span class="n">of</span> <span class="n">waiting</span><span class="p">!</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">3</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">4</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">Now</span> <span class="n">I</span> <span class="n">can</span> <span class="n">quit</span><span class="p">.</span>
+</span></span></code></pre></div><h1 id="三使计算代码可取消">三、使计算代码可取消</h1>
+<p>有两种方法可以使计算类型的代码可以被取消。第一种方法是定期调用一个挂起函数来检查取消操作，<code>yieid()</code> 函数是一个很好的选择。另一个方法是显示检查取消操作。让我们来试试后一种方法</p>
+<p>使用 <code>while (isActive)</code> 替换前面例子中的 <code>while (i &lt; 5)</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">startTime</span> <span class="p">=</span> <span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="n">launch</span><span class="p">(</span><span class="nc">Dispatchers</span><span class="p">.</span><span class="n">Default</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="py">nextPrintTime</span> <span class="p">=</span> <span class="n">startTime</span>
+</span></span><span class="line"><span class="cl">        <span class="k">var</span> <span class="py">i</span> <span class="p">=</span> <span class="m">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">isActive</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// cancellable computation loop
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// print a message twice a second
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="nc">System</span><span class="p">.</span><span class="n">currentTimeMillis</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">nextPrintTime</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m sleeping </span><span class="si">${i++}</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">nextPrintTime</span> <span class="o">+=</span> <span class="m">500L</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// delay a bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: I&#39;m tired of waiting!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">cancelAndJoin</span><span class="p">()</span> <span class="c1">// cancels the job and waits for its completion
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: Now I can quit.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>如你所见，现在这个循环被取消了。isActive 是一个可通过 CoroutineScope 对象在协程内部使用的扩展属性</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">tired</span> <span class="n">of</span> <span class="n">waiting</span><span class="p">!</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">Now</span> <span class="n">I</span> <span class="n">can</span> <span class="n">quit</span><span class="p">.</span>
+</span></span></code></pre></div><h1 id="四用-finally-关闭资源">四、用 finally 关闭资源</h1>
+<p>可取消的挂起函数在取消时会抛出 CancellationException，可以用常用的方式来处理这种情况。例如，<code>try {...} finally {...}</code> 表达式和 kotlin 的 <code>use</code> 函数都可用于在取消协程时执行回收操作</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m running finally&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// delay a bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: I&#39;m tired of waiting!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">cancelAndJoin</span><span class="p">()</span> <span class="c1">// cancels the job and waits for its completion
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: Now I can quit.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>join() 和 cancelAndJoin() 两个函数都会等待所有回收操作完成后再继续执行之后的代码，因此上面的示例生成以下输出：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">tired</span> <span class="n">of</span> <span class="n">waiting</span><span class="p">!</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">running</span> <span class="k">finally</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">Now</span> <span class="n">I</span> <span class="n">can</span> <span class="n">quit</span><span class="p">.</span>
+</span></span></code></pre></div><h1 id="五运行不可取消的代码块">五、运行不可取消的代码块</h1>
+<p>如果在上一个示例中的 <code>finally</code> 块中使用挂起函数，将会导致抛出 CancellationException，因为此时协程已经被取消了（例如，在 finally 中先调用 delay(1000L) 函数，将导致之后的输出语句不执行）。通常这并不是什么问题，因为所有性能良好的关闭操作（关闭文件、取消作业、关闭任何类型的通信通道等）通常都是非阻塞的，且不涉及任何挂起函数。但是，在极少数情况下，当需要在取消的协程中调用挂起函数时，可以使用 withContext 函数和 NonCancellable 上下文将相应的代码包装在 <code>withContext(NonCancellable) {...}</code> 代码块中，如下例所示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">withContext</span><span class="p">(</span><span class="n">NonCancellable</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: I&#39;m running finally&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">println</span><span class="p">(</span><span class="s2">&#34;job: And I&#39;ve just delayed for 1 sec because I&#39;m non-cancellable&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// delay a bit
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: I&#39;m tired of waiting!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">cancelAndJoin</span><span class="p">()</span> <span class="c1">// cancels the job and waits for its completion
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;main: Now I can quit.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>此时，即使在 finally 代码块中调用了挂起函数，其也将正常生效，且之后的输出语句也会正常输出</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">tired</span> <span class="n">of</span> <span class="n">waiting</span><span class="p">!</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">running</span> <span class="k">finally</span>
+</span></span><span class="line"><span class="cl"><span class="n">job</span><span class="p">:</span> <span class="n">And</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">ve</span> <span class="n">just</span> <span class="n">delayed</span> <span class="k">for</span> <span class="m">1</span> <span class="n">sec</span> <span class="n">because</span> <span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">non</span><span class="p">-</span><span class="n">cancellable</span>
+</span></span><span class="line"><span class="cl"><span class="n">main</span><span class="p">:</span> <span class="n">Now</span> <span class="n">I</span> <span class="n">can</span> <span class="n">quit</span><span class="p">.</span>
+</span></span></code></pre></div><h1 id="六超时">六、超时</h1>
+<p>大多数情况下，我们会主动取消协程的原因是由于其执行时间已超出预估的最长时间。虽然我们可以手动跟踪对相应 Job 的引用，并在超时后取消 Job，但官方也提供了 withTimeout 函数来完成此类操作。看一下示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">withTimeout</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">Exception</span> <span class="k">in</span> <span class="n">thread</span> <span class="s2">&#34;main&#34;</span> <span class="n">kotlinx</span><span class="p">.</span><span class="n">coroutines</span><span class="p">.</span><span class="n">TimeoutCancellationException</span><span class="p">:</span> <span class="n">Timed</span> <span class="k">out</span> <span class="n">waiting</span> <span class="k">for</span> <span class="m">1300</span> <span class="n">ms</span>
+</span></span></code></pre></div><p>withTimeout 引发的 <code>TimeoutCancellationException</code> 是 CancellationException 的子类。之前我们从未在控制台上看过 CancellationException 这类异常的堆栈信息。这是因为对于一个已取消的协程来说，CancellationException 被认为是触发协程结束的正常原因。但是，在这个例子中，我们在主函数中使用了 <code>withTimeout</code> 函数，该函数会主动抛出 TimeoutCancellationException</p>
+<p>你可以通过使用 <code>try{...}catch（e:TimeoutCancellationException）{...}</code> 代码块来对任何情况下的超时操作执行某些特定的附加操作，或者通过使用 <code>withTimeoutOrNull</code> 函数以便在超时时返回 null 而不是抛出异常</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="n">withTimeoutOrNull</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;Done&#34;</span> <span class="c1">// will get cancelled before it produces this result
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Result is </span><span class="si">$result</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>此时将不会打印出异常信息</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">Result</span> <span class="k">is</span> <span class="k">null</span>
+</span></span></code></pre></div>
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>【SpringBoot】38 个常用注解 :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="一、Spring Web MVC 注解 (1)@RequestMapping @RequestMapping注解的主要用途是将Web请求与请求处理类中的方法进行映射。Spring MVC和Spring WebFlux 都通过RquestMappingHandlerMapping和RequestMappingHndlerAdapter两个类来提供对@RequestMapping注解的支持。
+@RequestMapping注解对请求处理类中的请求处理方法进行标注；@RequestMapping注解拥有以下的六个配置属性：
+value:映射的请求URL或者其别名 method:兼容HTTP的方法名 params:根据HTTP参数的存在、缺省或值对请求进行过滤 header:根据HTTP Header的存在、缺省或值对请求进行过滤 consume:设定在HTTP请求正文中允许使用的媒体类型 product:在HTTP响应体中允许使用的媒体类型 提示：在使用@RequestMapping之前，请求处理类还需要使用@Controller或@RestController进行标记
+下面是使用@RequestMapping的两个示例：
+图片
+@RequestMapping还可以对类进行标记，这样类中的处理方法在映射请求路径时，会自动将类上@RequestMapping设置的value拼接到方法中映射路径之前，如下：
+图片
+(2)@RequestBody @RequestBody 在处理请求方法的参数列表中使用，它可以将请求主体中的参数绑定到一个对象中，请求主体参数是通过HttpMessageConverter传递的，根据请求主体中的参数名与对象的属性名进行匹配并绑定值。此外，还可以通过@Valid注解对请求主体中的参数进行校验。
+下面是一个使用@RequestBody的示例：
+图片
+(3)@GetMapping @GetMapping注解用于处理HTTP GET请求，并将请求映射到具体的处理方法中。具体来说，@GetMapping 是一个组合注解，它相当于是@RequestMapping(method=RequestMethod.GET)的快捷方式。
+下面是@GetMapping的一个使用示例：
+图片
+(4)@PostMapping @PostMapping注解用于处理HTTP POST请求，并将请求映射到具体的处理方法中。@PostMapping与@GetMapping一样，也是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.POST)的快捷方式。
+下面是使用@PostMapping的一个示例：
+图片
+(5)@PutMapping @PutMapping注解用于处理HTTP PUT请求，并将请求映射到具体的处理方法中，@PutMapping是一个组合注解，相当于是@RequestMapping(method=HttpMethod.PUT)的快捷方式。
+下面是使用@PutMapping的一个示例：
+图片
+(6)@DeleteMapping @DeleteMapping注解用于处理HTTP DELETE请求，并将请求映射到删除方法中。@DeleteMapping是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.DELETE)的快捷方式。
+下面是使用@DeleteMapping的一个示例：
+图片
+(7)@PatchMapping @PatchMapping注解用于处理HTTP PATCH请求，并将请求映射到对应的处理方法中。@PatchMapping相当于是@RequestMapping(method=HttpMethod.PATCH)的快捷方式。
+下面是一个简单的示例：
+图片
+(8)@ControllerAdvice @ControllerAdvice是@Component注解的一个延伸注解，Spring会自动扫描并检测被@ControllerAdvice所标注的类。@ControllerAdvice需要和@ExceptionHandler、@InitBinder以及@ModelAttribute注解搭配使用，主要是用来处理控制器所抛出的异常信息。
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/dev-log/springboot38-%E4%B8%AA%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="【SpringBoot】38 个常用注解">
+  <meta property="og:description" content="一、Spring Web MVC 注解 (1)@RequestMapping @RequestMapping注解的主要用途是将Web请求与请求处理类中的方法进行映射。Spring MVC和Spring WebFlux 都通过RquestMappingHandlerMapping和RequestMappingHndlerAdapter两个类来提供对@RequestMapping注解的支持。
+@RequestMapping注解对请求处理类中的请求处理方法进行标注；@RequestMapping注解拥有以下的六个配置属性：
+value:映射的请求URL或者其别名 method:兼容HTTP的方法名 params:根据HTTP参数的存在、缺省或值对请求进行过滤 header:根据HTTP Header的存在、缺省或值对请求进行过滤 consume:设定在HTTP请求正文中允许使用的媒体类型 product:在HTTP响应体中允许使用的媒体类型 提示：在使用@RequestMapping之前，请求处理类还需要使用@Controller或@RestController进行标记
+下面是使用@RequestMapping的两个示例：
+图片
+@RequestMapping还可以对类进行标记，这样类中的处理方法在映射请求路径时，会自动将类上@RequestMapping设置的value拼接到方法中映射路径之前，如下：
+图片
+(2)@RequestBody @RequestBody 在处理请求方法的参数列表中使用，它可以将请求主体中的参数绑定到一个对象中，请求主体参数是通过HttpMessageConverter传递的，根据请求主体中的参数名与对象的属性名进行匹配并绑定值。此外，还可以通过@Valid注解对请求主体中的参数进行校验。
+下面是一个使用@RequestBody的示例：
+图片
+(3)@GetMapping @GetMapping注解用于处理HTTP GET请求，并将请求映射到具体的处理方法中。具体来说，@GetMapping 是一个组合注解，它相当于是@RequestMapping(method=RequestMethod.GET)的快捷方式。
+下面是@GetMapping的一个使用示例：
+图片
+(4)@PostMapping @PostMapping注解用于处理HTTP POST请求，并将请求映射到具体的处理方法中。@PostMapping与@GetMapping一样，也是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.POST)的快捷方式。
+下面是使用@PostMapping的一个示例：
+图片
+(5)@PutMapping @PutMapping注解用于处理HTTP PUT请求，并将请求映射到具体的处理方法中，@PutMapping是一个组合注解，相当于是@RequestMapping(method=HttpMethod.PUT)的快捷方式。
+下面是使用@PutMapping的一个示例：
+图片
+(6)@DeleteMapping @DeleteMapping注解用于处理HTTP DELETE请求，并将请求映射到删除方法中。@DeleteMapping是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.DELETE)的快捷方式。
+下面是使用@DeleteMapping的一个示例：
+图片
+(7)@PatchMapping @PatchMapping注解用于处理HTTP PATCH请求，并将请求映射到对应的处理方法中。@PatchMapping相当于是@RequestMapping(method=HttpMethod.PATCH)的快捷方式。
+下面是一个简单的示例：
+图片
+(8)@ControllerAdvice @ControllerAdvice是@Component注解的一个延伸注解，Spring会自动扫描并检测被@ControllerAdvice所标注的类。@ControllerAdvice需要和@ExceptionHandler、@InitBinder以及@ModelAttribute注解搭配使用，主要是用来处理控制器所抛出的异常信息。">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="【SpringBoot】38 个常用注解">
+  <meta name="twitter:description" content="一、Spring Web MVC 注解 (1)@RequestMapping @RequestMapping注解的主要用途是将Web请求与请求处理类中的方法进行映射。Spring MVC和Spring WebFlux 都通过RquestMappingHandlerMapping和RequestMappingHndlerAdapter两个类来提供对@RequestMapping注解的支持。
+@RequestMapping注解对请求处理类中的请求处理方法进行标注；@RequestMapping注解拥有以下的六个配置属性：
+value:映射的请求URL或者其别名 method:兼容HTTP的方法名 params:根据HTTP参数的存在、缺省或值对请求进行过滤 header:根据HTTP Header的存在、缺省或值对请求进行过滤 consume:设定在HTTP请求正文中允许使用的媒体类型 product:在HTTP响应体中允许使用的媒体类型 提示：在使用@RequestMapping之前，请求处理类还需要使用@Controller或@RestController进行标记
+下面是使用@RequestMapping的两个示例：
+图片
+@RequestMapping还可以对类进行标记，这样类中的处理方法在映射请求路径时，会自动将类上@RequestMapping设置的value拼接到方法中映射路径之前，如下：
+图片
+(2)@RequestBody @RequestBody 在处理请求方法的参数列表中使用，它可以将请求主体中的参数绑定到一个对象中，请求主体参数是通过HttpMessageConverter传递的，根据请求主体中的参数名与对象的属性名进行匹配并绑定值。此外，还可以通过@Valid注解对请求主体中的参数进行校验。
+下面是一个使用@RequestBody的示例：
+图片
+(3)@GetMapping @GetMapping注解用于处理HTTP GET请求，并将请求映射到具体的处理方法中。具体来说，@GetMapping 是一个组合注解，它相当于是@RequestMapping(method=RequestMethod.GET)的快捷方式。
+下面是@GetMapping的一个使用示例：
+图片
+(4)@PostMapping @PostMapping注解用于处理HTTP POST请求，并将请求映射到具体的处理方法中。@PostMapping与@GetMapping一样，也是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.POST)的快捷方式。
+下面是使用@PostMapping的一个示例：
+图片
+(5)@PutMapping @PutMapping注解用于处理HTTP PUT请求，并将请求映射到具体的处理方法中，@PutMapping是一个组合注解，相当于是@RequestMapping(method=HttpMethod.PUT)的快捷方式。
+下面是使用@PutMapping的一个示例：
+图片
+(6)@DeleteMapping @DeleteMapping注解用于处理HTTP DELETE请求，并将请求映射到删除方法中。@DeleteMapping是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.DELETE)的快捷方式。
+下面是使用@DeleteMapping的一个示例：
+图片
+(7)@PatchMapping @PatchMapping注解用于处理HTTP PATCH请求，并将请求映射到对应的处理方法中。@PatchMapping相当于是@RequestMapping(method=HttpMethod.PATCH)的快捷方式。
+下面是一个简单的示例：
+图片
+(8)@ControllerAdvice @ControllerAdvice是@Component注解的一个延伸注解，Spring会自动扫描并检测被@ControllerAdvice所标注的类。@ControllerAdvice需要和@ExceptionHandler、@InitBinder以及@ModelAttribute注解搭配使用，主要是用来处理控制器所抛出的异常信息。">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/dev-log/springboot38-%E4%B8%AA%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"Xiaoliang Wang"},"dateModified":"0001-01-01T00:00:00Z","datePublished":"0001-01-01T00:00:00Z","description":"一、Spring Web MVC 注解 (1)@RequestMapping @RequestMapping注解的主要用途是将Web请求与请求处理类中的方法进行映射。Spring MVC和Spring WebFlux 都通过RquestMappingHandlerMapping和RequestMappingHndlerAdapter两个类来提供对@RequestMapping注解的支持。\n@RequestMapping注解对请求处理类中的请求处理方法进行标注；@RequestMapping注解拥有以下的六个配置属性：\nvalue:映射的请求URL或者其别名 method:兼容HTTP的方法名 params:根据HTTP参数的存在、缺省或值对请求进行过滤 header:根据HTTP Header的存在、缺省或值对请求进行过滤 consume:设定在HTTP请求正文中允许使用的媒体类型 product:在HTTP响应体中允许使用的媒体类型 提示：在使用@RequestMapping之前，请求处理类还需要使用@Controller或@RestController进行标记\n下面是使用@RequestMapping的两个示例：\n图片\n@RequestMapping还可以对类进行标记，这样类中的处理方法在映射请求路径时，会自动将类上@RequestMapping设置的value拼接到方法中映射路径之前，如下：\n图片\n(2)@RequestBody @RequestBody 在处理请求方法的参数列表中使用，它可以将请求主体中的参数绑定到一个对象中，请求主体参数是通过HttpMessageConverter传递的，根据请求主体中的参数名与对象的属性名进行匹配并绑定值。此外，还可以通过@Valid注解对请求主体中的参数进行校验。\n下面是一个使用@RequestBody的示例：\n图片\n(3)@GetMapping @GetMapping注解用于处理HTTP GET请求，并将请求映射到具体的处理方法中。具体来说，@GetMapping 是一个组合注解，它相当于是@RequestMapping(method=RequestMethod.GET)的快捷方式。\n下面是@GetMapping的一个使用示例：\n图片\n(4)@PostMapping @PostMapping注解用于处理HTTP POST请求，并将请求映射到具体的处理方法中。@PostMapping与@GetMapping一样，也是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.POST)的快捷方式。\n下面是使用@PostMapping的一个示例：\n图片\n(5)@PutMapping @PutMapping注解用于处理HTTP PUT请求，并将请求映射到具体的处理方法中，@PutMapping是一个组合注解，相当于是@RequestMapping(method=HttpMethod.PUT)的快捷方式。\n下面是使用@PutMapping的一个示例：\n图片\n(6)@DeleteMapping @DeleteMapping注解用于处理HTTP DELETE请求，并将请求映射到删除方法中。@DeleteMapping是一个组合注解，它相当于是@RequestMapping(method=HttpMethod.DELETE)的快捷方式。\n下面是使用@DeleteMapping的一个示例：\n图片\n(7)@PatchMapping @PatchMapping注解用于处理HTTP PATCH请求，并将请求映射到对应的处理方法中。@PatchMapping相当于是@RequestMapping(method=HttpMethod.PATCH)的快捷方式。\n下面是一个简单的示例：\n图片\n(8)@ControllerAdvice @ControllerAdvice是@Component注解的一个延伸注解，Spring会自动扫描并检测被@ControllerAdvice所标注的类。@ControllerAdvice需要和@ExceptionHandler、@InitBinder以及@ModelAttribute注解搭配使用，主要是用来处理控制器所抛出的异常信息。\n","name":"【SpringBoot】38 个常用注解","url":"http://localhost:1313/hugo-blog/public/post/dev-log/springboot38-%E4%B8%AA%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/dev-log/springboot38-%E4%B8%AA%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/dev-log/springboot38-%E4%B8%AA%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3/">【SpringBoot】38 个常用注解</a>
+      </h1>
+
+      
+      
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      2 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#一spring-web-mvc-注解">一、Spring Web MVC 注解</a></li>
+        <li><a href="#二spring-bean-注解">二、Spring Bean 注解</a></li>
+        <li><a href="#三spring-di与bean-scops注解">三、Spring DI与Bean Scops注解</a></li>
+        <li><a href="#四容器配置注解">四、容器配置注解</a></li>
+        <li><a href="#五spring-boot注解">五、Spring Boot注解</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <h3 id="一spring-web-mvc-注解">一、Spring Web MVC 注解</h3>
+<h4 id="1requestmapping"><strong>(1)@RequestMapping</strong></h4>
+<p>@RequestMapping注解的主要用途是将Web请求与请求处理类中的方法进行映射。Spring MVC和Spring <a href="https://so.csdn.net/so/search?q=WebFlux&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">WebFlux</a>
+都通过<code>RquestMappingHandlerMapping</code>和<code>RequestMappingHndlerAdapter</code>两个类来提供对@RequestMapping注解的支持。</p>
+<p><code>@RequestMapping</code>注解对请求处理类中的请求处理方法进行标注；<code>@RequestMapping</code>注解拥有以下的六个配置属性：</p>
+<ul>
+<li><code>value</code>:映射的请求URL或者其别名</li>
+<li><code>method</code>:兼容HTTP的方法名</li>
+<li><code>params</code>:根据HTTP参数的存在、缺省或值对请求进行过滤</li>
+<li><code>header</code>:根据HTTP Header的存在、缺省或值对请求进行过滤</li>
+<li><code>consume</code>:设定在HTTP请求正文中允许使用的媒体类型</li>
+<li><code>product</code>:在HTTP响应体中允许使用的媒体类型</li>
+</ul>
+<p>提示：在使用@RequestMapping之前，请求处理类还需要使用@Controller或@RestController进行标记</p>
+<p>下面是使用@RequestMapping的两个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/bf42b4019035b29e4e6765dfbdb22507.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>@RequestMapping还可以对类进行标记，这样类中的处理方法在映射请求路径时，会自动将类上@RequestMapping设置的value拼接到方法中映射路径之前，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/9c9c745649ab160ed645fe7eae66cb38.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="2requestbody"><strong>(2)@RequestBody</strong></h4>
+<p>@<a href="https://so.csdn.net/so/search?q=RequestBody&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">RequestBody</a>
+在处理请求方法的参数列表中使用，它可以将请求主体中的参数绑定到一个对象中，请求主体参数是通过<code>HttpMessageConverter</code>传递的，根据请求主体中的参数名与对象的属性名进行匹配并绑定值。此外，还可以通过@Valid注解对请求主体中的参数进行校验。</p>
+<p>下面是一个使用<code>@RequestBody</code>的示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/95351eca169810297fca3f8c7fe66713.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="3getmapping"><strong>(3)@GetMapping</strong></h4>
+<p><code>@GetMapping</code>注解用于处理HTTP GET请求，并将请求映射到具体的处理方法中。具体来说，@<a href="https://so.csdn.net/so/search?q=GetMapping&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">GetMapping</a>
+是一个组合注解，它相当于是<code>@RequestMapping(method=RequestMethod.GET)</code>的快捷方式。</p>
+<p>下面是<code>@GetMapping</code>的一个使用示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/a8b8342942c6f01fabb4ec7fd262874e.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="4postmapping"><strong>(4)@PostMapping</strong></h4>
+<p><code>@PostMapping</code>注解用于处理HTTP POST请求，并将请求映射到具体的处理方法中。@PostMapping与@GetMapping一样，也是一个组合注解，它相当于是<code>@RequestMapping(method=HttpMethod.POST)</code>的快捷方式。</p>
+<p>下面是使用<code>@PostMapping</code>的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/95351eca169810297fca3f8c7fe66713.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="5putmapping"><strong>(5)@PutMapping</strong></h4>
+<p><code>@PutMapping</code>注解用于处理HTTP PUT请求，并将请求映射到具体的处理方法中，@PutMapping是一个组合注解，相当于是<code>@RequestMapping(method=HttpMethod.PUT)</code>的快捷方式。</p>
+<p>下面是使用<code>@PutMapping</code>的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/652188f09398d92c9da2d8258af7e096.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="6deletemapping"><strong>(6)@DeleteMapping</strong></h4>
+<p><code>@DeleteMapping</code>注解用于处理HTTP DELETE请求，并将请求映射到删除方法中。@DeleteMapping是一个组合注解，它相当于是<code>@RequestMapping(method=HttpMethod.DELETE)</code>的快捷方式。</p>
+<p>下面是使用<code>@DeleteMapping</code>的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/69e769fd9cf5cf580aba5a8172f13ac8.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="7patchmapping"><strong>(7)@PatchMapping</strong></h4>
+<p><code>@PatchMapping</code>注解用于处理HTTP PATCH请求，并将请求映射到对应的处理方法中。@PatchMapping相当于是<code>@RequestMapping(method=HttpMethod.PATCH)</code>的快捷方式。</p>
+<p>下面是一个简单的示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/1753bc91a2615e1e1092799f0b23b9b2.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="8controlleradvice"><strong>(8)@ControllerAdvice</strong></h4>
+<p><code>@ControllerAdvice</code>是@Component注解的一个延伸注解，Spring会自动扫描并检测被@ControllerAdvice所标注的类。<code>@ControllerAdvice</code>需要和<code>@ExceptionHandler</code>、<code>@InitBinder</code>以及<code>@ModelAttribute</code>注解搭配使用，主要是用来处理控制器所抛出的异常信息。</p>
+<p>首先，我们需要定义一个被<code>@ControllerAdvice</code>所标注的类，在该类中，定义一个用于处理具体异常的方法，并使用@ExceptionHandler注解进行标记。</p>
+<p>此外，在有必要的时候，可以使用<code>@InitBinder</code>在类中进行全局的配置，还可以使用@ModelAttribute配置与视图相关的参数。使用<code>@ControllerAdvice</code>注解，就可以快速的创建统一的，自定义的异常处理类。</p>
+<p>下面是一个使用<code>@ControllerAdvice</code>的示例代码：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/f15446cc22b86ddb10254fbff469cd16.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="9responsebody"><strong>(9)@ResponseBody</strong></h4>
+<p><code>@ResponseBody</code>会自动将控制器中方法的返回值写入到HTTP响应中。特别的，<code>@ResponseBody</code>注解只能用在被<code>@Controller</code>注解标记的类中。如果在被<code>@RestController</code>标记的类中，则方法不需要使用<code>@ResponseBody</code>注解进行标注。<code>@RestController</code>相当于是<code>@Controller</code>和<code>@ResponseBody</code>的组合注解。</p>
+<p>下面是使用该注解的一个示例</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/883093be09f55b59d76cd1a00d32db0d.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="10exceptionhandler"><strong>(10)@ExceptionHandler</strong></h4>
+<p><code>@ExceptionHander</code>注解用于标注处理特定类型异常类所抛出异常的方法。当控制器中的方法抛出异常时，Spring会自动捕获异常，并将捕获的异常信息传递给被<code>@ExceptionHandler</code>标注的方法。</p>
+<p>下面是使用该注解的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/5b2a70035ecafa0c4d8e5d3a30a44d0d.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="11responsestatus"><strong>(11)@ResponseStatus</strong></h4>
+<p><code>@ResponseStatus</code>注解可以标注请求处理方法。使用此注解，可以指定响应所需要的HTTP STATUS。特别地，我们可以使用HttpStauts类对该注解的value属性进行赋值。</p>
+<p>下面是使用<code>@ResponseStatus</code>注解的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/544b88353bb9262cfa4ddf262d161cf5.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="12pathvariable"><strong>(12)@PathVariable</strong></h4>
+<p><code>@PathVariable</code>注解是将方法中的参数绑定到请求URI中的模板变量上。可以通过<code>@RequestMapping</code>注解来指定URI的模板变量，然后使用<code>@PathVariable</code>注解将方法中的参数绑定到模板变量上。</p>
+<p>特别地，<code>@PathVariable</code>注解允许我们使用value或name属性来给参数取一个别名。下面是使用此注解的一个示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/018c472c8c222e757f1746b667817166.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>模板变量名需要使用<code>{ }</code>进行包裹，如果方法的参数名与URI模板变量名一致，则在<code>@PathVariable</code>中就可以省略别名的定义。</p>
+<p>下面是一个简写的示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/b29a7a9a680927db41cbad8358b5509d.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>提示：如果参数是一个非必须的，可选的项，则可以在<code>@PathVariable</code>中设置<code>require = false</code></p>
+<h4 id="13requestparam"><strong>(13)@RequestParam</strong></h4>
+<p><code>@RequestParam</code>注解用于将方法的参数与Web请求的传递的参数进行绑定。使用<code>@RequestParam</code>可以轻松的访问HTTP请求参数的值。</p>
+<p>下面是使用该注解的代码示例：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-lIG3tAYG-1654676320675)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<p>该注解的其他属性配置与<code>@PathVariable</code>的配置相同，特别的，如果传递的参数为空，还可以通过defaultValue设置一个默认值。示例代码如下：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-sP1YdG8n-1654676320675)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h4 id="14controller"><strong>(14)@Controller</strong></h4>
+<p><code>@Controller</code>是<code>@Component</code>注解的一个延伸，Spring 会自动扫描并配置被该注解标注的类。此注解用于标注Spring MVC的控制器。下面是使用此注解的示例代码：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-Ij2lwefP-1654676320676)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h4 id="15restcontroller"><strong>(15)@RestController</strong></h4>
+<p><code>@RestController</code>是在Spring 4.0开始引入的，这是一个特定的控制器注解。此注解相当于<code>@Controller</code>和<code>@ResponseBody</code>的快捷方式。当使用此注解时，不需要再在方法上使用<code>@ResponseBody</code>注解。</p>
+<p>下面是使用此注解的示例代码：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/f51d2920f1f463dde8fe8a23661c876a.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="16modelattribute"><strong>(16)@ModelAttribute</strong></h4>
+<p>通过此注解，可以通过模型索引名称来访问已经存在于控制器中的model。下面是使用此注解的一个简单示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/aa6af18d2906eff471a724a2b21c4bc4.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>与<code>@PathVariable</code>和<code>@RequestParam</code>注解一样，如果参数名与模型具有相同的名字，则不必指定索引名称，简写示例如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/f79b1a44aa7b72113f4943e9680c6196.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>特别地，如果使用<code>@ModelAttribute</code>对方法进行标注，Spring会将方法的返回值绑定到具体的Model上。示例如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/43d675a7f4f71c5f9e3d6ca0bd4e87c2.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p>在Spring调用具体的处理方法之前，被<code>@ModelAttribute</code>注解标注的所有方法都将被执行。</p>
+<h4 id="17crossorigin"><strong>(17)@CrossOrigin</strong></h4>
+<p><code>@CrossOrigin</code>注解将为请求处理类或请求处理方法提供跨域调用支持。如果我们将此注解标注类，那么类中的所有方法都将获得支持跨域的能力。使用此注解的好处是可以微调跨域行为。使用此注解的示例如下：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-GZdahscU-1654676320677)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h4 id="18initbinder"><strong>(18)@InitBinder</strong></h4>
+<p><code>@InitBinder</code>注解用于标注初始化<strong>WebDataBinider</strong> 的方法，该方法用于对Http请求传递的表单数据进行处理，如时间格式化、字符串处理等。下面是使用此注解的示例：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-qwhBzLeR-1654676320678)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h3 id="二spring-bean-注解">二、Spring Bean 注解</h3>
+<p>在本小节中，主要列举与Spring Bean相关的4个注解以及它们的使用方式。</p>
+<h4 id="19componentscan"><strong>(19)@ComponentScan</strong></h4>
+<p><code>@ComponentScan</code>注解用于配置Spring需要扫描的被组件注解注释的类所在的包。可以通过配置其basePackages属性或者value属性来配置需要扫描的包路径。value属性是basePackages的别名。此注解的用法如下：</p>
+<h4 id="20component"><strong>(20)@Component</strong></h4>
+<p>@Component注解用于标注一个普通的组件类，它没有明确的业务范围，只是通知Spring被此注解的类需要被纳入到Spring Bean容器中并进行管理。此注解的使用示例如下：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-45XIt1Jl-1654676320678)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h4 id="21service"><strong>(21)@Service</strong></h4>
+<p><code>@Service</code>注解是<code>@Component</code>的一个延伸（特例），它用于标注业务逻辑类。与<code>@Component</code>注解一样，被此注解标注的类，会自动被Spring所管理。下面是使用<code>@Service</code>注解的示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/cc6bf2ae7558894900f6c76cc65a3168.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="22repository"><strong>(22)@Repository</strong></h4>
+<p><code>@Repository</code>注解也是<code>@Component</code>注解的延伸，与<code>@Component</code>注解一样，被此注解标注的类会被Spring自动管理起来，<code>@Repository</code>注解用于标注DAO层的数据持久化类。此注解的用法如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/b90cf5c0991d4b70172df5653ddba694.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片 <a href="http://mp.weixin.qq.com/s?__biz=Mzg2ODU0NTA2Mw==&amp;mid=2247488419&amp;idx=2&amp;sn=0b80c7f9f73fca89b91e257a269cfada&amp;chksm=ceabf4ebf9dc7dfdaa605a9bb92d31c9fc0a10a7a94351234181a89ba5800672c6e7da2ebfbe&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">Java项目分享 最新整理全集，找项目不累啦 07版</a>
+</p>
+<h3 id="三spring-di与bean-scops注解">三、Spring DI与Bean Scops注解</h3>
+<p><strong>Spring DI (Dependency Inject)</strong></p>
+<h4 id="23dependson"><strong>(23)@DependsOn</strong></h4>
+<p><code>@DependsOn</code>注解可以配置Spring IoC容器在初始化一个Bean之前，先初始化其他的Bean对象。下面是此注解使用示例代码：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-zm9jdnxn-1654676320679)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h4 id="24bean"><strong>(24)@Bean</strong></h4>
+<p>@Bean注解主要的作用是告知Spring，被此注解所标注的类将需要纳入到Bean管理工厂中。@Bean注解的用法很简单，在这里，着重介绍@Bean注解中<code>initMethod</code>和<code>destroyMethod</code>的用法。示例如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/0e12cbafaebf45339b4215193e84dbaf.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p><strong>Scops注解</strong></p>
+<h4 id="25scope"><strong>(25)@Scope</strong></h4>
+<p>@Scope注解可以用来定义@Component标注的类的作用范围以及@Bean所标记的类的作用范围。@Scope所限定的作用范围有：<code>singleton</code>、<code>prototype</code>、<code>request</code>、<code>session</code>、<code>globalSession</code>或者其他的自定义范围。这里以prototype为例子进行讲解。</p>
+<p>当一个Spring Bean被声明为prototype（原型模式）时，在每次需要使用到该类的时候，Spring IoC容器都会初始化一个新的改类的实例。在定义一个Bean时，可以设置Bean的scope属性为<code>prototype：scope=“prototype”</code>,也可以使用@Scope注解设置，如下：</p>
+<pre tabindex="0"><code>@Scope(value=ConfigurableBeanFactory.SCOPE_PROPTOTYPE)
+</code></pre><p>下面将给出两种不同的方式来使用@Scope注解，示例代码如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/06e1b1ce78318c9127b8e4a98cee6c7d.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="26scope-单例模式"><strong>(26)@Scope 单例模式</strong></h4>
+<p>当@Scope的作用范围设置成Singleton时，被此注解所标注的类只会被Spring IoC容器初始化一次。在默认情况下，Spring IoC容器所初始化的类实例都为singleton。同样的原理，此情形也有两种配置方式，示例代码如下：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-bDDbfc8t-1654676320680)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<h3 id="四容器配置注解">四、容器配置注解</h3>
+<h4 id="27autowired">(27)@Autowired</h4>
+<p>@Autowired注解用于标记Spring将要解析和注入的依赖项。此注解可以作用在构造函数、字段和setter方法上。</p>
+<p><strong>作用于构造函数</strong></p>
+<p>下面是@Autowired注解标注构造函数的使用示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/44f16f8db2e996e8c10935b5c2aee97f.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p><strong>作用于setter方法</strong></p>
+<p>下面是@Autowired注解标注setter方法的示例代码：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/abc6423384ba91b2569919a3d779137b.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<p><strong>作用于字段</strong></p>
+<p>@Autowired注解标注字段是最简单的，只需要在对应的字段上加入此注解即可，示例代码如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/cc1239e8110718fd4e055cc5b7a6bc72.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="28primary">(28)@Primary</h4>
+<p>当系统中需要配置多个具有相同类型的bean时，@Primary可以定义这些Bean的优先级。下面将给出一个实例代码来说明这一特性：</p>
+<p>[外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-4zixihpW-1654676320681)(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==)]图片</p>
+<p>输出结果：</p>
+<pre tabindex="0"><code>this is send DingDing method message.
+</code></pre><h4 id="29postconstruct与predestroy">(29)@PostConstruct与@PreDestroy</h4>
+<p>值得注意的是，这两个注解不属于Spring,它们是源于JSR-250中的两个注解，位于<code>common-annotations.jar</code>中。@PostConstruct注解用于标注在Bean被Spring初始化之前需要执行的方法。@PreDestroy注解用于标注Bean被销毁前需要执行的方法。下面是具体的示例代码：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/6800d32ff0fbecf1c342a141bda80175.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h4 id="30qualifier">(30)@Qualifier</h4>
+<p>当系统中存在同一类型的多个Bean时，@Autowired在进行依赖注入的时候就不知道该选择哪一个实现类进行注入。此时，我们可以使用@Qualifier注解来微调，帮助@Autowired选择正确的依赖项。下面是一个关于此注解的代码示例：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://img-blog.csdnimg.cn/img_convert/a76b22d6d74d84b5faa177832495fb80.png"
+      alt="图片" 
+      loading="lazy"
+    >
+  </figure></div>
+图片</p>
+<h3 id="五spring-boot注解">五、Spring Boot注解</h3>
+<h4 id="31springbootapplication"><strong>(31)@SpringBootApplication</strong></h4>
+<p><code>@SpringBootApplication</code>注解是一个快捷的配置注解，在被它标注的类中，可以定义一个或多个Bean，并自动触发自动配置Bean和自动扫描组件。此注解相当于<code>@Configuration</code>、<code>@EnableAutoConfiguration</code>和<code>@ComponentScan</code>的组合。</p>
+<p>在Spring Boot应用程序的主类中，就使用了此注解。示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@SpringBootApplication</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Application</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">Application</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="n">args</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">     </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="32enableautoconfiguration"><strong>(32)@EnableAutoConfiguration</strong></h4>
+<p>@EnableAutoConfiguration注解用于通知Spring，根据当前类路径下引入的依赖包，自动配置与这些依赖包相关的配置项。</p>
+<h4 id="33conditionalonclass与conditionalonmissingclass"><strong>(33)@ConditionalOnClass与@ConditionalOnMissingClass</strong></h4>
+<p>这两个注解属于类条件注解，它们根据是否存在某个类作为判断依据来决定是否要执行某些配置。下面是一个简单的示例代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Configuration@ConditionalOnClass</span><span class="p">(</span><span class="n">DataSource</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="kd">class</span> <span class="nc">MySQLAutoConfiguration</span><span class="w"> </span><span class="p">{</span><span class="w">  
+</span></span></span><span class="line"><span class="cl"><span class="w">    
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="34conditionalonbean与conditionalonmissingbean"><strong>(34)@ConditionalOnBean与@ConditionalOnMissingBean</strong></h4>
+<p>这两个注解属于对象条件注解，根据是否存在某个对象作为依据来决定是否要执行某些配置方法。示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean@ConditionalOnBean</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#34;dataSource&#34;</span><span class="p">)</span><span class="n">LocalContainerEntityManagerFactoryBean</span><span class="w"> </span><span class="nf">entityManagerFactory</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@ConditionalOnMissingBean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">MyBean</span><span class="w"> </span><span class="nf">myBean</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="34conditionalonproperty"><strong>(34)@ConditionalOnProperty</strong></h4>
+<p>@ConditionalOnProperty注解会根据Spring配置文件中的配置项是否满足配置要求，从而决定是否要执行被其标注的方法。示例代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean@ConditionalOnProperty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#34;alipay&#34;</span><span class="p">,</span><span class="n">havingValue</span><span class="o">=</span><span class="s">&#34;on&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">Alipay</span><span class="w"> </span><span class="nf">alipay</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Alipay</span><span class="p">();</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="35conditionalonresource"><strong>(35)@ConditionalOnResource</strong></h4>
+<p>此注解用于检测当某个配置文件存在使，则触发被其标注的方法，下面是使用此注解的代码示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ConditionalOnResource</span><span class="p">(</span><span class="n">resources</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;classpath:website.properties&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">Properties</span><span class="w"> </span><span class="nf">addWebsiteProperties</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="36conditionalonwebapplication与-conditionalonnotwebapplication"><strong>(36)@ConditionalOnWebApplication与 @ConditionalOnNotWebApplication</strong></h4>
+<p>这两个注解用于判断当前的应用程序是否是Web应用程序。如果当前应用是Web应用程序，则使用Spring WebApplicationContext,并定义其会话的生命周期。下面是一个简单的示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ConditionalOnWebApplicationHealthCheckController</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">healthCheckController</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="37conditionalexpression"><strong>(37)@ConditionalExpression</strong></h4>
+<p>此注解可以让我们控制更细粒度的基于表达式的配置条件限制。当表达式满足某个条件或者表达式为真的时候，将会执行被此注解标注的方法。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean@ConditionalException</span><span class="p">(</span><span class="s">&#34;${localstore} &amp;&amp; ${local == &#39;true&#39;}&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">LocalFileStore</span><span class="w"> </span><span class="nf">store</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="38conditional"><strong>(38)@Conditional</strong></h4>
+<p>@Conditional注解可以控制更为复杂的配置条件。在Spring内置的条件控制注解不满足应用需求的时候，可以使用此注解定义自定义的控制条件，以达到自定义的要求。下面是使用该注解的简单示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Conditioanl</span><span class="p">(</span><span class="n">CustomConditioanl</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CustomProperties</span><span class="w"> </span><span class="nf">addCustomProperties</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>真的时候，将会执行被此注解标注的方法。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean@ConditionalException</span><span class="p">(</span><span class="s">&#34;${localstore} &amp;&amp; ${local == &#39;true&#39;}&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">LocalFileStore</span><span class="w"> </span><span class="nf">store</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h4 id="38conditional-1"><strong>(38)@Conditional</strong></h4>
+<p>@Conditional注解可以控制更为复杂的配置条件。在Spring内置的条件控制注解不满足应用需求的时候，可以使用此注解定义自定义的控制条件，以达到自定义的要求。下面是使用该注解的简单示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Conditioanl</span><span class="p">(</span><span class="n">CustomConditioanl</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">CustomProperties</span><span class="w"> </span><span class="nf">addCustomProperties</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//...        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>文章知识点与官方知识档案匹配，可进一步学习相关知识</p>
+<p><a href="https://edu.csdn.net/skill/cloud_native/?utm_source=csdn_ai_skill_tree_blog" target="_blank" rel="noopener">云原生入门技能树</a>
+<a href="https://edu.csdn.net/skill/cloud_native/?utm_source=csdn_ai_skill_tree_blog" target="_blank" rel="noopener">首页</a>
+<a href="https://edu.csdn.net/skill/cloud_native/?utm_source=csdn_ai_skill_tree_blog" target="_blank" rel="noopener">概览</a>
+17255 人正在系统学习中</p>
+<p>本文转自 <a href="https://blog.csdn.net/m0_62676056/article/details/125187034" target="_blank" rel="noopener">https://blog.csdn.net/m0_62676056/article/details/125187034</a>
+，如有侵权，请联系删除。</p>
+
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>

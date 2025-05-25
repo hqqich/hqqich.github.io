@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Kotlin 协程官方文档（3）组合挂起函数 :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content=" 公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节来介绍构成挂起函数的各种方法
+一、默认顺序 假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟
+suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数
+我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间
+import kotlinx.coroutines.* import kotlin.system.* fun main() = runBlocking&lt;Unit&gt; { //sampleStart val time = measureTimeMillis { val one = doSomethingUsefulOne() val two = doSomethingUsefulTwo() println(&#34;The answer is ${one &#43; two}&#34;) } println(&#34;Completed in $time ms&#34;) //sampleEnd } suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Kotlin 协程官方文档（3）组合挂起函数">
+  <meta property="og:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节来介绍构成挂起函数的各种方法
+一、默认顺序 假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟
+suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数
+我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间
+import kotlinx.coroutines.* import kotlin.system.* fun main() = runBlocking&lt;Unit&gt; { //sampleStart val time = measureTimeMillis { val one = doSomethingUsefulOne() val two = doSomethingUsefulTwo() println(&#34;The answer is ${one &#43; two}&#34;) } println(&#34;Completed in $time ms&#34;) //sampleEnd } suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kotlin 协程官方文档（3）组合挂起函数">
+  <meta name="twitter:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 本节来介绍构成挂起函数的各种方法
+一、默认顺序 假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟
+suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数
+我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间
+import kotlinx.coroutines.* import kotlin.system.* fun main() = runBlocking&lt;Unit&gt; { //sampleStart val time = measureTimeMillis { val one = doSomethingUsefulOne() val two = doSomethingUsefulTwo() println(&#34;The answer is ${one &#43; two}&#34;) } println(&#34;Completed in $time ms&#34;) //sampleEnd } suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"Xiaoliang Wang"},"dateModified":"0001-01-01T00:00:00Z","datePublished":"0001-01-01T00:00:00Z","description":" 公众号：字节数组 希望对你有所帮助 🤣🤣\n最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见\n协程官方文档：coroutines-guide 本节来介绍构成挂起函数的各种方法\n一、默认顺序 假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟\nsuspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数\n我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间\nimport kotlinx.coroutines.* import kotlin.system.* fun main() = runBlocking\u0026lt;Unit\u0026gt; { //sampleStart val time = measureTimeMillis { val one = doSomethingUsefulOne() val two = doSomethingUsefulTwo() println(\u0026#34;The answer is ${one + two}\u0026#34;) } println(\u0026#34;Completed in $time ms\u0026#34;) //sampleEnd } suspend fun doSomethingUsefulOne(): Int { delay(1000L) // pretend we are doing something useful here return 13 } suspend fun doSomethingUsefulTwo(): Int { delay(1000L) // pretend we are doing something useful here, too return 29 } 将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的\n","name":"Kotlin 协程官方文档（3）组合挂起函数","url":"http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A33%E7%BB%84%E5%90%88%E6%8C%82%E8%B5%B7%E5%87%BD%E6%95%B0/">Kotlin 协程官方文档（3）组合挂起函数</a>
+      </h1>
+
+      
+      
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      4 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents"></nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>本节来介绍构成挂起函数的各种方法</p>
+<h1 id="一默认顺序">一、默认顺序</h1>
+<p>假设我们有两个定义于其它位置的挂起函数，它们用于执行一些有用操作，比如某种远程服务调用或者是计算操作。我们假设这两个函数是有实际意义的，但实际上它们只是为了模拟情况而延迟了一秒钟</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>在实践中，如果我们需要依靠第一个函数的运行结果来决定是否需要调用或者如何调用第二个函数，此时我们就需要按顺序来运行这两个函数</p>
+<p>我们使用默认顺序来调用这两个函数，因为协程中的代码和常规代码一样，在默认情况下是顺序的执行的。下面来计算两个挂起函数运行所需的总时间</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${one + two}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>将得到类似于下边这样的输出，可以看出函数是按顺序先后执行的</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="m">42</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="k">in</span> <span class="m">2007</span> <span class="n">ms</span>
+</span></span></code></pre></div><h1 id="二使用-async-并发">二、使用 async 并发</h1>
+<p>如果 doSomethingUsefulOne() 和 doSomethingUsefulTwo() 这两个函数之间没有依赖关系，并且我们希望通过同时执行这两个操作（并发）以便更快地得到答案，此时就需要用到 <code>async</code> 了</p>
+<p>从概念上讲，async 就类似于 launch。async 启动一个单独的协程，这是一个与所有其它协程同时工作的轻量级协程。不同之处在于，launch 返回 Job 对象并且不携带任何运行结果值。而 async 返回一个轻量级非阻塞的 <code>Deferred</code> 对象，可用于在之后取出返回值，可以通过调用 Deferred 的 <code>await()</code> 方法来获取最终结果。此外，Deferred 也实现了 Job 接口，所以也可以根据需要来取消它</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${one.await() + two.await()}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果类似于以下所示</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="m">42</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="k">in</span> <span class="m">1014</span> <span class="n">ms</span>
+</span></span></code></pre></div><p>可以看到运行耗时几乎是减半了，因为这两个协程是同时运行，总的耗时时间可以说是取决于耗时最长的任务。需要注意，协程的并发总是显式的</p>
+<h1 id="三惰性启动-async">三、惰性启动 async</h1>
+<p>可选的，可以将 async 的 <code>start</code> 参数设置为 <code>CoroutineStart.lazy</code> 使其变为懒加载模式。在这种模式下，只有在主动调用 Deferred 的 <code>await()</code> 或者 <code>start()</code> 方法时才会启动协程。运行以下示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">async</span><span class="p">(</span><span class="n">start</span> <span class="p">=</span> <span class="nc">CoroutineStart</span><span class="p">.</span><span class="n">LAZY</span><span class="p">)</span> <span class="p">{</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">async</span><span class="p">(</span><span class="n">start</span> <span class="p">=</span> <span class="nc">CoroutineStart</span><span class="p">.</span><span class="n">LAZY</span><span class="p">)</span> <span class="p">{</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// some computation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">one</span><span class="p">.</span><span class="n">start</span><span class="p">()</span> <span class="c1">// start the first one
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">two</span><span class="p">.</span><span class="n">start</span><span class="p">()</span> <span class="c1">// start the second one
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${one.await() + two.await()}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>将得到以下类似输出：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="m">42</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="k">in</span> <span class="m">1016</span> <span class="n">ms</span>
+</span></span></code></pre></div><p>以上定义了两个协程，但没有像前面的例子那样直接执行，而是将控制权交给了开发者，由开发者通过调用 <code>start()</code> 函数来确切地开始执行。首先启动了协程 one，然后启动了协程 two，然后再等待协程运行结束</p>
+<p>注意，如果只是在 <code>println</code> 中调用了 <code>await()</code> 而不首先调用 <code>start()</code> ,这将形成顺序行为，因为 <code>await()</code> 会启动协程并等待其完成，这不是 lazy 模式的预期结果。<code>async(start=CoroutineStart.LAZY)</code> 的用例是标准标准库中的 lazy 函数的替代品，用于在值的计算涉及挂起函数的情况下</p>
+<h1 id="四异步风格的函数">四、异步风格的函数</h1>
+<p>我们可以定义异步风格的函数，使用带有显式 GlobalScope 引用的异步协程生成器来调用 <code>doSomethingUsefulOne</code> 和 <code>doSomethingUsefulTwo</code> 函数。用 “…Async” 后缀来命名这些函数，以此来强调它们用来启动异步计算，并且需要通过其返回的延迟值来获取结果</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="c1">// The result type of somethingUsefulOneAsync is Deferred&lt;Int&gt;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">fun</span> <span class="nf">somethingUsefulOneAsync</span><span class="p">()</span> <span class="p">=</span> <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">doSomethingUsefulOne</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// The result type of somethingUsefulTwoAsync is Deferred&lt;Int&gt;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">fun</span> <span class="nf">somethingUsefulTwoAsync</span><span class="p">()</span> <span class="p">=</span> <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">doSomethingUsefulTwo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>注意，这些 <code>xxxAsync</code> 函数不是挂起函数，它们可以从任何地方调用。但是，调用这些函数意味着是要用异步形式来执行操作</p>
+<p>以下示例展示了它们在协程之外的使用：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1">// note that we don&#39;t have `runBlocking` to the right of `main` in this example
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// we can initiate async actions outside of a coroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">somethingUsefulOneAsync</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">somethingUsefulTwoAsync</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// but waiting for a result must involve either suspending or blocking.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// here we use `runBlocking { ... }` to block the main thread while waiting for the result
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${one.await() + two.await()}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//sampleEnd
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">somethingUsefulOneAsync</span><span class="p">()</span> <span class="p">=</span> <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">doSomethingUsefulOne</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">somethingUsefulTwoAsync</span><span class="p">()</span> <span class="p">=</span> <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">async</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">doSomethingUsefulTwo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><blockquote>
+<p>这里展示的带有异步函数的编程样式仅供说明，因为它是其它编程语言中的流行样式。强烈建议不要将此样式与 kotlin 协程一起使用，因为如下所述</p></blockquote>
+<p>想象一下，如果在 <code>val one = somethingUsefulOneAsync()</code> 和 <code>one.await()</code> 这两行代码之间存在逻辑错误，导致程序抛出异常，正在执行的操作也被中止，此时会发生什么情况？通常，全局的错误处理者可以捕获此异常，为开发人员记录并报告错误，但是程序可以继续执行其它操作。但是这里 <code>somethingUsefulOneAsync()</code> 函数仍然还在后台运行（因为其协程作用域是 GlobalScope），即使其启动者已经被中止了。这个问题不会在结构化并发中出现，如下一节所示</p>
+<h1 id="五使用-async-的结构化并发">五、使用 async 的结构化并发</h1>
+<p>让我们以 <code>Concurrent using async</code> 章节为例，提取一个同时执行 <code>doSomethingUsefulOne()</code> 和 <code>doSomethingUsefulTwo()</code> 并返回其结果之和的函数。因为 async 函数被定义为 CoroutineScope 上的一个扩展函数，所以我们需要将它放在 CoroutineScope 中，这就是  coroutineScope 函数提供的功能：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">concurrentSum</span><span class="p">():</span> <span class="n">Int</span> <span class="p">=</span> <span class="n">coroutineScope</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">one</span><span class="p">.</span><span class="n">await</span><span class="p">()</span> <span class="p">+</span> <span class="n">two</span><span class="p">.</span><span class="n">await</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>这样，如果 <code>concurrentSum()</code> 函数发生错误并引发异常，则在其作用域中启动的所有协程都将被取消</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlin.system.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">time</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;The answer is </span><span class="si">${concurrentSum()}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Completed in </span><span class="si">$time</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">concurrentSum</span><span class="p">():</span> <span class="n">Int</span> <span class="p">=</span> <span class="n">coroutineScope</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulOne</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">async</span> <span class="p">{</span> <span class="n">doSomethingUsefulTwo</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">one</span><span class="p">.</span><span class="n">await</span><span class="p">()</span> <span class="p">+</span> <span class="n">two</span><span class="p">.</span><span class="n">await</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulOne</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doSomethingUsefulTwo</span><span class="p">():</span> <span class="n">Int</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// pretend we are doing something useful here, too
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="m">29</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>从 main 函数的输出结果来看，两个操作仍然是同时执行的</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">The</span> <span class="n">answer</span> <span class="k">is</span> <span class="m">42</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="k">in</span> <span class="m">1017</span> <span class="n">ms</span>
+</span></span></code></pre></div><p>取消操作始终通过协程的层次结构来进行传播</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">failedConcurrentSum</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">ArithmeticException</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Computation failed with ArithmeticException&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">failedConcurrentSum</span><span class="p">():</span> <span class="n">Int</span> <span class="p">=</span> <span class="n">coroutineScope</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">one</span> <span class="p">=</span> <span class="n">async</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="nc">Long</span><span class="p">.</span><span class="n">MAX_VALUE</span><span class="p">)</span> <span class="c1">// Emulates very long computation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="m">42</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;First child was cancelled&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">two</span> <span class="p">=</span> <span class="n">async</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Second child throws an exception&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="n">ArithmeticException</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">one</span><span class="p">.</span><span class="n">await</span><span class="p">()</span> <span class="p">+</span> <span class="n">two</span><span class="p">.</span><span class="n">await</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>需要注意协程 one 和正在等待的父级是如何在协程 two 失败时取消的</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">Second</span> <span class="n">child</span> <span class="n">throws</span> <span class="n">an</span> <span class="n">exception</span>
+</span></span><span class="line"><span class="cl"><span class="n">First</span> <span class="n">child</span> <span class="n">was</span> <span class="n">cancelled</span>
+</span></span><span class="line"><span class="cl"><span class="n">Computation</span> <span class="n">failed</span> <span class="n">with</span> <span class="n">ArithmeticException</span>
+</span></span></code></pre></div>
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>

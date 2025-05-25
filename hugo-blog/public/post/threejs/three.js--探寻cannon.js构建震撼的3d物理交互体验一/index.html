@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一） :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content="我们用three.js可以绘制出各种酷炫的画面，但是当我们想要一个更加真实的物理效果的话，这个时候我们就需要一个物理的库，接下来我们就讲解一下今天要学习的canon，它可以给我们提供一个更加真实的物理效果，像物体的张力、摩擦力、拉伸、反弹等等各种真实的物理效果。该库都能够有一个非常好的模拟。
+PS：目前博主在一家互联网公司工作，该公司的编码风格是vue&#43;tsx ，所以接下来的项目以该编码风格进行举例，详细了解参考我之前的文章：地址 。
+canon基本使用 Cannon 是一种轻量级 的 JavaScript 3D 物理引擎，用于实现虚拟世界中的物理模拟和交互。它提供了一套强大的功能，能够处理刚体碰撞、力学模拟、约束系统等物理效果，使开发者能够在 Web 应用程序和游戏中实现逼真的物理行为。
+Cannon的官网：地址 ，提供了一系列关于物理运动在three世界的实现，实现案例 的效果非常直观，展示了物理运动的魅力，如下：
+Test for external image 接下来我们在three.js的vue项目 中使用Cannon，终端执行如下命令安装，具体参考：官网 `npm i cannon-es` 接下来我们通过tsx风格语法撰写three基础项目实现：
+import { defineComponent } from &#34;vue&#34;; import * as THREE from &#39;three&#39; import { OrbitControls } from &#39;three/examples/jsm/controls/OrbitControls.js&#39; import * as CANNON from &#39;cannon-es&#39; import &#39;./index.scss&#39; import { div } from &#34;three/examples/jsm/nodes/Nodes.js&#34;; export default defineComponent({ setup() { // 初始化物理世界 const world = new CANNON.World() // 初始化物理世界的重力 world.gravity.set(0, -9.82, 0) // 初始化3D世界 const scene = new THREE.Scene() // 初始化相机 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000) camera.position.z = 3 // 初始化渲染器 const renderer = new THREE.WebGLRenderer({ antialias: true }) renderer.setSize(window.innerWidth, window.innerHeight) document.body.appendChild(renderer.domElement) // 初始化控制器 const controls = new OrbitControls(camera, renderer.domElement) controls.enableDamping = true // 渲染 let clock = new THREE.Clock() const animate = () =&gt; { let delta = clock.getDelta() controls.update() renderer.render(scene, camera) requestAnimationFrame(animate) } animate() return () =&gt; { &lt;div&gt;&lt;/div&gt; } } }) 接下来我们需要给场景添加一些物体，如下：
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）">
+  <meta property="og:description" content="Guide to emoji usage in Hugo">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2025-03-05T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-03-05T00:00:00+00:00">
+    <meta property="article:tag" content="Sql">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）">
+  <meta name="twitter:description" content="Guide to emoji usage in Hugo">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"hqqich"},"dateModified":"2025-03-05T00:00:00Z","datePublished":"2025-03-05T00:00:00Z","description":"我们用three.js可以绘制出各种酷炫的画面，但是当我们想要一个更加真实的物理效果的话，这个时候我们就需要一个物理的库，接下来我们就讲解一下今天要学习的canon，它可以给我们提供一个更加真实的物理效果，像物体的张力、摩擦力、拉伸、反弹等等各种真实的物理效果。该库都能够有一个非常好的模拟。\nPS：目前博主在一家互联网公司工作，该公司的编码风格是vue+tsx ，所以接下来的项目以该编码风格进行举例，详细了解参考我之前的文章：地址 。\ncanon基本使用 Cannon 是一种轻量级 的 JavaScript 3D 物理引擎，用于实现虚拟世界中的物理模拟和交互。它提供了一套强大的功能，能够处理刚体碰撞、力学模拟、约束系统等物理效果，使开发者能够在 Web 应用程序和游戏中实现逼真的物理行为。\nCannon的官网：地址 ，提供了一系列关于物理运动在three世界的实现，实现案例 的效果非常直观，展示了物理运动的魅力，如下：\nTest for external image 接下来我们在three.js的vue项目 中使用Cannon，终端执行如下命令安装，具体参考：官网 `npm i cannon-es` 接下来我们通过tsx风格语法撰写three基础项目实现：\nimport { defineComponent } from \u0026#34;vue\u0026#34;; import * as THREE from \u0026#39;three\u0026#39; import { OrbitControls } from \u0026#39;three/examples/jsm/controls/OrbitControls.js\u0026#39; import * as CANNON from \u0026#39;cannon-es\u0026#39; import \u0026#39;./index.scss\u0026#39; import { div } from \u0026#34;three/examples/jsm/nodes/Nodes.js\u0026#34;; export default defineComponent({ setup() { // 初始化物理世界 const world = new CANNON.World() // 初始化物理世界的重力 world.gravity.set(0, -9.82, 0) // 初始化3D世界 const scene = new THREE.Scene() // 初始化相机 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000) camera.position.z = 3 // 初始化渲染器 const renderer = new THREE.WebGLRenderer({ antialias: true }) renderer.setSize(window.innerWidth, window.innerHeight) document.body.appendChild(renderer.domElement) // 初始化控制器 const controls = new OrbitControls(camera, renderer.domElement) controls.enableDamping = true // 渲染 let clock = new THREE.Clock() const animate = () =\u0026gt; { let delta = clock.getDelta() controls.update() renderer.render(scene, camera) requestAnimationFrame(animate) } animate() return () =\u0026gt; { \u0026lt;div\u0026gt;\u0026lt;/div\u0026gt; } } }) 接下来我们需要给场景添加一些物体，如下：\n","name":"Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）","url":"http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/">Three.js&ndash;》探寻Cannon.js构建震撼的3D物理交互体验（一）</a>
+      </h1>
+
+      
+      <h2 class="my-4 text-large text-slate-600 dark:text-slate-300">
+        Guide to emoji usage in Hugo
+      </h2>
+      
+      
+  <ul class="flex flex-row flex-wrap text-slate-500 dark:text-slate-300">
+    
+    
+      
+      <li>
+        <a href="/hugo-blog/public/tags/sql/"
+          class="flex flex-row text-sm mr-2 py-1">
+          <i class="h-5 w-5 flex-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M5 9l14 0"></path>
+   <path d="M5 15l14 0"></path>
+   <path d="M11 4l-4 16"></path>
+   <path d="M17 4l-4 16"></path>
+</svg>
+
+          </i>
+          <span class="ml-0">Sql</span>
+        </a>
+      </li>
+      
+    
+  </ul>
+
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  
+  
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path>
+   <path d="M16 3v4"></path>
+   <path d="M8 3v4"></path>
+   <path d="M4 11h16"></path>
+   <path d="M11 15h1"></path>
+   <path d="M12 15v3"></path>
+</svg>
+
+    </i>
+    <time datetime="2025-03-05T00:00:00&#43;00:00">
+      2025-03-05
+    </time>
+  </div>
+
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      10 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>hqqich</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents">
+  <ul>
+    <li><a href="#canon基本使用">canon基本使用</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <p>我们用three.js可以绘制出各种酷炫的画面，但是当我们想要一个更加真实的物理效果的话，这个时候我们就需要一个物理的库，接下来我们就讲解一下今天要学习的canon，它可以给我们提供一个更加真实的物理效果，像物体的张力、摩擦力、拉伸、反弹等等各种真实的物理效果。该库都能够有一个非常好的模拟。</p>
+<blockquote>
+<p>PS：目前博主在一家互联网公司工作，该公司的编码风格是vue+<a href="https://so.csdn.net/so/search?q=tsx&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">tsx</a>
+，所以接下来的项目以该编码风格进行举例，详细了解参考我之前的文章：<a href="https://z5qyj5pyi.blog.csdn.net/article/details/130637168" title="地址" target="_blank" rel="noopener">地址</a>
+。</p></blockquote>
+<h2 id="canon基本使用">canon基本使用</h2>
+<p>Cannon 是一种<a href="https://so.csdn.net/so/search?q=%E8%BD%BB%E9%87%8F%E7%BA%A7&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">轻量级</a>
+的 JavaScript 3D 物理引擎，用于实现虚拟世界中的物理模拟和交互。它提供了一套强大的功能，能够处理刚体碰撞、力学模拟、约束系统等物理效果，使开发者能够在 Web 应用程序和游戏中实现逼真的物理行为。</p>
+<p>Cannon的官网：<a href="https://pmndrs.github.io/cannon-es/" title="地址" target="_blank" rel="noopener">地址</a>
+，提供了一系列关于物理运动在three世界的实现，<a href="https://pmndrs.github.io/cannon-es/examples/threejs_fps" title="实现案例" target="_blank" rel="noopener">实现案例</a>
+的效果非常直观，展示了物理运动的魅力，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/d0251b3218d52a41b897da4eef8e21a3.png"
+      alt="placeholder"  title="Test for external image" 
+      loading="lazy"
+    ><figcaption class="text-sm text-center text-slate-500 dark:text-slate-300">Test for external image</figcaption>
+  </figure></div>
+</p>
+<p>接下来我们在three.js的<a href="https://so.csdn.net/so/search?q=vue%E9%A1%B9%E7%9B%AE&amp;spm=1001.2101.3001.7020" target="_blank" rel="noopener">vue项目</a>
+中使用Cannon，终端执行如下命令安装，具体参考：<a href="https://github.com/pmndrs/cannon-es" title="官网" target="_blank" rel="noopener">官网</a>
+</p>
+<pre tabindex="0"><code class="language-less" data-lang="less">`npm i cannon-es`
+</code></pre><p>接下来我们通过tsx风格语法撰写three基础项目实现：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">defineComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&#34;vue&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">THREE</span> <span class="nx">from</span> <span class="s1">&#39;three&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">OrbitControls</span> <span class="p">}</span>  <span class="nx">from</span> <span class="s1">&#39;three/examples/jsm/controls/OrbitControls.js&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">CANNON</span> <span class="nx">from</span> <span class="s1">&#39;cannon-es&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="s1">&#39;./index.scss&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">div</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&#34;three/examples/jsm/nodes/Nodes.js&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="nx">defineComponent</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">world</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">World</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界的重力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">gravity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.82</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化3D世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化相机
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化渲染器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">({</span> <span class="nx">antialias</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化控制器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">controls</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OrbitControls</span><span class="p">(</span><span class="nx">camera</span><span class="p">,</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">controls</span><span class="p">.</span><span class="nx">enableDamping</span> <span class="o">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 渲染
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">clock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Clock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">animate</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">let</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">clock</span><span class="p">.</span><span class="nx">getDelta</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">controls</span><span class="p">.</span><span class="nx">update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">animate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></div><p>接下来我们需要给场景添加一些物体，如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建一个物理球体，半径为0.5
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">sphereShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Sphere</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">sphereBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">sphereShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个球
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">sphereGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">SphereGeometry</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="c1">// 创建一个几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">sphereMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span> <span class="c1">// 创建一个球体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">shpereMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">sphereGeometry</span><span class="p">,</span> <span class="nx">sphereMaterial</span><span class="p">)</span> <span class="c1">// 创建一个球体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">shpereMesh</span><span class="p">)</span>
+</span></span></code></pre></div><p>打开控制台，可以看到我们的球体已经显示出来了：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/5474e51f86922611197700d24862a5de.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>接下来我们要把物理世界的球体给到我们three渲染出来的球体，让两者开始关联起来。在每一帧中，根据物理引擎模拟的结果来更新 Three.js 场景中球体网格的位置和旋转状态，从而实现了基于物理引擎的球体模拟效果，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/9710b6f43f977aec12f6dd42db1cd0c2.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>得到的结果如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/06c9692bebd50aecf2cd23c3d921efef.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<h4 id="基础碰撞使用">基础碰撞使用</h4>
+<p>上面我们实现了一个物体的自由下落，接下来我们实现物体与平面的碰撞效果。如下添加平面：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建一个物理世界的平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Plane</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">// 设置质量为0，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">shape</span><span class="o">:</span> <span class="nx">planeShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 设置刚体旋转（设置旋转X轴）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">planeBody</span><span class="p">.</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">setFromAxisAngle</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">planeBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PlaneGeometry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">// 因为渲染的东西不是无限衍生，这里给10x10
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 创建一个平面材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个平面网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 旋转平面90度让其平铺
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">planeMesh</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="o">-</span><span class="nb">Math</span><span class="p">.</span><span class="nx">PI</span> <span class="o">/</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">planeMesh</span><span class="p">)</span>
+</span></span></code></pre></div><p>当然除了我们设置平面质量为0之外，我们也可以设置平面为静态效果，也不受碰撞影响：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/ece069583ebb43001da60a0db2f212f0.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>最终得到的效果如下:</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/f419a767069b6d50c359f997cb9f43f6.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>那我们让物理世界和渲染世界的平面倾斜度加上0.1，小球是否会滑落而掉下去呢？测试一下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/54a272cd3d22a74b79833f49199b8bbd.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>得到的效果如下，可见小球是不会掉落下去的，因为物理世界的平面是无限衍生的，即使渲染世界的平面有限，小球仍然会走物理世界的规律，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/ce9841199cade46ead8a3eaf8bec786f.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>如果我们想在物理世界有一个有限大的平面的话， 我们可以通过构建一个立方体，然后把立方体压扁形成一个平面来使用，因为立方体已经有高度了，所以我们也不需要在旋转90度了，稍微给点倾斜度0.1即可，代码如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/fa2c29825549fb106de5dcffba83bc63.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>得到的效果如下，可见到我们的小球已经实现了掉落的效果：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/9e444a014888b055be4155ae61bc0b91.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>上面两标题的案例代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">defineComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&#34;vue&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">THREE</span> <span class="nx">from</span> <span class="s1">&#39;three&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">OrbitControls</span> <span class="p">}</span>  <span class="nx">from</span> <span class="s1">&#39;three/examples/jsm/controls/OrbitControls.js&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">CANNON</span> <span class="nx">from</span> <span class="s1">&#39;cannon-es&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="s1">&#39;./index.scss&#39;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="nx">defineComponent</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">world</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">World</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界的重力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">gravity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.82</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化3D世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化相机
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化渲染器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">({</span> <span class="nx">antialias</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化控制器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">controls</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OrbitControls</span><span class="p">(</span><span class="nx">camera</span><span class="p">,</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">controls</span><span class="p">.</span><span class="nx">enableDamping</span> <span class="o">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个物理球体，半径为0.5
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Sphere</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">sphereShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个球
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">SphereGeometry</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span> <span class="c1">// 创建一个几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span> <span class="c1">// 创建一个球体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">shpereMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">sphereGeometry</span><span class="p">,</span> <span class="nx">sphereMaterial</span><span class="p">)</span> <span class="c1">// 创建一个球体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 将网格添加到3D场景中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">shpereMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个物理世界的平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeShape = new CANNON.Plane()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// mass: 0, // 设置质量为0，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">shape</span><span class="o">:</span> <span class="nx">planeShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">STATIC</span> <span class="c1">// 设置物体为静态，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置刚体旋转（设置旋转X轴）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">planeBody</span><span class="p">.</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">setFromAxisAngle</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">planeBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeGeometry = new THREE.PlaneGeometry(10, 10) // 因为渲染的东西不是无限衍生，这里给10x10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 旋转平面90度让其平铺
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">planeMesh</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">planeMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 渲染
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">clock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Clock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">animate</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 获取了两次渲染之间的时间差，通常用于控制动画和物理模拟。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kd">let</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">clock</span><span class="p">.</span><span class="nx">getDelta</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 使用时间差来推进物理世界的模拟
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">world</span><span class="p">.</span><span class="nx">step</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 更新球体网格的位置和旋转
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// 将物理引擎中球体的位置赋值给 Three.js 中球体网格（shpereMesh）的位置，从而将物理模拟的结果更新到可视化场景中。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">shpereMesh</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">.</span><span class="nx">position</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 将物理引擎中球体的旋转状态赋值给 Three.js 中球体网格（shpereMesh）的旋转状态，确保网格的旋转与物理模拟一致。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">shpereMesh</span><span class="p">.</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">.</span><span class="nx">quaternion</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">controls</span><span class="p">.</span><span class="nx">update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">animate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></div><h4 id="材质与摩擦系数设置">材质与摩擦系数设置</h4>
+<p>cannon的材质可以模拟我们现实生活当中的物理的效果，比如说我们可以设置它的摩擦系数，弹性系数来实现我们这个物体的滑动的有摩擦的效果。借助上面的案例，我们将球体换成立方体，因为要创建多个立方体，这里我们设置一个变量用于存储</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建网格数组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">phyMeshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">meshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 渲染世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建物理立方体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 设置立方体的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMaterialCon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span></code></pre></div><p>在渲染函数处，我们变量数组来推进物理世界模拟：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/4405deff5089542357b2f98c78f94261.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>最终得到是效果如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/509b025d30dfd4f5eb723322d575515a.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>接下来我们添加第二个物体，将第二个物体的摩擦系数设置为0，第一个物体和平面的摩擦系数设置为0.7，代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建网格数组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">phyMeshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span> <span class="nx">meshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 渲染世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建物理立方体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 设置立方体的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMaterialCon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">boxMaterialCon</span><span class="p">.</span><span class="nx">friction</span> <span class="o">=</span> <span class="mf">0.7</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建第二个物理立方体（使用第一个物理立方体的内容，材质不同）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxSlipperyMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxSlipperyMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">boxSlipperyMaterial</span><span class="p">.</span><span class="nx">friction</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">// 摩擦系数为0
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 创建刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBody2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="c1">// 区别于第一个物体，位置改变一下
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxSlipperyMaterial</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建立方体几何体（使用第一个物体的内容）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMesh2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个物理世界的平面
+</span></span></span><span class="line"><span class="cl"><span class="c1">// const planeShape = new CANNON.Plane()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// mass: 0, // 设置质量为0，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">shape</span><span class="o">:</span> <span class="nx">planeShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">type</span><span class="o">:</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">STATIC</span><span class="p">,</span> <span class="c1">// 设置物体为静态，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 设置刚体旋转（设置旋转X轴）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">planeBody</span><span class="p">.</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">setFromAxisAngle</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">planeBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个平面
+</span></span></span><span class="line"><span class="cl"><span class="c1">// const planeGeometry = new THREE.PlaneGeometry(10, 10) // 因为渲染的东西不是无限衍生，这里给10x10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个平面材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建一个平面网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">planeMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 旋转平面90度让其平铺
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">planeMesh</span><span class="p">.</span><span class="nx">rotation</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">planeMesh</span><span class="p">)</span>
+</span></span></code></pre></div><p>最终得到的效果如下，可以看到我们设置的第二个物体因为很光滑，所以很容易就滑落下去：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/85d32960d36eca86d425aa3a842f5326.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<h4 id="弹性与接触材质设置">弹性与接触材质设置</h4>
+<p>上文我们介绍了摩擦效果的操作，接下来我们继续开始讲解物体的弹性操作，我们根据上文的代码，再创建第三个立方体，然后给该立方体添加弹性系数</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建第三个物理立方体（使用第一个物理立方体的内容，材质不同）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBouncyMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxBouncyMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">boxBouncyMaterial</span><span class="p">.</span><span class="nx">friction</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span></span><span class="line"><span class="cl"><span class="nx">boxBouncyMaterial</span><span class="p">.</span><span class="nx">restitution</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">// 设置弹性系数为1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 创建刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBody3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxBouncyMaterial</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建几何体（使用第一个立方体的内容以及材质）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMesh3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span> <span class="c1">// 添加网格
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh3</span><span class="p">)</span>
+</span></span></code></pre></div><p>给立方体设置弹性系数之后，如果我们想让弹性效果奏效的话，我们也需要给平面网格设置相同的弹性系数，因为平面网格使用的材质是第一个立方体的材质，所以我们只要给第一个立方体设置弹性系数即可，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/fb7285a494479eadf9065df5559b2d0e.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>最终得到的效果如下，可以看到设置高度高的物体，从高处下落反弹的效果是很直观的：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/5b21e6bcaa31efb15274c72c710c9682.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>当然我们也没有必要单独设置一下立方体和平面的弹性和摩擦系数，我们也可以通过接触材质的系数设置两个材质之间的一个弹性和摩擦系数，来实现相应的效果，如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 创建第三个物理立方体（使用第一个物理立方体的内容，材质不同）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBouncyMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxBouncyMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// boxBouncyMaterial.friction = 0.1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// boxBouncyMaterial.restitution = 1 // 设置弹性系数为1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 创建刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxBody3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">material</span><span class="o">:</span> <span class="nx">boxBouncyMaterial</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 创建几何体（使用第一个立方体的内容以及材质）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">boxMesh3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span> <span class="c1">// 添加网格
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义接触材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">material3toplane</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">ContactMaterial</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">boxMaterialCon</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">boxBouncyMaterial</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">friction</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">restitution</span><span class="o">:</span>  <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 将接触材质添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">world</span><span class="p">.</span><span class="nx">addContactMaterial</span><span class="p">(</span><span class="nx">material3toplane</span><span class="p">)</span>
+</span></span></code></pre></div><p>最终呈现的效果依然很明显：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/2e54407cea37dda7adfcbe0f5983d9de.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<h4 id="碰撞与碰撞组">碰撞与碰撞组</h4>
+<p>Cannon中的碰撞指的是游戏开发中物体之间的相互作用，通常包括物体之间的碰撞检测和碰撞响应两个部分。碰撞检测用于判断物体是否发生了碰撞，而碰撞响应则是在发生碰撞时对物体进行相应的处理，比如改变物体的速度、方向等。如下我们设置代码来实现：</p>
+<p>依次创建立方体、球体、圆柱体到场景当中，举例代码如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/8e3f2477230a84c09af06fee8648a3f5.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>接下来我们给创建到场景的立方体添加一个初速度使其运动来碰撞另外两个物体，如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/a76c3fa19872906c5d723d848f4e600b.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>这里给出完整的代码来给大家进行学习：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">defineComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&#34;vue&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">THREE</span> <span class="nx">from</span> <span class="s1">&#39;three&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">OrbitControls</span> <span class="p">}</span>  <span class="nx">from</span> <span class="s1">&#39;three/examples/jsm/controls/OrbitControls.js&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">CANNON</span> <span class="nx">from</span> <span class="s1">&#39;cannon-es&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="s1">&#39;./index.scss&#39;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="nx">defineComponent</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">world</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">World</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界的重力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">gravity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.82</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化3D世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化相机
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化渲染器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">({</span> <span class="nx">antialias</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化控制器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">controls</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OrbitControls</span><span class="p">(</span><span class="nx">camera</span><span class="p">,</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">controls</span><span class="p">.</span><span class="nx">enableDamping</span> <span class="o">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建网格数组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">phyMeshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">meshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 渲染世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理立方体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置立方体的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMaterialCon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">boxMaterialCon</span><span class="p">.</span><span class="nx">friction</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理球
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">spereShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Sphere</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">spereShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球的几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">SphereGeometry</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x0000ff</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">sphereGeometry</span><span class="p">,</span> <span class="nx">sphereMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">sphereMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">sphereMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理圆柱体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Cylinder</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">cylinderShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">cylinderBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cylinderBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">CylinderGeometry</span><span class="p">(</span><span class="mf">0.5</span> <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xff0000</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">cylinderGeometry</span><span class="p">,</span> <span class="nx">cylinderMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cylinderMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cylinderMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个物理世界的平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeShape = new CANNON.Plane()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// mass: 0, // 设置质量为0，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">shape</span><span class="o">:</span> <span class="nx">planeShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">STATIC</span><span class="p">,</span> <span class="c1">// 设置物体为静态，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置刚体旋转（设置旋转X轴）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0.1)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">planeBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeGeometry = new THREE.PlaneGeometry(10, 10) // 因为渲染的东西不是无限衍生，这里给10x10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 旋转平面90度让其平铺
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// planeMesh.rotation.x = 0.1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">planeMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置立方体的初始速度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">boxBody</span><span class="p">.</span><span class="nx">velocity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 渲染
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">clock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Clock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">animate</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 获取了两次渲染之间的时间差，通常用于控制动画和物理模拟。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kd">let</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">clock</span><span class="p">.</span><span class="nx">getDelta</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">world</span><span class="p">.</span><span class="nx">step</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 使用时间差来推进物理世界的模拟
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">meshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">position</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">phyMeshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">position</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">meshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">phyMeshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">quaternion</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">controls</span><span class="p">.</span><span class="nx">update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">animate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></div><p>接下来实现碰撞组，碰撞组是为了更高效地管理和处理碰撞而引入的概念。通过将具有相似碰撞特性的物体分组，可以在碰撞检测和碰撞响应时只考虑同一组内的物体之间的碰撞，从而减少不必要的计算量，提高游戏的性能和效率。代码如下：</p>
+<p>我们设置立方体为组1，然后碰撞掩码就是能够和谁发生碰撞，我们设置立方体可以和所有物体碰撞：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/5e4fac4b2c40e18673bb61ea27a64638.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>在球体的分组当中，我们设置碰撞掩码如下，可以看到我们的球不能碰撞圆柱体：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/39e77f9e8c97e981ebc2a0a4dd385c74.png"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>最终呈现的效果如下：</p>
+<p><div class="not-prose">
+<figure>
+    <img src="https://i-blog.csdnimg.cn/blog_migrate/71a8d2aa9e10aef0830cd8916e98de59.gif"
+      alt="" 
+      loading="lazy"
+    >
+  </figure></div>
+</p>
+<p>给出案例的完整代码供大家学习：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">defineComponent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&#34;vue&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">THREE</span> <span class="nx">from</span> <span class="s1">&#39;three&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="p">{</span> <span class="nx">OrbitControls</span> <span class="p">}</span>  <span class="nx">from</span> <span class="s1">&#39;three/examples/jsm/controls/OrbitControls.js&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">CANNON</span> <span class="nx">from</span> <span class="s1">&#39;cannon-es&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">import</span> <span class="s1">&#39;./index.scss&#39;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kr">export</span> <span class="k">default</span> <span class="nx">defineComponent</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">setup</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">world</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">World</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化物理世界的重力
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">gravity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.82</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化3D世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化相机
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">camera</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="mi">8</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="mi">5</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化渲染器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">({</span> <span class="nx">antialias</span><span class="o">:</span> <span class="kc">true</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 初始化控制器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">controls</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OrbitControls</span><span class="p">(</span><span class="nx">camera</span><span class="p">,</span> <span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">controls</span><span class="p">.</span><span class="nx">enableDamping</span> <span class="o">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建网格数组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">phyMeshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 物理世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">meshes</span><span class="o">:</span> <span class="nx">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// 渲染世界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置碰撞组，数值要用2的幂
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">GROUP1</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">// 分组立方体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">GROUP2</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">// 分组球体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">GROUP3</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1">// 分组圆柱体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">GROUP4</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1">// 分组平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理立方体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置立方体的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMaterialCon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Material</span><span class="p">(</span><span class="s2">&#34;boxMaterial&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">boxMaterialCon</span><span class="p">.</span><span class="nx">friction</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">boxShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">collisionFilterGroup</span><span class="o">:</span> <span class="nx">GROUP1</span><span class="p">,</span> <span class="c1">// 设置碰撞组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">collisionFilterMask</span><span class="o">:</span> <span class="nx">GROUP2</span> <span class="o">|</span> <span class="nx">GROUP3</span> <span class="o">|</span> <span class="nx">GROUP4</span><span class="p">,</span> <span class="c1">// 碰撞掩码，可以和二组和三、四组碰撞
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x00ff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建立方体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">boxMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">boxGeometry</span><span class="p">,</span> <span class="nx">boxMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">boxMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理球
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">spereShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Sphere</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">spereShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">collisionFilterGroup</span><span class="o">:</span> <span class="nx">GROUP2</span><span class="p">,</span> <span class="c1">// 设置碰撞组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">collisionFilterMask</span><span class="o">:</span> <span class="nx">GROUP1</span> <span class="o">|</span> <span class="nx">GROUP4</span><span class="p">,</span> <span class="c1">// 碰撞掩码，可以和一、四组碰撞
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">sphereBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球的几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">SphereGeometry</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球的材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0x0000ff</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建球网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">sphereMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">sphereGeometry</span><span class="p">,</span> <span class="nx">sphereMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">sphereMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">sphereMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建物理圆柱体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Cylinder</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">shape</span><span class="o">:</span> <span class="nx">cylinderShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">mass</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">collisionFilterGroup</span><span class="o">:</span> <span class="nx">GROUP3</span><span class="p">,</span> <span class="c1">// 设置碰撞组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">collisionFilterMask</span><span class="o">:</span> <span class="nx">GROUP1</span> <span class="o">|</span> <span class="nx">GROUP4</span><span class="p">,</span> <span class="c1">// 碰撞掩码，可以和一、四组碰撞
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">cylinderBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cylinderBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体几何体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">CylinderGeometry</span><span class="p">(</span><span class="mf">0.5</span> <span class="p">,</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xff0000</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建圆柱体网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">cylinderMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">cylinderGeometry</span><span class="p">,</span> <span class="nx">cylinderMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">cylinderMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">meshes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cylinderMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个物理世界的平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeShape = new CANNON.Plane()
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeShape</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Box</span><span class="p">(</span><span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个刚体
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// mass: 0, // 设置质量为0，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">shape</span><span class="o">:</span> <span class="nx">planeShape</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">position</span><span class="o">:</span> <span class="k">new</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="nx">CANNON</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nx">STATIC</span><span class="p">,</span> <span class="c1">// 设置物体为静态，不受碰撞的影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">material</span><span class="o">:</span> <span class="nx">boxMaterialCon</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">collisionFilterGroup</span><span class="o">:</span> <span class="nx">GROUP4</span><span class="p">,</span> <span class="c1">// 设置碰撞组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nx">collisionFilterMask</span><span class="o">:</span> <span class="nx">GROUP1</span> <span class="o">|</span> <span class="nx">GROUP2</span> <span class="o">|</span> <span class="nx">GROUP3</span><span class="p">,</span> <span class="c1">// 碰撞掩码，可以和一组、二组和三组碰撞
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置刚体旋转（设置旋转X轴）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0.1)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 将刚体添加到物理世界当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">world</span><span class="p">.</span><span class="nx">addBody</span><span class="p">(</span><span class="nx">planeBody</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 物理世界创建的东西不显示，所以我们要再通过three.js再创建一个平面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// const planeGeometry = new THREE.PlaneGeometry(10, 10) // 因为渲染的东西不是无限衍生，这里给10x10
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeGeometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">BoxGeometry</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面材质
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMaterial</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshBasicMaterial</span><span class="p">({</span> <span class="nx">color</span><span class="o">:</span> <span class="mh">0xffff00</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建一个平面网格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">planeMesh</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">planeGeometry</span><span class="p">,</span> <span class="nx">planeMaterial</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 旋转平面90度让其平铺
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// planeMesh.rotation.x = 0.1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// 将网格添加到3D场景当中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">planeMesh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="c1">// 设置立方体的初始速度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">boxBody</span><span class="p">.</span><span class="nx">velocity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1">// 渲染
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">clock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">THREE</span><span class="p">.</span><span class="nx">Clock</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">animate</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 获取了两次渲染之间的时间差，通常用于控制动画和物理模拟。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kd">let</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">clock</span><span class="p">.</span><span class="nx">getDelta</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">world</span><span class="p">.</span><span class="nx">step</span><span class="p">(</span><span class="nx">delta</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 使用时间差来推进物理世界的模拟
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">phyMeshes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">meshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">position</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">phyMeshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">position</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">meshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">quaternion</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">phyMeshes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">quaternion</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">controls</span><span class="p">.</span><span class="nx">update</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">scene</span><span class="p">,</span> <span class="nx">camera</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">animate</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">animate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span></code></pre></div>
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>

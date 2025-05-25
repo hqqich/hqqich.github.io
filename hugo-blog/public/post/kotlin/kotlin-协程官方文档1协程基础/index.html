@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+  <title>Kotlin 协程官方文档（1）协程基础 :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta
+  name="description"
+  content=" 公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 此章节涵盖了协程的基本概念
+一、你的第一个协程程序 运行以下代码：
+import kotlinx.coroutines.* fun main() { GlobalScope.launch { // 在后台启动一个新协程，并继续执行之后的代码 delay(1000L) // 非阻塞式地延迟一秒 println(&#34;World!&#34;) // 延迟结束后打印 } println(&#34;Hello,&#34;) //主线程继续执行，不受协程 delay 所影响 Thread.sleep(2000L) // 主线程阻塞式睡眠2秒，以此来保证JVM存活 } 输出结果
+Hello, World! 本质上，协程可以称为轻量级线程。协程在 CoroutineScope （协程作用域）的上下文中通过 launch、async 等协程构造器（coroutine builder）来启动。在上面的例子中，在 GlobalScope ，即全局作用域内启动了一个新的协程，这意味着该协程的生命周期只受整个应用程序的生命周期的限制，即只要整个应用程序还在运行中，只要协程的任务还未结束，该协程就可以一直运行
+可以将以上的协程改写为常用的 thread 形式，可以获得相同的结果
+fun main() { thread { Thread.sleep(1000L) println(&#34;World!&#34;) } println(&#34;Hello,&#34;) Thread.sleep(2000L) } 但是如果仅仅是将 GlobalScope.launch 替换为 thread 的话，编译器将提示错误：
+Suspend function &#39;delay&#39; should be called only from a coroutine or another suspend function 这是由于 delay() 是一个挂起函数（suspending function），挂起函数只能由协程或者其它挂起函数进行调度。挂起函数不会阻塞线程，而是会将协程挂起，在特定的时候才再继续运行
+开发者需要明白，协程是运行于线程上的，一个线程可以运行多个（可以是几千上万个）协程。线程的调度行为是由 OS 来操纵的，而协程的调度行为是可以由开发者来指定并由编译器来实现的。当协程 A 调用 delay(1000L) 函数来指定延迟1秒后再运行时，协程 A 所在的线程只是会转而去执行协程 B，等到1秒后再把协程 A 加入到可调度队列里。所以说，线程并不会因为协程的延时而阻塞，这样可以极大地提高线程的并发灵活度
+"
+/>
+<meta
+  name="keywords"
+  content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
+/>
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A31%E5%8D%8F%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+  <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
+  <meta property="og:title" content="Kotlin 协程官方文档（1）协程基础">
+  <meta property="og:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 此章节涵盖了协程的基本概念
+一、你的第一个协程程序 运行以下代码：
+import kotlinx.coroutines.* fun main() { GlobalScope.launch { // 在后台启动一个新协程，并继续执行之后的代码 delay(1000L) // 非阻塞式地延迟一秒 println(&#34;World!&#34;) // 延迟结束后打印 } println(&#34;Hello,&#34;) //主线程继续执行，不受协程 delay 所影响 Thread.sleep(2000L) // 主线程阻塞式睡眠2秒，以此来保证JVM存活 } 输出结果
+Hello, World! 本质上，协程可以称为轻量级线程。协程在 CoroutineScope （协程作用域）的上下文中通过 launch、async 等协程构造器（coroutine builder）来启动。在上面的例子中，在 GlobalScope ，即全局作用域内启动了一个新的协程，这意味着该协程的生命周期只受整个应用程序的生命周期的限制，即只要整个应用程序还在运行中，只要协程的任务还未结束，该协程就可以一直运行
+可以将以上的协程改写为常用的 thread 形式，可以获得相同的结果
+fun main() { thread { Thread.sleep(1000L) println(&#34;World!&#34;) } println(&#34;Hello,&#34;) Thread.sleep(2000L) } 但是如果仅仅是将 GlobalScope.launch 替换为 thread 的话，编译器将提示错误：
+Suspend function &#39;delay&#39; should be called only from a coroutine or another suspend function 这是由于 delay() 是一个挂起函数（suspending function），挂起函数只能由协程或者其它挂起函数进行调度。挂起函数不会阻塞线程，而是会将协程挂起，在特定的时候才再继续运行
+开发者需要明白，协程是运行于线程上的，一个线程可以运行多个（可以是几千上万个）协程。线程的调度行为是由 OS 来操纵的，而协程的调度行为是可以由开发者来指定并由编译器来实现的。当协程 A 调用 delay(1000L) 函数来指定延迟1秒后再运行时，协程 A 所在的线程只是会转而去执行协程 B，等到1秒后再把协程 A 加入到可调度队列里。所以说，线程并不会因为协程的延时而阻塞，这样可以极大地提高线程的并发灵活度">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Kotlin 协程官方文档（1）协程基础">
+  <meta name="twitter:description" content="公众号：字节数组 希望对你有所帮助 🤣🤣
+最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见
+协程官方文档：coroutines-guide 此章节涵盖了协程的基本概念
+一、你的第一个协程程序 运行以下代码：
+import kotlinx.coroutines.* fun main() { GlobalScope.launch { // 在后台启动一个新协程，并继续执行之后的代码 delay(1000L) // 非阻塞式地延迟一秒 println(&#34;World!&#34;) // 延迟结束后打印 } println(&#34;Hello,&#34;) //主线程继续执行，不受协程 delay 所影响 Thread.sleep(2000L) // 主线程阻塞式睡眠2秒，以此来保证JVM存活 } 输出结果
+Hello, World! 本质上，协程可以称为轻量级线程。协程在 CoroutineScope （协程作用域）的上下文中通过 launch、async 等协程构造器（coroutine builder）来启动。在上面的例子中，在 GlobalScope ，即全局作用域内启动了一个新的协程，这意味着该协程的生命周期只受整个应用程序的生命周期的限制，即只要整个应用程序还在运行中，只要协程的任务还未结束，该协程就可以一直运行
+可以将以上的协程改写为常用的 thread 形式，可以获得相同的结果
+fun main() { thread { Thread.sleep(1000L) println(&#34;World!&#34;) } println(&#34;Hello,&#34;) Thread.sleep(2000L) } 但是如果仅仅是将 GlobalScope.launch 替换为 thread 的话，编译器将提示错误：
+Suspend function &#39;delay&#39; should be called only from a coroutine or another suspend function 这是由于 delay() 是一个挂起函数（suspending function），挂起函数只能由协程或者其它挂起函数进行调度。挂起函数不会阻塞线程，而是会将协程挂起，在特定的时候才再继续运行
+开发者需要明白，协程是运行于线程上的，一个线程可以运行多个（可以是几千上万个）协程。线程的调度行为是由 OS 来操纵的，而协程的调度行为是可以由开发者来指定并由编译器来实现的。当协程 A 调用 delay(1000L) 函数来指定延迟1秒后再运行时，协程 A 所在的线程只是会转而去执行协程 B，等到1秒后再把协程 A 加入到可调度队列里。所以说，线程并不会因为协程的延时而阻塞，这样可以极大地提高线程的并发灵活度">
+
+
+<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A31%E5%8D%8F%E7%A8%8B%E5%9F%BA%E7%A1%80/" />
+
+<link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
+<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+
+
+
+
+
+
+
+
+
+  
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"Xiaoliang Wang"},"dateModified":"0001-01-01T00:00:00Z","datePublished":"0001-01-01T00:00:00Z","description":" 公众号：字节数组 希望对你有所帮助 🤣🤣\n最近一直在了解关于 Kotlin协程 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见\n协程官方文档：coroutines-guide 此章节涵盖了协程的基本概念\n一、你的第一个协程程序 运行以下代码：\nimport kotlinx.coroutines.* fun main() { GlobalScope.launch { // 在后台启动一个新协程，并继续执行之后的代码 delay(1000L) // 非阻塞式地延迟一秒 println(\u0026#34;World!\u0026#34;) // 延迟结束后打印 } println(\u0026#34;Hello,\u0026#34;) //主线程继续执行，不受协程 delay 所影响 Thread.sleep(2000L) // 主线程阻塞式睡眠2秒，以此来保证JVM存活 } 输出结果\nHello, World! 本质上，协程可以称为轻量级线程。协程在 CoroutineScope （协程作用域）的上下文中通过 launch、async 等协程构造器（coroutine builder）来启动。在上面的例子中，在 GlobalScope ，即全局作用域内启动了一个新的协程，这意味着该协程的生命周期只受整个应用程序的生命周期的限制，即只要整个应用程序还在运行中，只要协程的任务还未结束，该协程就可以一直运行\n可以将以上的协程改写为常用的 thread 形式，可以获得相同的结果\nfun main() { thread { Thread.sleep(1000L) println(\u0026#34;World!\u0026#34;) } println(\u0026#34;Hello,\u0026#34;) Thread.sleep(2000L) } 但是如果仅仅是将 GlobalScope.launch 替换为 thread 的话，编译器将提示错误：\nSuspend function \u0026#39;delay\u0026#39; should be called only from a coroutine or another suspend function 这是由于 delay() 是一个挂起函数（suspending function），挂起函数只能由协程或者其它挂起函数进行调度。挂起函数不会阻塞线程，而是会将协程挂起，在特定的时候才再继续运行\n开发者需要明白，协程是运行于线程上的，一个线程可以运行多个（可以是几千上万个）协程。线程的调度行为是由 OS 来操纵的，而协程的调度行为是可以由开发者来指定并由编译器来实现的。当协程 A 调用 delay(1000L) 函数来指定延迟1秒后再运行时，协程 A 所在的线程只是会转而去执行协程 B，等到1秒后再把协程 A 加入到可调度队列里。所以说，线程并不会因为协程的延时而阻塞，这样可以极大地提高线程的并发灵活度\n","name":"Kotlin 协程官方文档（1）协程基础","url":"http://localhost:1313/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A31%E5%8D%8F%E7%A8%8B%E5%9F%BA%E7%A1%80/"}
+</script>
+
+</head>
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
+    
+<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
+  <span class="block sm:hidden">all</span>
+  <span class="hidden sm:block md:hidden">sm</span>
+  <span class="hidden md:block lg:hidden">md</span>
+  <span class="hidden lg:block xl:hidden">lg</span>
+  <span class="hidden xl:block 2xl:hidden">xl</span>
+  <span class="hidden 2xl:block">2xl</span>
+</div>
+
+  <header class="flex flex-none justify-center z-10">
+    <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
+  <div class="flex-none ml-2 md:ml-0">
+    <a href="/hugo-blog/public/" class="">
+      <img class="h-12 w-12 rounded-full object-cover bg-gray-100" src="/hugo-blog/public/logo.svg" alt="logo">
+    </a>
+  </div>
+  
+  <h1 class="hidden md:flex flex-col justify-center mx-2">
+    <a href="/hugo-blog/public/" class="text-2xl font-semibold text-slate-800 dark:text-slate-200">
+      Hugo Theme Tailwind
+    </a>
+  </h1>
+  
+  <div class="flex-1"></div>
+  <div class="flex-none">
+    
+
+
+
+<nav class="h-full static">
+  <button id="navbar-menu-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg md:hidden" aria-controls="navbar-menu" aria-expanded="false">
+    <span class="sr-only">Open main menu</span>
+    <i class="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 6l16 0" />
+  <path d="M4 12l16 0" />
+  <path d="M4 18l16 0" />
+</svg>
+
+    </i>
+  </button>
+  <div class="absolute md:static top-16 left-0 right-0 z-50 hidden w-full md:block md:w-auto" id="navbar-menu">
+    <ul class="flex flex-col mx-2 md:mx-0 md:flex-row md:border-0 rounded-xs md:rounded-full px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+    
+        <li id="post" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600 text-emerald-600"
+            href="/hugo-blog/public/post/" title="Post">Post</a>
+        </li>
+      
+    
+        <li id="about" class="">
+          <a class="block px-3 py-3 hover:text-emerald-600"
+            href="/hugo-blog/public/about/" title="About">About</a>
+        </li>
+      
+    
+    </ul>
+  </div>
+</nav>
+
+
+  </div>
+  
+  <div class="flex-none">
+    <div class="h-full static">
+      <button id="navbar-lang-toggle" type="button" class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+        <span class="sr-only">Open language switcher</span>
+        <i class="w-8 h-8">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c0 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+        </i>
+      </button>
+      <div class="absolute hidden top-16 z-50" id="navbar-lang">
+        <ul class="flex flex-col rounded-xs px-3 text-base font-medium text-slate-800 dark:text-slate-200 shadow-lg bg-white dark:bg-gray-600 shadow-slate-800/5 dark:shadow-slate-200/5 ring-1 ring-slate-900/5 dark:ring-slate-100/5">
+          <li class="">
+            <span class="block px-3 py-3 cursor-default hover:text-emerald-600">English</span>
+            </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="flex-none md:hidden">
+    <a href=/hugo-blog/public/search/ class="inline-flex items-center p-2 text-sm text-slate-800 dark:text-slate-200 rounded-lg" aria-controls="navbar-menu" aria-expanded="false">
+      <span class="sr-only">Search</span>
+      <i class="w-8 h-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+    <path d="M21 21l-6 -6" />
+</svg>
+
+      </i>
+    </a>
+  </div>
+  <div class="darkmode-toggle flex flex-none mr-2 md:mr-0">
+    <label for="darkmode-toggle" class="relative flex items-center gap-1 px-3 cursor-pointer rounded-full bg-gray-100 dark:bg-gray-600" title="Toggle dark mode">
+      <input name="darkmode-toggle" id="darkmode-toggle" type="checkbox" class="sr-only peer" aria-label="Toggle dark mode">
+      <div class="absolute z-10 w-15 h-8 rounded-full bg-white dark:bg-gray-700"></div>
+      <i class="h-6 w-6 z-20 ml-1 flex-none rounded-full bg-yellow-400 place-self-center peer-checked:invisible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brightness-down" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+   <path d="M12 5l0 .01"></path>
+   <path d="M17 7l0 .01"></path>
+   <path d="M19 12l0 .01"></path>
+   <path d="M17 17l0 .01"></path>
+   <path d="M12 19l0 .01"></path>
+   <path d="M7 17l0 .01"></path>
+   <path d="M5 12l0 .01"></path>
+   <path d="M7 7l0 .01"></path>
+</svg>
+
+      </i>
+      <i class="h-6 w-6 z-20 mr-1 flex-none rounded-full place-self-center invisible peer-checked:visible">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+   <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"></path>
+   <path d="M19 11h2m-1 -1v2"></path>
+</svg>
+
+      </i>
+    </label>
+  </div>
+</div>
+
+  </header>
+  <main class="flex flex-auto justify-center">
+    
+<div id="progress" class="fixed top-0 left-0 w-full h-1 bg-blue-500"></div>
+<div class="w-full max-w-4xl lg:max-w-5xl">
+  <div class="flex flex-col mt-6 mx-2 md:mx-0 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700">
+    <div>
+      <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A31%E5%8D%8F%E7%A8%8B%E5%9F%BA%E7%A1%80/">
+        
+      </a>
+    </div>
+    <div class="flex flex-col gap-y-3 p-6">
+      <h1 class="text-4xl font-semibold text-slate-800 dark:text-slate-100">
+        <a href="/hugo-blog/public/post/kotlin/kotlin-%E5%8D%8F%E7%A8%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A31%E5%8D%8F%E7%A8%8B%E5%9F%BA%E7%A1%80/">Kotlin 协程官方文档（1）协程基础</a>
+      </h1>
+
+      
+      
+
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass-high" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M6.5 7h11"></path>
+   <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
+   <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
+</svg>
+
+    </i>
+    <span>
+      3 minutes to read
+    </span>
+  </div>
+</div>
+
+      <div class="flex flex-col gap-y-1 md:flex-row md:gap-y-0 md:gap-x-4 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row text-base gap-x-1">
+    <i class="h-6 w-6 flex-none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    class="icon icon-tabler icons-tabler-outline icon-tabler-user">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+    </i>
+    <span>Xiaoliang Wang</span>
+  </div>
+</div>
+
+      
+        
+        <section class="prose prose-slate dark:prose-invert w-full max-w-4xl lg:max-w-5xl mt-6">
+          <h2>Table of Contents</h2>
+          <aside><nav id="TableOfContents"></nav></aside>
+        </section>
+        
+      
+
+      <article class="mt-6 w-full max-w-4xl lg:max-w-5xl prose prose-slate dark:prose-invert prose-quoteless post-content">
+        <blockquote>
+<p>公众号：<a href="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image" target="_blank" rel="noopener">字节数组</a>
+</p>
+<p>希望对你有所帮助 🤣🤣</p></blockquote>
+<blockquote>
+<p>最近一直在了解关于 <strong>Kotlin协程</strong> 的知识，那最好的学习资料自然是官方提供的学习文档了，看了看后我就萌生了翻译官方文档的想法。前后花了要接近一个月时间，一共九篇文章，在这里也分享出来，希望对读者有所帮助。个人知识所限，有些翻译得不是太顺畅，也希望读者能提出意见</p>
+<p>协程官方文档：<a href="https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md" target="_blank" rel="noopener">coroutines-guide</a>
+</p></blockquote>
+<p>此章节涵盖了协程的基本概念</p>
+<h1 id="一你的第一个协程程序">一、你的第一个协程程序</h1>
+<p>运行以下代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">// 在后台启动一个新协程，并继续执行之后的代码
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span> <span class="c1">// 非阻塞式地延迟一秒
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span> <span class="c1">// 延迟结束后打印
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span> <span class="c1">//主线程继续执行，不受协程 delay 所影响
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nc">Thread</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="m">2000L</span><span class="p">)</span> <span class="c1">// 主线程阻塞式睡眠2秒，以此来保证JVM存活
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>输出结果</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">Hello</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="n">World</span><span class="p">!</span>
+</span></span></code></pre></div><p>本质上，协程可以称为<strong>轻量级线程</strong>。协程在 CoroutineScope （协程作用域）的上下文中通过 launch、async 等协程构造器（coroutine builder）来启动。在上面的例子中，在 GlobalScope ，即<strong>全局作用域</strong>内启动了一个新的协程，这意味着该协程的生命周期只受整个应用程序的生命周期的限制，即只要整个应用程序还在运行中，只要协程的任务还未结束，该协程就可以一直运行</p>
+<p>可以将以上的协程改写为常用的 thread 形式，可以获得相同的结果</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">thread</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nc">Thread</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nc">Thread</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="m">2000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>但是如果仅仅是将 <code>GlobalScope.launch</code> 替换为 <code>thread</code> 的话，编译器将提示错误：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">Suspend</span> <span class="n">function</span> <span class="err">&#39;</span><span class="n">delay</span><span class="err">&#39;</span> <span class="n">should</span> <span class="n">be</span> <span class="n">called</span> <span class="n">only</span> <span class="n">from</span> <span class="n">a</span> <span class="n">coroutine</span> <span class="n">or</span> <span class="n">another</span> <span class="k">suspend</span> <span class="n">function</span>
+</span></span></code></pre></div><p>这是由于 <code>delay()</code> 是一个挂起函数（suspending function），挂起函数只能由协程或者其它挂起函数进行调度。挂起函数不会阻塞线程，而是会将协程挂起，在特定的时候才再继续运行</p>
+<blockquote>
+<p>开发者需要明白，协程是运行于线程上的，一个线程可以运行多个（可以是几千上万个）协程。线程的调度行为是由 OS 来操纵的，而协程的调度行为是可以由开发者来指定并由编译器来实现的。当协程 A 调用 delay(1000L) 函数来指定延迟1秒后再运行时，协程 A 所在的线程只是会转而去执行协程 B，等到1秒后再把协程 A 加入到可调度队列里。所以说，线程并不会因为协程的延时而阻塞，这样可以极大地提高线程的并发灵活度</p></blockquote>
+<h1 id="二桥接阻塞与非阻塞的世界">二、桥接阻塞与非阻塞的世界</h1>
+<p>在第一个协程程序里，混用了非阻塞代码 <code>delay()</code> 与阻塞代码 <code>Thread.sleep()</code> ，使得我们很容易就搞混当前程序是否是阻塞的。可以改用 runBlocking 来明确这种情形</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">// launch a new coroutine in background and continue
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span> <span class="c1">// main thread continues here immediately
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">runBlocking</span> <span class="p">{</span>     <span class="c1">// but this expression blocks the main thread
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">2000L</span><span class="p">)</span>  <span class="c1">// ... while we delay for 2 seconds to keep JVM alive
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果和第一个程序是一样的，但是这段代码只使用了非阻塞延迟。主线程调用了 runBlocking 函数，直到 runBlocking 内部的所有协程执行完成后，之后的代码才会继续执行</p>
+<p>可以将以上代码用更喜欢的方式来重写，使用 runBlocking 来包装 main 函数的执行体：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span> <span class="c1">// start main coroutine
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">// launch a new coroutine in background and continue
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span> <span class="c1">// main coroutine continues here immediately
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">delay</span><span class="p">(</span><span class="m">2000L</span><span class="p">)</span>      <span class="c1">// delaying for 2 seconds to keep JVM alive
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>这里 <code>runBlocking&lt;Unit&gt; { ... } </code> 作为用于启动顶层主协程的适配器。我们显式地指定它的返回类型 Unit，因为 kotlin 中 main 函数必须返回 Unit 类型，但一般我们都可以省略类型声明，因为编译器可以自动推导（这需要代码块的最后一行代码语句没有返回值或者返回值为 Unit）</p>
+<p>这也是为挂起函数编写单元测试的一种方法：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MyTest</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">testMySuspendingFunction</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// here we can use suspending functions using any assertion style that we like
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>需要注意的是，runBlocking 代码块默认运行于其声明所在的线程，而 launch 代码块默认运行于线程池中，可以通过打印当前线程名来进行区分</p>
+<h1 id="三等待作业">三、等待作业</h1>
+<p>延迟一段时间来等待另一个协程运行并不是一个好的选择，可以显式（非阻塞的方式）地等待协程执行完成</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">val</span> <span class="py">job</span> <span class="p">=</span> <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span> <span class="c1">// launch a new coroutine and keep a reference to its Job
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">job</span><span class="p">.</span><span class="n">join</span><span class="p">()</span> <span class="c1">// wait until child coroutine completes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>现在，代码的运行结果仍然是相同的，但是主协程与后台作业的持续时间没有任何关系，这样好多了</p>
+<h1 id="四结构化并发">四、结构化并发</h1>
+<p>以上对于协程的使用还有一些需要改进的地方。<code>GlobalScope.launch</code> 会创建一个顶级协程。尽管它很轻量级，但在运行时还是会消耗一些内存资源。如果开发者忘记保留对该协程的引用，它将可以一直运行直到整个应用程序停止。我们会遇到一些比较麻烦的情形，比如协程中的代码被挂起（比如错误地延迟了太多时间），或者启动了太多协程导致内存不足。此时我们需要手动保留对所有已启动协程的引用以便在需要的时候停止协程，但这很容易出错</p>
+<p>kotlin 提供了更好的解决方案。我们可以在代码中使用结构化并发。正如我们通常使用线程那样（线程总是全局的），我们可以在特定的范围内来启动协程</p>
+<p>在上面的示例中，我们通过 runBlocking 将 main() 函数转为协程。每个协程构造器（包括 runBlocking）都会将 CoroutineScope 的实例添加到其代码块的作用域中。我们可以在这个作用域中启动协程，而不必显式地 <code>join</code>，因为外部协程（示例代码中的 runBlocking）在其作用域中启动的所有协程完成之前不会结束。因此，我们可以简化示例代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span> <span class="c1">// this: CoroutineScope
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">launch</span> <span class="p">{</span> <span class="c1">// launch a new coroutine in the scope of runBlocking
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>launch 函数是 CoroutineScope 的扩展函数，而 runBlocking 的函数体参数也是被声明为 CoroutineScope 的扩展函数，所以 launch 函数就隐式持有了和 runBlocking 相同的协程作用域。此时即使 delay 再久， <code>println(&quot;World!&quot;)</code> 也一定会被执行</p>
+<h1 id="五作用域构建器">五、作用域构建器</h1>
+<p>除了使用官方的几个协程构建器所提供的协程作用域之外，还可以使用 <code>coroutineScope</code> 来声明自己的作用域。coroutineScope 用于创建一个协程作用域，直到所有启动的子协程都完成后才结束</p>
+<p>runBlocking 和 coroutineScope 看起来很像，因为它们都需要等待其内部所有相同作用域的子协程结束后才会结束自己。两者的主要区别在于 runBlocking 方法会阻塞当前线程，而 coroutineScope 只是挂起并释放底层线程以供其它协程使用。由于这个差别，所以 runBlocking 是一个普通函数，而 coroutineScope 是一个挂起函数</p>
+<p>可以通过以下示例来演示：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span> <span class="c1">// this: CoroutineScope
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">launch</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">delay</span><span class="p">(</span><span class="m">200L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Task from runBlocking&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">coroutineScope</span> <span class="p">{</span> <span class="c1">// Creates a coroutine scope
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Task from nested launch&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">        <span class="n">delay</span><span class="p">(</span><span class="m">100L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Task from coroutine scope&#34;</span><span class="p">)</span> <span class="c1">// This line will be printed before the nested launch
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Coroutine scope is over&#34;</span><span class="p">)</span> <span class="c1">// This line is not printed until the nested launch completes
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>运行结果：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">Task</span> <span class="n">from</span> <span class="n">coroutine</span> <span class="n">scope</span>
+</span></span><span class="line"><span class="cl"><span class="n">Task</span> <span class="n">from</span> <span class="n">runBlocking</span>
+</span></span><span class="line"><span class="cl"><span class="n">Task</span> <span class="n">from</span> <span class="n">nested</span> <span class="n">launch</span>
+</span></span><span class="line"><span class="cl"><span class="n">Coroutine</span> <span class="n">scope</span> <span class="k">is</span> <span class="n">over</span> 
+</span></span></code></pre></div><p>注意，在 “Task from coroutine scope” 消息打印之后，在等待 launch 执行完之前 ，将执行并打印“Task from runBlocking”，尽管此时 coroutineScope 尚未完成</p>
+<h1 id="六提取函数并重构">六、提取函数并重构</h1>
+<p>抽取 launch 内部的代码块为一个独立的函数，需要将之声明为挂起函数。挂起函数可以像常规函数一样在协程中使用，但它们的额外特性是：可以依次使用其它挂起函数（如 delay 函数）来使协程挂起</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">launch</span> <span class="p">{</span> <span class="n">doWorld</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;Hello,&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// this is your first suspending function
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">suspend</span> <span class="k">fun</span> <span class="nf">doWorld</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">println</span><span class="p">(</span><span class="s2">&#34;World!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>但是如果提取出的函数包含一个在当前作用域中调用的协程构建器的话该怎么办？ 在这种情况下，所提取函数上只有 <code>suspend</code> 修饰符是不够的。为 <code>CoroutineScope</code> 写一个扩展函数 <code>doWorld</code> 是其中一种解决方案，但这可能并非总是适用的，因为它并没有使 API 更加清晰。 常用的解决方案是要么显式将 <code>CoroutineScope</code> 作为包含该函数的类的一个字段， 要么当外部类实现了 <code>CoroutineScope</code> 时隐式取得。 作为最后的手段，可以使用 <code>CoroutineScope(coroutineContext)</code>，不过这种方法结构上并不安全， 因为你不能再控制该方法执行的作用域。只有私有 API 才能使用这个构建器。</p>
+<h1 id="七协程是轻量级的">七、协程是轻量级的</h1>
+<p>运行以下代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">repeat</span><span class="p">(</span><span class="m">100</span><span class="n">_000</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// launch a lot of coroutines
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">1000L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">print</span><span class="p">(</span><span class="s2">&#34;.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>以上代码启动了10万个协程，每个协程延时一秒后都会打印输出。如果改用线程来完成的话，很大可能会发生内存不足异常，但用协程来完成的话就可以轻松胜任</p>
+<h1 id="八全局协程类似于守护线程">八、全局协程类似于守护线程</h1>
+<p>以下代码在 GlobalScope 中启动了一个会长时间运行的协程，它每秒打印两次 &ldquo;I&rsquo;m sleeping&rdquo; ，然后在延迟一段时间后从 main 函数返回</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">kotlinx.coroutines.*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">main</span><span class="p">()</span> <span class="p">=</span> <span class="n">runBlocking</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//sampleStart
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nc">GlobalScope</span><span class="p">.</span><span class="n">launch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">repeat</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span> <span class="p">{</span> <span class="n">i</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">println</span><span class="p">(</span><span class="s2">&#34;I&#39;m sleeping </span><span class="si">$i</span><span class="s2"> ...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">delay</span><span class="p">(</span><span class="m">500L</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delay</span><span class="p">(</span><span class="m">1300L</span><span class="p">)</span> <span class="c1">// just quit after delay
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//sampleEnd    
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>你可以运行代码并看到它打印了三行后终止运行：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">0</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">1</span> <span class="o">..</span><span class="p">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">sleeping</span> <span class="m">2</span> <span class="o">..</span><span class="p">.</span>
+</span></span></code></pre></div><p>这是由于 launch 函数依附的协程作用域是 GlobalScope，而非 runBlocking 所隐含的作用域。在 GlobalScope 中启动的协程无法使进程保持活动状态，它们就像守护线程（当主线程消亡时，守护线程也将消亡）</p>
+
+      </article>
+
+      
+
+
+  
+<script type="text/javascript">
+  (function() {
+    const themeToggle = document.querySelector('.darkmode-toggle input');
+    const light = 'light';
+    const dark = 'dark';
+    let isDark = localStorage.theme === dark || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    let theme = isDark ? dark : light;
+
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    const dataset = {
+        repo: 'tomowang\/hugo-theme-tailwind',
+        repoId: 'R_kgDOKjVJHA',
+        category: 'Announcements',
+        categoryId: 'DIC_kwDOKjVJHM4CafqS',
+        mapping: 'pathname',
+        reactionsEnabled: '1',
+        emitMetadata: '0',
+        theme: theme,
+        lang: 'en',
+    };
+    s.src = 'https://giscus.app/client.js';
+    s.crossorigin = 'anonymous';
+    s.async = true;
+    Object.entries(dataset).forEach(function(a) {
+        return s.dataset[a[0]] = a[1];
+    });
+
+    const curScriptElement = document.currentScript;
+    curScriptElement.parentNode.insertBefore(s, curScriptElement);
+
+    function sendMessage(message) {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      
+      if (!iframe) return;
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    }
+
+    themeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        theme = dark;
+      } else {
+        theme = light;
+      }
+      sendMessage({
+        setConfig: {
+          theme: theme,
+        }
+      });
+    });
+  })();
+</script>
+  
+
+
+
+    </div>
+  </div>
+</div>
+
+  </main>
+  <footer class="flex flex-none justify-center">
+    <section class="flex flex-col md:flex-row mx-2 md:mx-0 gap-2 md:gap-0 justify-between w-full max-w-4xl lg:max-w-5xl py-6 text-slate-500 dark:text-slate-300">
+  <div class="flex flex-row">
+    
+  
+  
+    <a href="https://x.com/hqqich" target="_blank" title="X" class="flex flex-row mr-2">
+      <span class="hidden">X</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-x" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+  
+    <a href="https://github.com/hqqich" target="_blank" title="Github" class="flex flex-row mr-2">
+      <span class="hidden">Github</span>
+      <i class="h-6 w-6 flex-none"> <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+</svg>
+ </i>
+    </a>
+  
+  
+
+
+  </div>
+  <div class="grow"></div>
+  <div class="flex flex-row">
+    <i class="h-6 w-6 flex-none"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+   <path d="M14 9.75a3.016 3.016 0 0 0 -4.163 .173a2.993 2.993 0 0 0 0 4.154a3.016 3.016 0 0 0 4.163 .173"></path>
+</svg>
+</i> 2022 - 2025 Hqqich
+    
+  </div>
+  
+  <div class="flex flex-row">
+    <span class="ml-0 pl-0 md:ml-2 md:pl-2 border-l-0 md:border-l border-slate-300 dark:border-slate-400">
+      Powered by <a href="https://gohugo.io" target="_blank" rel="noopener" class="underline">Hugo</a> <span class="text-red-600">&hearts;</span> <a href="https://github.com/tomowang/hugo-theme-tailwind" target="_blank" rel="noopener" class="underline">Tailwind</a>
+    </span>
+  </div>
+  
+</section>
+
+  </footer>
+  <script src="/hugo-blog/public/main.js"></script>
+
+<div class="hidden top-1 right-1" id="code-copy">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+  <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+</svg>
+
+  </i>
+</div>
+<div class="hidden top-1 right-1" id="code-copy-done">
+  <i class="h-6 w-6 block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M5 12l5 5l10 -10" />
+</svg>
+
+  </i>
+</div><script src="/hugo-blog/public/code-copy.js"></script>
+
+
+
+
+
+</body>
+</html>
