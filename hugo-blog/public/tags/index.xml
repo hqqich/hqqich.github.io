@@ -2,97 +2,104 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Hugo Theme Tailwind Example Site</title>
-    <link>http://localhost:1313/hugo-blog/public/tags/</link>
+    <link>https://gohugo.io/hugo-blog/public/tags/</link>
     <description>Recent content in Tags on Hugo Theme Tailwind Example Site</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
     <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Sun, 25 May 2025 19:58:50 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/hugo-blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 May 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gohugo.io/hugo-blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>网络</title>
+      <link>https://gohugo.io/hugo-blog/public/tags/%E7%BD%91%E7%BB%9C/</link>
+      <pubDate>Tue, 27 May 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>https://gohugo.io/hugo-blog/public/tags/%E7%BD%91%E7%BB%9C/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Sql</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/sql/</link>
-      <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/sql/</guid>
+      <link>https://gohugo.io/hugo-blog/public/tags/sql/</link>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <guid>https://gohugo.io/hugo-blog/public/tags/sql/</guid>
       <description></description>
     </item>
     <item>
       <title>Three.js</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/three.js/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/three.js/</link>
       <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/three.js/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/three.js/</guid>
       <description></description>
     </item>
     <item>
       <title>Css</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/css/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/css/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/css/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/css/</guid>
       <description></description>
     </item>
     <item>
       <title>Html</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/html/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/html/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/html/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/html/</guid>
       <description></description>
     </item>
     <item>
       <title>Markdown</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/markdown/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/markdown/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/markdown/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/markdown/</guid>
       <description></description>
     </item>
     <item>
       <title>Tag1</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/tag1/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/tag1/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/tag1/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/tag1/</guid>
       <description></description>
     </item>
     <item>
       <title>Tag2</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/tag2/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/tag2/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/tag2/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/tag2/</guid>
       <description></description>
     </item>
     <item>
       <title>Privacy</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/privacy/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/privacy/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/privacy/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/privacy/</guid>
       <description></description>
     </item>
     <item>
       <title>Shortcodes</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/shortcodes/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/shortcodes/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/shortcodes/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/shortcodes/</guid>
       <description></description>
     </item>
     <item>
       <title>Text</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/text/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/text/</link>
       <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/text/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/text/</guid>
       <description></description>
     </item>
     <item>
       <title>Emoji</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/emoji/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/emoji/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/emoji/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/emoji/</guid>
       <description></description>
     </item>
     <item>
       <title>CustomTag</title>
-      <link>http://localhost:1313/hugo-blog/public/tags/custom/</link>
+      <link>https://gohugo.io/hugo-blog/public/tags/custom/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/tags/custom/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/tags/custom/</guid>
       <description></description>
     </item>
   </channel>

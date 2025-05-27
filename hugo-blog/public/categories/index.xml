@@ -2,34 +2,34 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Hugo Theme Tailwind Example Site</title>
-    <link>http://localhost:1313/hugo-blog/public/categories/</link>
+    <link>https://gohugo.io/hugo-blog/public/categories/</link>
     <description>Recent content in Categories on Hugo Theme Tailwind Example Site</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
     <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Sun, 25 May 2025 19:58:50 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/hugo-blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 May 2025 21:30:59 +0800</lastBuildDate>
+    <atom:link href="https://gohugo.io/hugo-blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Syntax</title>
-      <link>http://localhost:1313/hugo-blog/public/categories/syntax/</link>
+      <link>https://gohugo.io/hugo-blog/public/categories/syntax/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/categories/syntax/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/categories/syntax/</guid>
       <description></description>
     </item>
     <item>
       <title>Themes</title>
-      <link>http://localhost:1313/hugo-blog/public/categories/themes/</link>
+      <link>https://gohugo.io/hugo-blog/public/categories/themes/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/categories/themes/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/categories/themes/</guid>
       <description></description>
     </item>
     <item>
       <title>A Category with Slug</title>
-      <link>http://localhost:1313/hugo-blog/public/categories/with-slug/</link>
+      <link>https://gohugo.io/hugo-blog/public/categories/with-slug/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/categories/with-slug/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/categories/with-slug/</guid>
       <description></description>
     </item>
   </channel>

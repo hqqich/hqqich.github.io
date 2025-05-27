@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
-<head><script src="/hugo-blog/public/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=hugo-blog/public/livereload" data-no-instant defer></script>
+<head>
   <title>Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一） :: Hugo Theme Tailwind Example Site - Example site for hugo-theme-tailwind</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -19,7 +19,7 @@ import { defineComponent } from &#34;vue&#34;; import * as THREE from &#39;three
   name="keywords"
   content="hugo, tailwind, tailwindcss, hugo theme, hugo theme tailwind"
 />
-<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/">
+<meta name="robots" content="noodp" /><link rel="manifest" href="/manifest.json" /><meta property="og:url" content="https://gohugo.io/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/">
   <meta property="og:site_name" content="Hugo Theme Tailwind Example Site">
   <meta property="og:title" content="Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）">
   <meta property="og:description" content="Guide to emoji usage in Hugo">
@@ -36,37 +36,40 @@ import { defineComponent } from &#34;vue&#34;; import * as THREE from &#39;three
   <meta name="twitter:description" content="Guide to emoji usage in Hugo">
 
 
-<link rel="canonical" href="http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/" />
+<link rel="canonical" href="https://gohugo.io/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/" />
 
 <link rel="shortcut icon" href="/hugo-blog/public/favicon.ico" />
-<link rel="stylesheet" href="/hugo-blog/public/css/index.c3a5d1586276a68cf55558ab67f2c726fee27f4aea3add1802872f471c5f233d.css">
+<link rel="stylesheet" href="/hugo-blog/public/css/index.min.8f52268ce38691bd84eeee05121a11e2bc53c0e9f7fa97e2b147af29c8a627e1.css">
 
 
 
 
 
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-75W5D7R0V1"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-75W5D7R0V1');
+        }
+      </script>
 
 
 
 
   
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"hqqich"},"dateModified":"2025-03-05T00:00:00Z","datePublished":"2025-03-05T00:00:00Z","description":"我们用three.js可以绘制出各种酷炫的画面，但是当我们想要一个更加真实的物理效果的话，这个时候我们就需要一个物理的库，接下来我们就讲解一下今天要学习的canon，它可以给我们提供一个更加真实的物理效果，像物体的张力、摩擦力、拉伸、反弹等等各种真实的物理效果。该库都能够有一个非常好的模拟。\nPS：目前博主在一家互联网公司工作，该公司的编码风格是vue+tsx ，所以接下来的项目以该编码风格进行举例，详细了解参考我之前的文章：地址 。\ncanon基本使用 Cannon 是一种轻量级 的 JavaScript 3D 物理引擎，用于实现虚拟世界中的物理模拟和交互。它提供了一套强大的功能，能够处理刚体碰撞、力学模拟、约束系统等物理效果，使开发者能够在 Web 应用程序和游戏中实现逼真的物理行为。\nCannon的官网：地址 ，提供了一系列关于物理运动在three世界的实现，实现案例 的效果非常直观，展示了物理运动的魅力，如下：\nTest for external image 接下来我们在three.js的vue项目 中使用Cannon，终端执行如下命令安装，具体参考：官网 `npm i cannon-es` 接下来我们通过tsx风格语法撰写three基础项目实现：\nimport { defineComponent } from \u0026#34;vue\u0026#34;; import * as THREE from \u0026#39;three\u0026#39; import { OrbitControls } from \u0026#39;three/examples/jsm/controls/OrbitControls.js\u0026#39; import * as CANNON from \u0026#39;cannon-es\u0026#39; import \u0026#39;./index.scss\u0026#39; import { div } from \u0026#34;three/examples/jsm/nodes/Nodes.js\u0026#34;; export default defineComponent({ setup() { // 初始化物理世界 const world = new CANNON.World() // 初始化物理世界的重力 world.gravity.set(0, -9.82, 0) // 初始化3D世界 const scene = new THREE.Scene() // 初始化相机 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000) camera.position.z = 3 // 初始化渲染器 const renderer = new THREE.WebGLRenderer({ antialias: true }) renderer.setSize(window.innerWidth, window.innerHeight) document.body.appendChild(renderer.domElement) // 初始化控制器 const controls = new OrbitControls(camera, renderer.domElement) controls.enableDamping = true // 渲染 let clock = new THREE.Clock() const animate = () =\u0026gt; { let delta = clock.getDelta() controls.update() renderer.render(scene, camera) requestAnimationFrame(animate) } animate() return () =\u0026gt; { \u0026lt;div\u0026gt;\u0026lt;/div\u0026gt; } } }) 接下来我们需要给场景添加一些物体，如下：\n","name":"Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）","url":"http://localhost:1313/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/"}
+  {"@context":"https://schema.org","@type":"Article","author":{"@type":"Person","name":"hqqich"},"dateModified":"2025-03-05T00:00:00Z","datePublished":"2025-03-05T00:00:00Z","description":"我们用three.js可以绘制出各种酷炫的画面，但是当我们想要一个更加真实的物理效果的话，这个时候我们就需要一个物理的库，接下来我们就讲解一下今天要学习的canon，它可以给我们提供一个更加真实的物理效果，像物体的张力、摩擦力、拉伸、反弹等等各种真实的物理效果。该库都能够有一个非常好的模拟。\nPS：目前博主在一家互联网公司工作，该公司的编码风格是vue+tsx ，所以接下来的项目以该编码风格进行举例，详细了解参考我之前的文章：地址 。\ncanon基本使用 Cannon 是一种轻量级 的 JavaScript 3D 物理引擎，用于实现虚拟世界中的物理模拟和交互。它提供了一套强大的功能，能够处理刚体碰撞、力学模拟、约束系统等物理效果，使开发者能够在 Web 应用程序和游戏中实现逼真的物理行为。\nCannon的官网：地址 ，提供了一系列关于物理运动在three世界的实现，实现案例 的效果非常直观，展示了物理运动的魅力，如下：\nTest for external image 接下来我们在three.js的vue项目 中使用Cannon，终端执行如下命令安装，具体参考：官网 `npm i cannon-es` 接下来我们通过tsx风格语法撰写three基础项目实现：\nimport { defineComponent } from \u0026#34;vue\u0026#34;; import * as THREE from \u0026#39;three\u0026#39; import { OrbitControls } from \u0026#39;three/examples/jsm/controls/OrbitControls.js\u0026#39; import * as CANNON from \u0026#39;cannon-es\u0026#39; import \u0026#39;./index.scss\u0026#39; import { div } from \u0026#34;three/examples/jsm/nodes/Nodes.js\u0026#34;; export default defineComponent({ setup() { // 初始化物理世界 const world = new CANNON.World() // 初始化物理世界的重力 world.gravity.set(0, -9.82, 0) // 初始化3D世界 const scene = new THREE.Scene() // 初始化相机 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000) camera.position.z = 3 // 初始化渲染器 const renderer = new THREE.WebGLRenderer({ antialias: true }) renderer.setSize(window.innerWidth, window.innerHeight) document.body.appendChild(renderer.domElement) // 初始化控制器 const controls = new OrbitControls(camera, renderer.domElement) controls.enableDamping = true // 渲染 let clock = new THREE.Clock() const animate = () =\u0026gt; { let delta = clock.getDelta() controls.update() renderer.render(scene, camera) requestAnimationFrame(animate) } animate() return () =\u0026gt; { \u0026lt;div\u0026gt;\u0026lt;/div\u0026gt; } } }) 接下来我们需要给场景添加一些物体，如下：\n","name":"Three.js--》探寻Cannon.js构建震撼的3D物理交互体验（一）","url":"https://gohugo.io/hugo-blog/public/post/threejs/three.js--%E6%8E%A2%E5%AF%BBcannon.js%E6%9E%84%E5%BB%BA%E9%9C%87%E6%92%BC%E7%9A%843d%E7%89%A9%E7%90%86%E4%BA%A4%E4%BA%92%E4%BD%93%E9%AA%8C%E4%B8%80/"}
 </script>
 
 </head>
-<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800">
-    
-<div class="fixed right-0 top-0 z-50 flex items-center justify-center bg-gray-200 p-2 text-sm uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200">
-  <span class="block sm:hidden">all</span>
-  <span class="hidden sm:block md:hidden">sm</span>
-  <span class="hidden md:block lg:hidden">md</span>
-  <span class="hidden lg:block xl:hidden">lg</span>
-  <span class="hidden xl:block 2xl:hidden">xl</span>
-  <span class="hidden 2xl:block">2xl</span>
-</div>
-
-  <header class="flex flex-none justify-center z-10">
+<body class="flex flex-col min-h-screen w-full bg-slate-50 dark:bg-gray-800"><header class="flex flex-none justify-center z-10">
     <div class="flex flex-row gap justify-between w-full max-w-4xl lg:max-w-5xl h-12 mt-3">
   <div class="flex-none ml-2 md:ml-0">
     <a href="/hugo-blog/public/" class="">
@@ -1292,7 +1295,7 @@ import { defineComponent } from &#34;vue&#34;; import * as THREE from &#39;three
 </section>
 
   </footer>
-  <script src="/hugo-blog/public/main.js"></script>
+  <script src="/hugo-blog/public/main.min.65ca5b0808abf278fcec5d424701ebf0b4bc46a737129cd5e57fdb739f463e79.js"></script>
 
 <div class="hidden top-1 right-1" id="code-copy">
   <i class="h-6 w-6 block">
@@ -1312,7 +1315,7 @@ import { defineComponent } from &#34;vue&#34;; import * as THREE from &#39;three
 </svg>
 
   </i>
-</div><script src="/hugo-blog/public/code-copy.js"></script>
+</div><script src="/hugo-blog/public/code-copy.min.e7b2a74adef1ed474c335c8bd5e7832b2316b8842b0f9184d65286c5bd64f51a.js"></script>
 
 
 

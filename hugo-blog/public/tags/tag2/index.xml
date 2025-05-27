@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tag2 on Hugo Theme Tailwind Example Site</title>
-    <link>http://localhost:1313/hugo-blog/public/tags/tag2/</link>
+    <link>https://gohugo.io/hugo-blog/public/tags/tag2/</link>
     <description>Recent content in Tag2 on Hugo Theme Tailwind Example Site</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
     <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/hugo-blog/public/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 25 May 2025 21:30:59 +0800</lastBuildDate>
+    <atom:link href="https://gohugo.io/hugo-blog/public/tags/tag2/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Markdown Syntax Guide</title>
-      <link>http://localhost:1313/hugo-blog/public/post/i18n-blog/markdown-syntax/</link>
+      <link>https://gohugo.io/hugo-blog/public/post/i18n-blog/markdown-syntax/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>http://localhost:1313/hugo-blog/public/post/i18n-blog/markdown-syntax/</guid>
+      <guid>https://gohugo.io/hugo-blog/public/post/i18n-blog/markdown-syntax/</guid>
       <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
     </item>
   </channel>
