@@ -10,6 +10,10 @@ tags = [
 
 > 在处理视频播放时遇到 NotAllowedError: play() failed because the user didn't interact with the document 这类错误，通常是因为浏览器的自动播放策略限制了在没有用户交互的情况下自动播放视频。从2018年开始，大部分现代浏览器都加强了对自动播放视频的限制，以改善用户体验和减少对用户注意力的干扰。
 
+## 参考
+
+[浏览器自动播放音频时的错误拦截（Uncaught (in promise) NotAllowedError: play() ...... https://goo.gl/xX8pDD）](https://blog.csdn.net/qq_45599738/article/details/143888787)
+
 ## 解决方法
 
 ### 1. 用户交互触发播放：
