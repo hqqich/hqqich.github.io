@@ -1,4 +1,4 @@
 ---
-title: A Category with Slug
+title: 自定义分类
 slug: with-slug
 ---

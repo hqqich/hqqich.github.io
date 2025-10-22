@@ -33,3 +33,10 @@
     name = "关于"
     pageRef = "about"
     weight = 20
+
+  [[zh-cn.menu.main]]
+    identifier = "weekly"
+    name = "周总结"
+    pageRef = "weekly"
+    weight = 20
+

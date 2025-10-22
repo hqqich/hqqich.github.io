@@ -2,303 +2,127 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/categories/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
+    <loc>https://gohugo.io/hugo-blog/public/post/</loc>
+    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/tags/</loc>
+    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/categories/"
+                href="https://gohugo.io/hugo-blog/public/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/categories/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
                 href="https://gohugo.io/hugo-blog/public/tags/"
                 />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/"
-                />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/image-process/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/i18n-blog/image-process/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/image-process/"
-                />
+    <loc>https://gohugo.io/hugo-blog/public/tags/windows/</loc>
+    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/css/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/css/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/css/"
-                />
+    <loc>https://gohugo.io/hugo-blog/public/tags/%E8%BF%9C%E7%A8%8B/</loc>
+    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/html/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/html/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/html/"
-                />
+    <loc>https://gohugo.io/hugo-blog/public/post/software/1remote/</loc>
+    <lastmod>2025-10-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/markdown/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/markdown/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/markdown/"
-                />
+    <loc>https://gohugo.io/hugo-blog/public/tags/sql/</loc>
+    <lastmod>2025-05-25T22:46:18+08:00</lastmod>
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/markdown-syntax/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/i18n-blog/markdown-syntax/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/markdown-syntax/"
-                />
+    <loc>https://gohugo.io/hugo-blog/public/post/dev-log/github-action/</loc>
+    <lastmod>2025-05-25T22:46:18+08:00</lastmod>
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/series/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/series/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/series/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/categories/syntax/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/categories/syntax/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/categories/syntax/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/tag1/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/tag1/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/tag1/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/tag2/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/tag2/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/tag2/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/categories/themes/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/categories/themes/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/categories/themes/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/series/themes-guide/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/series/themes-guide/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/series/themes-guide/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/math-typesetting/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/i18n-blog/math-typesetting/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/math-typesetting/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/emoji/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/emoji/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/emoji/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/emoji-support/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/i18n-blog/emoji-support/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/emoji-support/"
-                />
-  </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/about/</loc>
+    <loc>https://gohugo.io/hugo-blog/public/categories/</loc>
     <lastmod>2025-05-25T19:58:50+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/about/"
+                href="https://gohugo.io/hugo-blog/public/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/about/"
+                href="https://gohugo.io/hugo-blog/public/categories/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/rich-content/</loc>
-    <lastmod>2025-05-25T21:30:59+08:00</lastmod>
+    <loc>https://gohugo.io/hugo-blog/public/weekly/2025-10-20/</loc>
+    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/weekly/</loc>
+    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/about/</loc>
+    <lastmod>2025-05-25T19:58:50+08:00</lastmod>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/</loc>
+    <lastmod>2025-05-25T19:58:50+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/post/i18n-blog/rich-content/"
+                href="https://gohugo.io/hugo-blog/public/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/post/i18n-blog/rich-content/"
+                href="https://gohugo.io/hugo-blog/public/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/search/</loc>
+    <loc>https://gohugo.io/hugo-blog/public/manifest.json</loc>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.de/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.es/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.fr/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.hi/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.jp/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.nl/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.pl/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/_index.ru/</loc>
+    <priority>0.1</priority>
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/search/</loc>
     <priority>0.1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
+                href="https://gohugo.io/hugo-blog/public/en/search/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-CN"
                 href="https://gohugo.io/hugo-blog/public/search/"
                 />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/search/"
-                />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/tags/custom/</loc>
-    <lastmod>2025-05-25T19:58:50+08:00</lastmod>
+    <loc>https://gohugo.io/hugo-blog/public/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/tags/custom/"
+                href="https://gohugo.io/hugo-blog/public/en/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/tags/custom/"
+                href="https://gohugo.io/hugo-blog/public/series/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/zh-cn/categories/with-slug/</loc>
+    <loc>https://gohugo.io/hugo-blog/public/tags/custom/</loc>
     <lastmod>2025-05-25T19:58:50+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/categories/with-slug/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/zh-cn/categories/with-slug/"
-                />
+  </url><url>
+    <loc>https://gohugo.io/hugo-blog/public/categories/with-slug/</loc>
+    <lastmod>2025-05-25T19:58:50+08:00</lastmod>
   </url>
 </urlset>

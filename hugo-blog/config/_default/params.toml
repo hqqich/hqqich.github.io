@@ -11,16 +11,16 @@ jsonLD = true
 showAuthor = true
 
 [author]
-  name = "Xiaoliang Wang"
-  email = "user@example.com"
+  name = "hqqich"
+  email = "hqqich1314@outlook.com"
 
 [header]
   logo = "logo.svg"
-  title = "Hugo Theme Tailwind"
+  title = "软件分享博客"
 
 [footer]
   since = 2022
-  poweredby = true
+  poweredby = false
 
 # giscus is comments system powered by GitHub Discussions
 # generate configurations from https://giscus.app/
@@ -52,11 +52,11 @@ showAuthor = true
 
 [pwa]
   enabled = true
-  icon = "logo.png" # should be in assets
+  icon = "logo.svg" # should be in assets
   icon_sizes = [192, 512]
 
   # will be used as the manifest.json file and merge the default one
   # https://developer.mozilla.org/en-US/docs/Web/Manifest
   # https://web.dev/add-manifest/
   [manifest]
-  description = "Example site for hugo-theme-tailwind"
+  description = "软件分享博客"

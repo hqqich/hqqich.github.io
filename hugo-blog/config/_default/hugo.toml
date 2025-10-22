@@ -1,9 +1,9 @@
 baseURL = "https://gohugo.io/hugo-blog/public"
-title = "Hugo Theme Tailwind Example Site"
+title = "软件分享博客"
 copyright = "Hqqich"
 pagination.pagerSize = 3 # for demonstration of pagination
-languageCode = "en"
-defaultContentLanguage = "en"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
 enableInlineShortcodes = true
 # prevent build failures when using Hugo's Instagram shortcode due to deprecated Instagram API.
 # See https://github.com/gohugoio/hugo/issues/7228#issuecomment-714490456

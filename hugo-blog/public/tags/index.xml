@@ -1,104 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Hugo Theme Tailwind Example Site</title>
+    <title>Tags on 软件分享博客</title>
     <link>https://gohugo.io/hugo-blog/public/tags/</link>
-    <description>Recent content in Tags on Hugo Theme Tailwind Example Site</description>
+    <description>Recent content in Tags on 软件分享博客</description>
     <generator>Hugo</generator>
-    <language>en-US</language>
-    <managingEditor>user@example.com (Xiaoliang Wang)</managingEditor>
-    <webMaster>user@example.com (Xiaoliang Wang)</webMaster>
+    <language>zh-CN</language>
+    <managingEditor>hqqich1314@outlook.com (hqqich)</managingEditor>
+    <webMaster>hqqich1314@outlook.com (hqqich)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Tue, 27 May 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 22 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://gohugo.io/hugo-blog/public/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>网络</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/%E7%BD%91%E7%BB%9C/</link>
-      <pubDate>Tue, 27 May 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/%E7%BD%91%E7%BB%9C/</guid>
+      <title>Windows</title>
+      <link>https://gohugo.io/hugo-blog/public/tags/windows/</link>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
+      <guid>https://gohugo.io/hugo-blog/public/tags/windows/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>远程</title>
+      <link>https://gohugo.io/hugo-blog/public/tags/%E8%BF%9C%E7%A8%8B/</link>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
+      <guid>https://gohugo.io/hugo-blog/public/tags/%E8%BF%9C%E7%A8%8B/</guid>
       <description></description>
     </item>
     <item>
       <title>Sql</title>
       <link>https://gohugo.io/hugo-blog/public/tags/sql/</link>
-      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <pubDate>Sun, 25 May 2025 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
       <guid>https://gohugo.io/hugo-blog/public/tags/sql/</guid>
       <description></description>
     </item>
     <item>
-      <title>Three.js</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/three.js/</link>
-      <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/three.js/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Css</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/css/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/css/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Html</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/html/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/html/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Markdown</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/markdown/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/markdown/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tag1</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/tag1/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/tag1/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tag2</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/tag2/</link>
-      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/tag2/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Privacy</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/privacy/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/privacy/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Shortcodes</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/shortcodes/</link>
-      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/shortcodes/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Text</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/text/</link>
-      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/text/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Emoji</title>
-      <link>https://gohugo.io/hugo-blog/public/tags/emoji/</link>
-      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
-      <guid>https://gohugo.io/hugo-blog/public/tags/emoji/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>CustomTag</title>
+      <title>自定义标签</title>
       <link>https://gohugo.io/hugo-blog/public/tags/custom/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>user@example.com (Xiaoliang Wang)</author>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
       <guid>https://gohugo.io/hugo-blog/public/tags/custom/</guid>
       <description></description>
     </item>

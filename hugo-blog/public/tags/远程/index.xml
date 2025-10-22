@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>远程 on 软件分享博客</title>
+    <link>https://gohugo.io/hugo-blog/public/tags/%E8%BF%9C%E7%A8%8B/</link>
+    <description>Recent content in 远程 on 软件分享博客</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <managingEditor>hqqich1314@outlook.com (hqqich)</managingEditor>
+    <webMaster>hqqich1314@outlook.com (hqqich)</webMaster>
+    <copyright>Hqqich</copyright>
+    <lastBuildDate>Wed, 22 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://gohugo.io/hugo-blog/public/tags/%E8%BF%9C%E7%A8%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>远程会话管理工具，1Remote</title>
+      <link>https://gohugo.io/hugo-blog/public/post/software/1remote/</link>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
+      <guid>https://gohugo.io/hugo-blog/public/post/software/1remote/</guid>
+      <description>&lt;h2 id=&#34;地址&#34;&gt;地址&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/1Remote/1Remote&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;github.com/1Remote/1Remote&lt;/a&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;&lt;div class=&#34;not-prose&#34;&gt;&#xD;&#xA;&lt;picture&gt;&#xD;&#xA;    &lt;source type=&#34;image/webp&#34; srcset=&#34;https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_6d8cb7bc0913ba4.webp 320w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_65a2a97c4f515b6e.webp 640w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_209eadc3a780a119.webp 960w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_51617b918e73e0ac.webp 1280w&#34; sizes=&#34;(min-width: 1024px) 100vw, 50vw&#34; /&gt;&#xD;&#xA;    &lt;source type=&#34;image/jpeg&#34; srcset=&#34;https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_3c07ba2b561e3906.jpg 320w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_2c18a8a6ed85a09.jpg 640w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_7991cd88b75fb402.jpg 960w, https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_dd24fbd992f005af.jpg 1280w&#34; sizes=&#34;(min-width: 1024px) 100vw, 50vw&#34; /&gt;&#xD;&#xA;    &lt;img class=&#34;h-auto max-w-full rounded-lg&#34; src=&#34;https://gohugo.io/hugo-blog/public/post/software/1remote/images/img_hu_2c18a8a6ed85a09.jpg&#34; width=&#34;1530&#34; height=&#34;718&#34; alt=&#34;界面&#34; title=&#34;界面&#34; loading=&#34;lazy&#34; /&gt;&#xD;&#xA;  &lt;/picture&gt;&#xD;&#xA;&lt;/div&gt;&#xD;&#xA;&lt;/p&gt;&#xA;&lt;h2 id=&#34;功能&#34;&gt;功能&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;开源且免费&lt;/li&gt;&#xA;&lt;li&gt;支持 RDP, SSH, VNC, Telnet, (S)FTP, RemoteApp 等多种协议&lt;/li&gt;&#xA;&lt;li&gt;多屏幕、高分辨率的 RDP 支持&lt;/li&gt;&#xA;&lt;li&gt;一键打开你的远程连接 (Alt + M)&lt;/li&gt;&#xA;&lt;li&gt;单个服务器配置中允许存储多个地址和账号&lt;/li&gt;&#xA;&lt;li&gt;基于选项卡的远程桌面界面、多语言、可自定义颜色主题&lt;/li&gt;&#xA;&lt;li&gt;易于部署，仅需解压就能运行&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+  </channel>
+</rss>
