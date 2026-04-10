@@ -1,1 +1,1 @@
-{"description":"Example site for hugo-theme-tailwind","display":"standalone","icons":[],"name":"软件分享博客","scope":"https://gohugo.io/hugo-blog/public/","start_url":"https://gohugo.io/hugo-blog/public/"}
+{"description":"Example site for hugo-theme-tailwind","display":"standalone","icons":[],"name":"软件分享博客","scope":"http://localhost:1313/hugo-blog/public/","start_url":"http://localhost:1313/hugo-blog/public/"}

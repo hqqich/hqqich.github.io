@@ -2,13 +2,13 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 软件分享博客</title>
-    <link>https://gohugo.io/hugo-blog/public/en/categories/</link>
+    <link>http://localhost:1313/hugo-blog/public/en/categories/</link>
     <description>Recent content in Categories on 软件分享博客</description>
     <generator>Hugo</generator>
     <language>en-US</language>
     <managingEditor>hqqich1314@outlook.com (hqqich)</managingEditor>
     <webMaster>hqqich1314@outlook.com (hqqich)</webMaster>
     <copyright>Hqqich</copyright>
-    <atom:link href="https://gohugo.io/hugo-blog/public/en/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/hugo-blog/public/en/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

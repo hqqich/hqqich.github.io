@@ -2,20 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 软件分享博客</title>
-    <link>https://gohugo.io/hugo-blog/public/categories/</link>
+    <link>http://localhost:1313/hugo-blog/public/categories/</link>
     <description>Recent content in Categories on 软件分享博客</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
     <managingEditor>hqqich1314@outlook.com (hqqich)</managingEditor>
     <webMaster>hqqich1314@outlook.com (hqqich)</webMaster>
     <copyright>Hqqich</copyright>
-    <lastBuildDate>Sun, 25 May 2025 19:58:50 +0800</lastBuildDate>
-    <atom:link href="https://gohugo.io/hugo-blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 22 Oct 2025 17:56:22 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/hugo-blog/public/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>自定义分类</title>
-      <link>https://gohugo.io/hugo-blog/public/categories/with-slug/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
-      <guid>https://gohugo.io/hugo-blog/public/categories/with-slug/</guid>
+      <title>Software</title>
+      <link>http://localhost:1313/hugo-blog/public/categories/software/</link>
+      <pubDate>Wed, 22 Oct 2025 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
+      <guid>http://localhost:1313/hugo-blog/public/categories/software/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>With-Slug</title>
+      <link>http://localhost:1313/hugo-blog/public/categories/with-slug/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>hqqich1314@outlook.com (hqqich)</author>
+      <guid>http://localhost:1313/hugo-blog/public/categories/with-slug/</guid>
       <description></description>
     </item>
   </channel>

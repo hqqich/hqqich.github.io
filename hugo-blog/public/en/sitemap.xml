@@ -2,65 +2,65 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gohugo.io/hugo-blog/public/en/search/</loc>
+    <loc>http://localhost:1313/hugo-blog/public/en/search/</loc>
     <priority>0.1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/search/"
+                href="http://localhost:1313/hugo-blog/public/search/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/en/search/"
+                href="http://localhost:1313/hugo-blog/public/en/search/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/en/categories/</loc>
+    <loc>http://localhost:1313/hugo-blog/public/en/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/categories/"
+                href="http://localhost:1313/hugo-blog/public/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/en/categories/"
+                href="http://localhost:1313/hugo-blog/public/en/categories/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/en/series/</loc>
+    <loc>http://localhost:1313/hugo-blog/public/en/series/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/series/"
+                href="http://localhost:1313/hugo-blog/public/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/en/series/"
+                href="http://localhost:1313/hugo-blog/public/en/series/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/en/tags/</loc>
+    <loc>http://localhost:1313/hugo-blog/public/en/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/tags/"
+                href="http://localhost:1313/hugo-blog/public/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/en/tags/"
+                href="http://localhost:1313/hugo-blog/public/en/tags/"
                 />
   </url><url>
-    <loc>https://gohugo.io/hugo-blog/public/en/</loc>
+    <loc>http://localhost:1313/hugo-blog/public/en/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="zh-CN"
-                href="https://gohugo.io/hugo-blog/public/"
+                href="http://localhost:1313/hugo-blog/public/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en-US"
-                href="https://gohugo.io/hugo-blog/public/en/"
+                href="http://localhost:1313/hugo-blog/public/en/"
                 />
   </url>
 </urlset>
