@@ -94,6 +94,30 @@
             (gltf) => {
                 const model = gltf.scene;
                 scene.add(model);
+
+                // 调试：输出材质信息
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        console.log('Material:', child.material);
+                        // // 尝试多种方式改变颜色
+                        // if (child.material.color) {
+                        //     child.material.color.set(0xcccccc);
+                        // }
+                        // if (child.material.emissive) {
+                        //     child.material.emissive.set(0xcccccc);
+                        // }
+                        // child.material.needsUpdate = true;
+                    }
+
+                    // if (child.isMesh && child.material) {
+                    //     if (child.material.name === 'red_glass') {
+                    //         child.material.color.set(0x000000);
+                    //         child.material.needsUpdate = true;
+                    //     }
+                    // }
+
+                });
+
                 frameModel(model);
                 info.textContent = '🖱️ 拖动旋转 | 滚轮缩放';
             },
