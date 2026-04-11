@@ -44,16 +44,19 @@
         const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
         scene.add(gridHelper);
 
-        // 光源
-        const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        keyLight.position.set(10, 12, 10);
+        // 光源 - 自然光模拟
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        keyLight.position.set(15, 20, 15);  // 更高的角度，像太阳
         scene.add(keyLight);
 
-        const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        fillLight.position.set(-8, 6, -8);
+        const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);  // 较弱的补光
+        fillLight.position.set(-12, 8, -12);
         scene.add(fillLight);
 
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 0.9));
+        // 天空与地面的漫反射 - 天空明显比地面亮
+        scene.add(new THREE.HemisphereLight(0xb8d4ff, 0x555555, 0.85));
+        
+        scene.background = new THREE.Color(0xb8d4ff);  // 天空蓝灰色
 
         function frameModel(model) {
             const box = new THREE.Box3().setFromObject(model);
